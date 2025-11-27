@@ -27,29 +27,29 @@
         /* Logo e Header */
         .brand-header {
             text-align: center;
-            margin-bottom: 40px;
-            padding: 50px 30px;
+            margin-bottom: 30px;
+            padding: 30px 30px 25px;
             background: rgba(45, 45, 68, 0.3);
             border-radius: 20px;
             backdrop-filter: blur(10px);
         }
 
         .logo-container {
-            width: 200px;
-            height: 200px;
-            margin: 0 auto 25px;
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 20px;
             background: white;
             border-radius: 50%;
             padding: 0;
-            box-shadow: 0 15px 60px rgba(255,255,255,0.2);
+            box-shadow: 0 10px 40px rgba(255,255,255,0.2);
             display: flex;
             align-items: center;
             justify-content: center;
-            border: 5px solid rgba(13, 202, 240, 0.3);
+            border: 4px solid rgba(13, 202, 240, 0.3);
         }
 
         .logo-lion {
-            font-size: 120px;
+            font-size: 70px;
             line-height: 1;
             filter: drop-shadow(0 5px 15px rgba(0,0,0,0.2));
         }
@@ -209,6 +209,28 @@
             border-radius: 20px;
             font-weight: 700;
             font-size: 0.9em;
+        }
+
+        .master-header-actions {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .logout-btn-header {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            padding: 10px 20px;
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .logout-btn-header:hover {
+            background: rgba(255,255,255,0.3);
+            border-color: rgba(255,255,255,0.5);
         }
 
         /* Progress Section */
@@ -689,12 +711,12 @@
             }
 
             .logo-container {
-                width: 150px;
-                height: 150px;
+                width: 100px;
+                height: 100px;
             }
 
             .logo-lion {
-                font-size: 90px;
+                font-size: 60px;
             }
 
             .brand-subtitle {
@@ -703,6 +725,15 @@
 
             .recursos-grid {
                 grid-template-columns: 1fr;
+            }
+
+            .master-header-actions {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .logout-btn-header {
+                width: 100%;
             }
         }
     </style>
@@ -858,7 +889,10 @@
                     <h2>Painel Administrativo</h2>
                     <p>Mentor de Líderes</p>
                 </div>
-                <span class="badge-master">👑 MASTER</span>
+                <div class="master-header-actions">
+                    <span class="badge-master">👑 MASTER</span>
+                    <button class="logout-btn-header" onclick="logout()">Sair</button>
+                </div>
             </div>
 
             <div class="stats-grid" id="statsGrid"></div>
@@ -870,8 +904,6 @@
             </div>
 
             <div id="masterContent"></div>
-
-            <button class="logout-btn" onclick="logout()">Sair</button>
         </div>
     </div>
 
@@ -1303,7 +1335,6 @@
         function renderizarEstatisticas() {
             const todosAlunos = [...allStudentsData.turma1, ...allStudentsData.turma2];
             const totalAlunos = todosAlunos.length;
-            const alunosComSenha = todosAlunos.filter(a => a.temSenha).length;
             
             let totalFormularios = 0;
             let totalPreenchidos = 0;
@@ -1321,12 +1352,12 @@
                     <div class="stat-label">Total de Alunos</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-value">${alunosComSenha}</div>
-                    <div class="stat-label">Com Senha Criada</div>
-                </div>
-                <div class="stat-card">
                     <div class="stat-value">${allStudentsData.turma1.length}</div>
                     <div class="stat-label">Turma 1</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">${allStudentsData.turma2.length}</div>
+                    <div class="stat-label">Turma 2</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-value">${percentualGeral}%</div>

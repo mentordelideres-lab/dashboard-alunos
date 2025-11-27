@@ -257,6 +257,136 @@
             font-weight: 600;
         }
 
+        /* Section Titles */
+        .section-title {
+            font-size: 1.5em;
+            font-weight: 700;
+            color: #ffffff;
+            margin: 40px 0 20px;
+            padding-left: 15px;
+            border-left: 5px solid #0dcaf0;
+        }
+
+        /* Biblioteca de Recursos */
+        .biblioteca-section {
+            background: rgba(45, 45, 68, 0.5);
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .biblioteca-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .biblioteca-icon {
+            font-size: 2.5em;
+        }
+
+        .biblioteca-title {
+            font-size: 1.8em;
+            font-weight: 700;
+            color: #0dcaf0;
+        }
+
+        .recursos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .recurso-card {
+            background: rgba(26, 26, 46, 0.5);
+            border: 2px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .recurso-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(13, 202, 240, 0.5);
+            box-shadow: 0 10px 30px rgba(13, 202, 240, 0.2);
+        }
+
+        .recurso-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .recurso-icon {
+            font-size: 2.5em;
+            min-width: 50px;
+        }
+
+        .recurso-info {
+            flex: 1;
+        }
+
+        .recurso-title {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 8px;
+        }
+
+        .recurso-descricao {
+            color: #b8b8b8;
+            font-size: 0.95em;
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+
+        .recurso-categoria {
+            display: inline-block;
+            background: rgba(13, 202, 240, 0.2);
+            color: #0dcaf0;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.85em;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .btn-download {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #0dcaf0 0%, #0ba8cc 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: block;
+            text-align: center;
+        }
+
+        .btn-download:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(13, 202, 240, 0.4);
+        }
+
+        .empty-biblioteca {
+            text-align: center;
+            padding: 60px 20px;
+            color: #b8b8b8;
+        }
+
+        .empty-biblioteca-icon {
+            font-size: 4em;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
         /* Formulários */
         .formularios-grid {
             display: grid;
@@ -570,6 +700,10 @@
             .brand-subtitle {
                 font-size: 1.1em;
             }
+
+            .recursos-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -702,6 +836,16 @@
                 </div>
             </div>
 
+            <!-- BIBLIOTECA DE RECURSOS -->
+            <div id="bibliotecaSection" class="biblioteca-section hidden">
+                <div class="biblioteca-header">
+                    <span class="biblioteca-icon">📚</span>
+                    <h2 class="biblioteca-title">Biblioteca de Recursos</h2>
+                </div>
+                <div id="recursosContainer" class="recursos-grid"></div>
+            </div>
+
+            <h3 class="section-title">📝 Seus Formulários</h3>
             <div id="formulariosContainer" class="formularios-grid"></div>
 
             <button class="logout-btn" onclick="logout()">Sair</button>
@@ -742,6 +886,7 @@
 
         let alunoData = null;
         let configData = null;
+        let recursosData = [];
         let allStudentsData = { turma1: [], turma2: [] };
         let primeiroAcessoEmail = null;
 
@@ -819,13 +964,10 @@
             try {
                 showMessage('messageBox', '', 'clear');
                 
-                // Limpar espaços extras
                 email = email.trim().toLowerCase();
                 senha = senha.trim();
                 
                 console.log('🔐 Tentando login...');
-                console.log('📧 Email:', email);
-                console.log('🔑 É master?', email === MASTER_EMAIL.toLowerCase());
                 
                 // Verificar master
                 if (email === MASTER_EMAIL.toLowerCase() && senha === MASTER_PASSWORD) {
@@ -860,6 +1002,16 @@
                 }
 
                 configData = await fetchSheetData('CONFIG');
+                
+                // Carregar recursos
+                try {
+                    recursosData = await fetchSheetData('RECURSOS');
+                    console.log('📚 Recursos carregados');
+                } catch (error) {
+                    console.log('ℹ️ Aba RECURSOS não encontrada - biblioteca desabilitada');
+                    recursosData = [];
+                }
+
                 alunoData = resultado.aluno;
                 mostrarDashboard();
 
@@ -879,7 +1031,7 @@
                 if (emailAluno === email) {
                     const senhaAluno = row.c[9]?.v || '';
                     
-                    // Primeiro acesso (sem senha cadastrada)
+                    // Primeiro acesso
                     if (!senhaAluno || senhaAluno === '') {
                         return {
                             primeiroAcesso: true,
@@ -1077,7 +1229,69 @@
             document.getElementById('progressFill').style.width = `${percentual}%`;
             document.getElementById('progressText').textContent = `${preenchidos}/${total}`;
 
+            renderizarBiblioteca();
             renderizarFormularios();
+        }
+
+        function renderizarBiblioteca() {
+            const section = document.getElementById('bibliotecaSection');
+            const container = document.getElementById('recursosContainer');
+
+            // Filtrar recursos pela turma do aluno
+            const recursosFiltrados = filtrarRecursosPorTurma(recursosData, alunoData.turma);
+
+            if (recursosFiltrados.length === 0) {
+                section.classList.add('hidden');
+                return;
+            }
+
+            section.classList.remove('hidden');
+            container.innerHTML = '';
+
+            recursosFiltrados.forEach(recurso => {
+                const card = document.createElement('div');
+                card.className = 'recurso-card';
+                card.innerHTML = `
+                    <div class="recurso-header">
+                        <span class="recurso-icon">${recurso.icone}</span>
+                        <div class="recurso-info">
+                            <h3 class="recurso-title">${recurso.nome}</h3>
+                        </div>
+                    </div>
+                    ${recurso.categoria ? `<span class="recurso-categoria">${recurso.categoria}</span>` : ''}
+                    <p class="recurso-descricao">${recurso.descricao}</p>
+                    <a href="${recurso.link}" target="_blank" class="btn-download">
+                        📥 Baixar PDF
+                    </a>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function filtrarRecursosPorTurma(rows, turma) {
+            if (!rows || rows.length <= 1) return [];
+
+            const recursos = [];
+            for (let i = 1; i < rows.length; i++) {
+                const row = rows[i];
+                if (!row.c || !row.c[0]) continue;
+
+                const turmaRecurso = row.c[1]?.v || '';
+                
+                // Mostrar se for da turma específica ou AMBAS
+                if (turmaRecurso === turma || turmaRecurso === 'AMBAS') {
+                    recursos.push({
+                        nome: row.c[0]?.v || 'Sem título',
+                        turma: turmaRecurso,
+                        link: row.c[2]?.v || '#',
+                        descricao: row.c[3]?.v || 'Material de apoio para sua jornada',
+                        icone: row.c[4]?.v || '📄',
+                        categoria: row.c[5]?.v || ''
+                    });
+                }
+            }
+
+            return recursos;
         }
 
         function mostrarDashboardMaster() {
@@ -1322,6 +1536,7 @@
         function logout() {
             alunoData = null;
             configData = null;
+            recursosData = [];
             allStudentsData = { turma1: [], turma2: [] };
             primeiroAcessoEmail = null;
             

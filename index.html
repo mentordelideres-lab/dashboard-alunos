@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mentor de Líderes - Dashboard Seguro</title>
+    <title>Mentor de Líderes - Dashboard</title>
     <style>
         * {
             margin: 0;
@@ -13,38 +13,68 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
             min-height: 100vh;
             padding: 20px;
+            color: #e4e4e4;
         }
 
         .container {
-            max-width: 900px;
+            max-width: 1400px;
             margin: 0 auto;
         }
 
-        .login-card, .dashboard-card {
-            background: white;
-            border-radius: 20px;
-            padding: 40px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-        }
-
-        .logo {
+        /* Logo e Header */
+        .brand-header {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 40px;
+            padding: 30px;
+            background: rgba(45, 45, 68, 0.3);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
         }
 
-        .logo h1 {
-            color: #667eea;
+        .logo-container {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 20px;
+            background: white;
+            border-radius: 50%;
+            padding: 20px;
+            box-shadow: 0 10px 40px rgba(255,255,255,0.1);
+        }
+
+        .logo-lion {
+            width: 100%;
+            height: 100%;
+            background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTUwIDEwYzIyIDAgNDAgMTggNDAgNDBzLTE4IDQwLTQwIDQwLTQwLTE4LTQwLTQwIDE4LTQwIDQwLTQweiIgZmlsbD0iIzJkMmQyZCIvPjwvc3ZnPg==');
+            background-size: cover;
+            background-position: center;
+        }
+
+        .brand-title {
             font-size: 2.5em;
             font-weight: 700;
-            margin-bottom: 5px;
+            color: #ffffff;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
         }
 
-        .logo p {
-            color: #666;
-            font-size: 1.1em;
+        .brand-subtitle {
+            font-size: 1.2em;
+            color: #b8b8b8;
+            font-weight: 300;
+        }
+
+        /* Login Card */
+        .login-card, .dashboard-card {
+            background: rgba(45, 45, 68, 0.5);
+            border-radius: 20px;
+            padding: 40px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
         }
 
         .input-group {
@@ -54,53 +84,52 @@
         .input-group label {
             display: block;
             margin-bottom: 8px;
-            color: #333;
+            color: #e4e4e4;
             font-weight: 600;
         }
 
         .input-group input {
             width: 100%;
             padding: 15px;
-            border: 2px solid #e0e0e0;
+            background: rgba(255,255,255,0.1);
+            border: 2px solid rgba(255,255,255,0.2);
             border-radius: 10px;
             font-size: 1em;
+            color: white;
             transition: all 0.3s;
         }
 
         .input-group input:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: #0dcaf0;
+            background: rgba(255,255,255,0.15);
         }
 
-        .input-group small {
-            display: block;
-            margin-top: 5px;
-            color: #666;
-            font-size: 0.9em;
+        .input-group input::placeholder {
+            color: rgba(255,255,255,0.5);
         }
 
         .btn-primary {
             width: 100%;
             padding: 15px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #0dcaf0 0%, #0ba8cc 100%);
             color: white;
             border: none;
             border-radius: 10px;
             font-size: 1.1em;
             font-weight: 600;
             cursor: pointer;
-            transition: transform 0.3s;
+            transition: all 0.3s;
         }
 
         .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 10px 30px rgba(13, 202, 240, 0.4);
         }
 
         .btn-primary:disabled {
             opacity: 0.6;
             cursor: not-allowed;
-            transform: none;
         }
 
         .link-button {
@@ -109,7 +138,7 @@
         }
 
         .link-button a {
-            color: #667eea;
+            color: #0dcaf0;
             text-decoration: none;
             font-weight: 600;
             cursor: pointer;
@@ -123,39 +152,69 @@
             display: none;
         }
 
-        .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+        /* Messages */
+        .error-message, .success-message, .info-message {
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border-left: 4px solid;
+        }
+
+        .error-message {
+            background: rgba(220, 53, 69, 0.2);
+            border-color: #dc3545;
+            color: #ff6b6b;
+        }
+
+        .success-message {
+            background: rgba(40, 167, 69, 0.2);
+            border-color: #28a745;
+            color: #51cf66;
+        }
+
+        .info-message {
+            background: rgba(13, 202, 240, 0.2);
+            border-color: #0dcaf0;
+            color: #0dcaf0;
+        }
+
+        /* Dashboard Header */
+        .dashboard-header {
+            background: linear-gradient(135deg, #0dcaf0 0%, #0ba8cc 100%);
             padding: 30px;
             border-radius: 15px;
             margin-bottom: 30px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            box-shadow: 0 10px 40px rgba(13, 202, 240, 0.3);
         }
 
-        .header-info h2 {
+        .dashboard-header h2 {
             font-size: 2em;
             margin-bottom: 5px;
         }
 
-        .header-info p {
+        .dashboard-header p {
             opacity: 0.9;
             font-size: 1.1em;
         }
 
         .badge-master {
-            background: rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.3);
             padding: 10px 20px;
             border-radius: 20px;
-            font-weight: 600;
+            font-weight: 700;
+            font-size: 0.9em;
         }
 
+        /* Progress Section */
         .progress-section {
-            background: #f8f9fa;
+            background: rgba(45, 45, 68, 0.5);
             padding: 25px;
             border-radius: 15px;
             margin-bottom: 30px;
+            border: 1px solid rgba(255,255,255,0.1);
         }
 
         .progress-header {
@@ -166,28 +225,26 @@
         }
 
         .progress-header h3 {
-            color: #333;
             font-size: 1.3em;
         }
 
         .progress-percentage {
             font-size: 2em;
             font-weight: 700;
-            color: #667eea;
+            color: #0dcaf0;
         }
 
         .progress-bar {
             width: 100%;
             height: 30px;
-            background: #e0e0e0;
+            background: rgba(255,255,255,0.1);
             border-radius: 15px;
             overflow: hidden;
-            position: relative;
         }
 
         .progress-fill {
             height: 100%;
-            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(90deg, #0dcaf0 0%, #0ba8cc 100%);
             transition: width 0.5s ease;
             display: flex;
             align-items: center;
@@ -197,14 +254,15 @@
             font-weight: 600;
         }
 
+        /* Formulários */
         .formularios-grid {
             display: grid;
             gap: 20px;
         }
 
         .formulario-card {
-            background: white;
-            border: 2px solid #e0e0e0;
+            background: rgba(45, 45, 68, 0.5);
+            border: 2px solid rgba(255,255,255,0.1);
             border-radius: 15px;
             padding: 20px;
             transition: all 0.3s;
@@ -212,7 +270,8 @@
 
         .formulario-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            border-color: rgba(13, 202, 240, 0.5);
+            box-shadow: 0 10px 30px rgba(13, 202, 240, 0.2);
         }
 
         .formulario-header {
@@ -225,7 +284,6 @@
         .formulario-title {
             font-size: 1.2em;
             font-weight: 600;
-            color: #333;
         }
 
         .status-badge {
@@ -236,13 +294,15 @@
         }
 
         .status-preenchido {
-            background: #d4edda;
-            color: #155724;
+            background: rgba(40, 167, 69, 0.3);
+            color: #51cf66;
+            border: 1px solid #51cf66;
         }
 
         .status-pendente {
-            background: #f8d7da;
-            color: #721c24;
+            background: rgba(220, 53, 69, 0.3);
+            color: #ff6b6b;
+            border: 1px solid #ff6b6b;
         }
 
         .btn-formulario {
@@ -259,63 +319,206 @@
         }
 
         .btn-preencher {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #0dcaf0 0%, #0ba8cc 100%);
             color: white;
         }
 
         .btn-preencher:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 5px 20px rgba(13, 202, 240, 0.4);
         }
 
         .btn-concluido {
-            background: #d4edda;
-            color: #155724;
+            background: rgba(40, 167, 69, 0.3);
+            color: #51cf66;
             cursor: default;
+            border: 1px solid #51cf66;
         }
 
-        .error-message, .success-message, .info-message {
-            padding: 15px;
-            border-radius: 10px;
+        /* Master Dashboard */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: rgba(45, 45, 68, 0.5);
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(13, 202, 240, 0.5);
+        }
+
+        .stat-value {
+            font-size: 2.5em;
+            font-weight: 700;
+            color: #0dcaf0;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            color: #b8b8b8;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
             margin-bottom: 20px;
+            flex-wrap: wrap;
         }
 
-        .error-message {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
+        .tab {
+            padding: 12px 24px;
+            background: rgba(45, 45, 68, 0.5);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            color: #e4e4e4;
         }
 
-        .success-message {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
+        .tab.active {
+            background: linear-gradient(135deg, #0dcaf0 0%, #0ba8cc 100%);
+            border-color: #0dcaf0;
+            color: white;
         }
 
-        .info-message {
-            background: #d1ecf1;
-            color: #0c5460;
-            border: 1px solid #bee5eb;
+        .tab:hover {
+            transform: translateY(-2px);
+            border-color: rgba(13, 202, 240, 0.5);
+        }
+
+        /* Aluno Card Expandível */
+        .aluno-card {
+            background: rgba(45, 45, 68, 0.5);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 10px;
+            margin-bottom: 15px;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+
+        .aluno-card:hover {
+            border-color: rgba(13, 202, 240, 0.5);
+        }
+
+        .aluno-header {
+            padding: 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .aluno-info {
+            flex: 1;
+        }
+
+        .aluno-nome {
+            font-weight: 600;
+            font-size: 1.1em;
+            margin-bottom: 5px;
+        }
+
+        .aluno-email {
+            color: #b8b8b8;
+            font-size: 0.9em;
+        }
+
+        .aluno-stats {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .mini-progress {
+            font-size: 0.9em;
+            color: #0dcaf0;
+            font-weight: 600;
+        }
+
+        .expand-icon {
+            font-size: 1.5em;
+            color: #0dcaf0;
+            transition: transform 0.3s;
+        }
+
+        .aluno-card.expanded .expand-icon {
+            transform: rotate(180deg);
+        }
+
+        .aluno-details {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            background: rgba(26, 26, 46, 0.5);
+        }
+
+        .aluno-card.expanded .aluno-details {
+            max-height: 1000px;
+        }
+
+        .formularios-table {
+            width: 100%;
+            margin: 20px;
+        }
+
+        .formularios-table table {
+            width: calc(100% - 40px);
+            border-collapse: collapse;
+        }
+
+        .formularios-table th {
+            text-align: left;
+            padding: 12px;
+            background: rgba(13, 202, 240, 0.2);
+            border-bottom: 2px solid #0dcaf0;
+            color: #0dcaf0;
+            font-weight: 600;
+        }
+
+        .formularios-table td {
+            padding: 12px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .formularios-table tr:hover {
+            background: rgba(255,255,255,0.05);
+        }
+
+        .status-icon {
+            font-size: 1.2em;
         }
 
         .logout-btn {
-            background: #e0e0e0;
-            color: #333;
+            background: rgba(255,255,255,0.1);
+            color: #e4e4e4;
             padding: 10px 20px;
-            border: none;
+            border: 1px solid rgba(255,255,255,0.2);
             border-radius: 10px;
             cursor: pointer;
             font-weight: 600;
             margin-top: 20px;
+            transition: all 0.3s;
         }
 
         .logout-btn:hover {
-            background: #d0d0d0;
+            background: rgba(255,255,255,0.2);
+            border-color: rgba(255,255,255,0.4);
         }
 
         .password-strength {
             height: 5px;
-            background: #e0e0e0;
+            background: rgba(255,255,255,0.1);
             border-radius: 3px;
             margin-top: 5px;
             overflow: hidden;
@@ -331,107 +534,42 @@
         .strength-medium { background: #ffc107; }
         .strength-strong { background: #28a745; }
 
-        /* Master Dashboard */
-        .tabs {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
-        .tab {
-            padding: 12px 24px;
-            border: none;
-            background: #e0e0e0;
-            border-radius: 10px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s;
-        }
-
-        .tab.active {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-        }
-
-        .aluno-card {
-            background: white;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
-            padding: 15px;
-            margin-bottom: 15px;
-        }
-
-        .aluno-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-
-        .aluno-nome {
-            font-weight: 600;
-            font-size: 1.1em;
-            color: #333;
-        }
-
-        .aluno-email {
-            color: #666;
-            font-size: 0.9em;
-        }
-
-        .mini-progress {
-            font-size: 0.9em;
-            color: #667eea;
-            font-weight: 600;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-
-        .stat-card {
-            background: white;
-            padding: 20px;
-            border-radius: 15px;
-            text-align: center;
-            border: 2px solid #e0e0e0;
-        }
-
-        .stat-value {
-            font-size: 2.5em;
-            font-weight: 700;
-            color: #667eea;
-        }
-
-        .stat-label {
-            color: #666;
-            margin-top: 5px;
-        }
-
         @media (max-width: 768px) {
-            .header {
+            .dashboard-header {
                 flex-direction: column;
                 text-align: center;
             }
 
-            .login-card, .dashboard-card {
-                padding: 25px;
+            .aluno-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+            .aluno-stats {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .brand-title {
+                font-size: 2em;
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- Tela de Login -->
-        <div id="loginScreen" class="login-card">
-            <div class="logo">
-                <h1>🎯 Mentor de Líderes</h1>
-                <p>Dashboard do Aluno</p>
+        <!-- Brand Header -->
+        <div class="brand-header">
+            <div class="logo-container">
+                <div class="logo-lion">🦁</div>
             </div>
-            
+            <h1 class="brand-title">Mentor de Líderes</h1>
+            <p class="brand-subtitle">Dashboard de Acompanhamento</p>
+        </div>
+
+        <!-- Login Screen -->
+        <div id="loginScreen" class="login-card">
             <div id="messageBox"></div>
             
             <form id="loginForm">
@@ -461,12 +599,10 @@
             </div>
         </div>
 
-        <!-- Tela Esqueci Senha -->
+        <!-- Esqueci Senha Screen -->
         <div id="esqueciSenhaScreen" class="login-card hidden">
-            <div class="logo">
-                <h1>🔑 Recuperar Senha</h1>
-                <p>Enviaremos um link para seu email</p>
-            </div>
+            <h2 style="margin-bottom: 20px;">🔑 Recuperar Senha</h2>
+            <p style="margin-bottom: 20px; color: #b8b8b8;">Enviaremos um link para seu email</p>
             
             <div id="messageBoxEsqueci"></div>
             
@@ -488,12 +624,10 @@
             </div>
         </div>
 
-        <!-- Tela Primeiro Acesso / Criar Senha -->
+        <!-- Criar Senha Screen -->
         <div id="criarSenhaScreen" class="login-card hidden">
-            <div class="logo">
-                <h1>👋 Bem-vindo!</h1>
-                <p>Crie sua senha de acesso</p>
-            </div>
+            <h2 style="margin-bottom: 10px;">👋 Bem-vindo!</h2>
+            <p style="margin-bottom: 30px; color: #b8b8b8;">Crie sua senha de acesso</p>
             
             <div id="messageBoxCriar"></div>
             
@@ -515,7 +649,7 @@
                     <div class="password-strength">
                         <div class="password-strength-bar" id="strengthBar"></div>
                     </div>
-                    <small id="strengthText">Digite uma senha</small>
+                    <small id="strengthText" style="color: #b8b8b8; display: block; margin-top: 5px;">Digite uma senha</small>
                 </div>
                 <div class="input-group">
                     <label for="confirmarSenhaInput">Confirmar Senha:</label>
@@ -533,8 +667,8 @@
 
         <!-- Dashboard do Aluno -->
         <div id="dashboardScreen" class="dashboard-card hidden">
-            <div class="header">
-                <div class="header-info">
+            <div class="dashboard-header">
+                <div>
                     <h2 id="alunoNome">Carregando...</h2>
                     <p id="alunoTurma">Turma</p>
                 </div>
@@ -559,8 +693,8 @@
 
         <!-- Dashboard Master -->
         <div id="masterDashboard" class="dashboard-card hidden">
-            <div class="header">
-                <div class="header-info">
+            <div class="dashboard-header">
+                <div>
                     <h2>Painel Administrativo</h2>
                     <p>Mentor de Líderes</p>
                 </div>
@@ -585,8 +719,6 @@
         // Configuração
         const SHEET_ID = '1OjxHwWh6kWaNgQrCPP57GB_FMs4LVFH3Orbve3ciylQ';
         const SHEETS_BASE_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=`;
-        
-        // URL do Google Apps Script
         const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxPoJtzkVonMhXxYqA9a886dEAYIIoBD8p4ocjjALn4wJw1zhMzVhATaI-cuyUEdkXw3w/exec';
 
         const MASTER_EMAIL = 'mentordelideres@gmail.com';
@@ -717,22 +849,7 @@
 
             } catch (error) {
                 console.error('❌ Erro completo:', error);
-                console.error('📋 ID da Planilha:', SHEET_ID);
-                console.error('🔗 URL base:', SHEETS_BASE_URL);
-                
-                let errorMessage = 'Erro ao conectar com a planilha. ';
-                
-                if (error.message.includes('Failed to fetch')) {
-                    errorMessage += 'Problema de conexão. Verifique sua internet.';
-                } else if (error.message.includes('404')) {
-                    errorMessage += 'Planilha não encontrada. Verifique o ID da planilha.';
-                } else if (error.message.includes('403')) {
-                    errorMessage += 'Acesso negado. Certifique-se que a planilha está pública.';
-                } else {
-                    errorMessage += 'Verifique se a planilha está compartilhada publicamente e se as abas TURMA 1 e TURMA 2 existem.';
-                }
-                
-                showMessage('messageBox', errorMessage, 'error');
+                showMessage('messageBox', 'Erro ao conectar. Verifique sua internet e se a planilha está acessível.', 'error');
             }
         }
 
@@ -788,8 +905,7 @@
                 btn.disabled = true;
                 btn.textContent = 'Salvando...';
                 
-                // Chamar Apps Script para salvar senha
-                const response = await fetch(APPS_SCRIPT_URL, {
+                await fetch(APPS_SCRIPT_URL, {
                     method: 'POST',
                     mode: 'no-cors',
                     headers: { 'Content-Type': 'application/json' },
@@ -800,7 +916,6 @@
                     })
                 });
 
-                // Como é no-cors, vamos assumir sucesso e fazer login
                 showMessage('messageBoxCriar', 'Senha criada com sucesso! Entrando...', 'success');
                 
                 setTimeout(() => {
@@ -819,7 +934,6 @@
             try {
                 showMessage('messageBoxEsqueci', 'Verificando email...', 'info');
                 
-                // Verificar se email existe
                 const turma1Data = await fetchSheetData('TURMA 1');
                 const turma2Data = await fetchSheetData('TURMA 2');
                 
@@ -847,7 +961,6 @@
                     return;
                 }
 
-                // Enviar email via Apps Script
                 await fetch(APPS_SCRIPT_URL, {
                     method: 'POST',
                     mode: 'no-cors',
@@ -874,29 +987,25 @@
 
         async function fetchSheetData(sheetName) {
             const url = SHEETS_BASE_URL + encodeURIComponent(sheetName);
-            console.log('🔍 Tentando acessar:', url);
+            console.log('🔍 Acessando:', url);
             
             try {
                 const response = await fetch(url);
-                console.log('📡 Response status:', response.status);
+                console.log('📡 Status:', response.status);
                 
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
                 
                 const text = await response.text();
-                console.log('📄 Texto recebido (primeiros 100 chars):', text.substring(0, 100));
-                
-                // Remover o wrapper do Google
                 const jsonText = text.substring(text.indexOf('{')).slice(0, -2);
                 const json = JSON.parse(jsonText);
                 
-                console.log('✅ Dados parseados com sucesso');
-                console.log('📊 Número de linhas:', json.table?.rows?.length || 0);
+                console.log('✅ Dados carregados');
                 
                 return json.table.rows;
             } catch (error) {
-                console.error('❌ Erro detalhado:', error);
+                console.error('❌ Erro:', error);
                 throw error;
             }
         }
@@ -1015,20 +1124,53 @@
             const container = document.getElementById('masterContent');
             let html = '';
 
-            alunos.forEach(aluno => {
+            alunos.forEach((aluno, index) => {
                 const senhaStatus = aluno.temSenha ? '✅ Senha criada' : '⚠️ Aguardando senha';
+                const alunoId = `aluno-${index}`;
+                
                 html += `
-                    <div class="aluno-card">
-                        <div class="aluno-header">
-                            <div>
+                    <div class="aluno-card" id="${alunoId}">
+                        <div class="aluno-header" onclick="toggleAluno('${alunoId}')">
+                            <div class="aluno-info">
                                 <div class="aluno-nome">${aluno.nome}</div>
                                 <div class="aluno-email">${aluno.email}</div>
-                                <small style="color: ${aluno.temSenha ? '#28a745' : '#ffc107'};">${senhaStatus}</small>
+                                <small style="color: ${aluno.temSenha ? '#51cf66' : '#ffc107'};">${senhaStatus}</small>
                             </div>
-                            <div class="mini-progress">${aluno.progresso}% completo</div>
+                            <div class="aluno-stats">
+                                <div class="mini-progress">${aluno.progresso}% completo</div>
+                                <div class="expand-icon">▼</div>
+                            </div>
                         </div>
-                        <div class="progress-bar" style="height: 10px;">
-                            <div class="progress-fill" style="width: ${aluno.progresso}%"></div>
+                        <div class="aluno-details">
+                            <div class="formularios-table">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Formulário</th>
+                                            <th style="text-align: center;">Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        ${FORMULARIOS.map((form, idx) => {
+                                            const status = aluno.formularios[idx];
+                                            const isPreenchido = status === 'Preenchido';
+                                            return `
+                                                <tr>
+                                                    <td>${form.nome}</td>
+                                                    <td style="text-align: center;">
+                                                        <span class="status-icon" style="color: ${isPreenchido ? '#51cf66' : '#ff6b6b'}">
+                                                            ${isPreenchido ? '✅' : '❌'}
+                                                        </span>
+                                                        <span style="color: ${isPreenchido ? '#51cf66' : '#ff6b6b'}; font-weight: 600;">
+                                                            ${isPreenchido ? 'Preenchido' : 'Pendente'}
+                                                        </span>
+                                                    </td>
+                                                </tr>
+                                            `;
+                                        }).join('')}
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 `;
@@ -1037,22 +1179,33 @@
             container.innerHTML = html;
         }
 
+        function toggleAluno(alunoId) {
+            const card = document.getElementById(alunoId);
+            card.classList.toggle('expanded');
+        }
+
         function renderizarVisaoGeral() {
             const container = document.getElementById('masterContent');
             const turma1Media = calcularMedia(allStudentsData.turma1);
             const turma2Media = calcularMedia(allStudentsData.turma2);
 
             container.innerHTML = `
-                <div class="formularios-grid">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
                     <div class="formulario-card">
-                        <h3>📊 Turma 1</h3>
-                        <p style="font-size: 2em; font-weight: 700; color: #667eea; margin: 20px 0;">${turma1Media}%</p>
+                        <h3 style="margin-bottom: 20px;">📊 Turma 1</h3>
+                        <div style="font-size: 3em; font-weight: 700; color: #0dcaf0; margin: 20px 0;">${turma1Media}%</div>
                         <p>Média de conclusão</p>
+                        <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.1);">
+                            <p><strong>${allStudentsData.turma1.length}</strong> alunos</p>
+                        </div>
                     </div>
                     <div class="formulario-card">
-                        <h3>📊 Turma 2</h3>
-                        <p style="font-size: 2em; font-weight: 700; color: #764ba2; margin: 20px 0;">${turma2Media}%</p>
+                        <h3 style="margin-bottom: 20px;">📊 Turma 2</h3>
+                        <div style="font-size: 3em; font-weight: 700; color: #0dcaf0; margin: 20px 0;">${turma2Media}%</div>
                         <p>Média de conclusão</p>
+                        <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.1);">
+                            <p><strong>${allStudentsData.turma2.length}</strong> alunos</p>
+                        </div>
                     </div>
                 </div>
             `;

@@ -671,12 +671,23 @@
             try {
                 showMessage('messageBox', '', 'clear');
                 
+                // Limpar espaços extras
+                email = email.trim().toLowerCase();
+                senha = senha.trim();
+                
+                console.log('🔐 Tentando login...');
+                console.log('📧 Email:', email);
+                console.log('🔑 É master?', email === MASTER_EMAIL.toLowerCase());
+                
                 // Verificar master
-                if (email === MASTER_EMAIL && senha === MASTER_PASSWORD) {
+                if (email === MASTER_EMAIL.toLowerCase() && senha === MASTER_PASSWORD) {
+                    console.log('👑 Login Master - OK!');
                     await carregarDadosMaster();
                     mostrarDashboardMaster();
                     return;
                 }
+                
+                console.log('👤 Buscando aluno...');
 
                 // Buscar aluno
                 const turma1Data = await fetchSheetData('TURMA 1');
@@ -705,8 +716,23 @@
                 mostrarDashboard();
 
             } catch (error) {
-                console.error('Erro:', error);
-                showMessage('messageBox', 'Erro ao conectar. Verifique se a planilha está acessível.', 'error');
+                console.error('❌ Erro completo:', error);
+                console.error('📋 ID da Planilha:', SHEET_ID);
+                console.error('🔗 URL base:', SHEETS_BASE_URL);
+                
+                let errorMessage = 'Erro ao conectar com a planilha. ';
+                
+                if (error.message.includes('Failed to fetch')) {
+                    errorMessage += 'Problema de conexão. Verifique sua internet.';
+                } else if (error.message.includes('404')) {
+                    errorMessage += 'Planilha não encontrada. Verifique o ID da planilha.';
+                } else if (error.message.includes('403')) {
+                    errorMessage += 'Acesso negado. Certifique-se que a planilha está pública.';
+                } else {
+                    errorMessage += 'Verifique se a planilha está compartilhada publicamente e se as abas TURMA 1 e TURMA 2 existem.';
+                }
+                
+                showMessage('messageBox', errorMessage, 'error');
             }
         }
 
@@ -848,10 +874,31 @@
 
         async function fetchSheetData(sheetName) {
             const url = SHEETS_BASE_URL + encodeURIComponent(sheetName);
-            const response = await fetch(url);
-            const text = await response.text();
-            const json = JSON.parse(text.substr(47).slice(0, -2));
-            return json.table.rows;
+            console.log('🔍 Tentando acessar:', url);
+            
+            try {
+                const response = await fetch(url);
+                console.log('📡 Response status:', response.status);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const text = await response.text();
+                console.log('📄 Texto recebido (primeiros 100 chars):', text.substring(0, 100));
+                
+                // Remover o wrapper do Google
+                const jsonText = text.substring(text.indexOf('{')).slice(0, -2);
+                const json = JSON.parse(jsonText);
+                
+                console.log('✅ Dados parseados com sucesso');
+                console.log('📊 Número de linhas:', json.table?.rows?.length || 0);
+                
+                return json.table.rows;
+            } catch (error) {
+                console.error('❌ Erro detalhado:', error);
+                throw error;
+            }
         }
 
         async function carregarDadosMaster() {

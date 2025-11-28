@@ -925,6 +925,147 @@
             opacity: 0.5;
         }
 
+        /* Acesso Rápido */
+        .acesso-rapido-section {
+            background: rgba(45, 45, 68, 0.5);
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .acesso-rapido-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .acesso-rapido-icon {
+            font-size: 1.8em;
+        }
+
+        .acesso-rapido-title {
+            font-size: 1.3em;
+            font-weight: 700;
+            color: #0dcaf0;
+            margin: 0;
+        }
+
+        /* Botão Plataforma de Vídeos */
+        .btn-plataforma-videos {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            background: linear-gradient(135deg, #0dcaf0 0%, #0ba8cc 100%);
+            padding: 20px 25px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            text-decoration: none;
+            color: white;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .btn-plataforma-videos:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(13, 202, 240, 0.4);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-plataforma-videos .btn-icon {
+            font-size: 2em;
+        }
+
+        .btn-plataforma-videos .btn-text {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+        .btn-plataforma-videos strong {
+            font-size: 1.1em;
+        }
+
+        .btn-plataforma-videos small {
+            opacity: 0.9;
+            font-size: 0.9em;
+        }
+
+        .btn-plataforma-videos .btn-arrow {
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+
+        /* Agendamento */
+        .agendamento-section {
+            background: rgba(26, 26, 46, 0.5);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .agendamento-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .agendamento-icon {
+            font-size: 1.5em;
+        }
+
+        .agendamento-header h4 {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #ffffff;
+            margin: 0;
+        }
+
+        .mentores-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+        }
+
+        .btn-mentor {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(45, 45, 68, 0.7);
+            padding: 15px 18px;
+            border-radius: 10px;
+            text-decoration: none;
+            color: white;
+            transition: all 0.3s;
+            border: 2px solid rgba(255,255,255,0.1);
+        }
+
+        .btn-mentor:hover {
+            background: rgba(13, 202, 240, 0.2);
+            border-color: rgba(13, 202, 240, 0.5);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(13, 202, 240, 0.2);
+        }
+
+        .btn-mentor .mentor-icon {
+            font-size: 1.3em;
+        }
+
+        .btn-mentor .mentor-nome {
+            flex: 1;
+            font-weight: 600;
+            font-size: 0.95em;
+        }
+
+        .btn-mentor .mentor-arrow {
+            font-size: 1.2em;
+            opacity: 0.7;
+        }
+
         /* Formulários */
         .formularios-grid {
             display: grid;
@@ -1389,6 +1530,35 @@
                 </div>
             </div>
 
+            <!-- ACESSO RÁPIDO -->
+            <div class="acesso-rapido-section">
+                <div class="acesso-rapido-header">
+                    <span class="acesso-rapido-icon">🚀</span>
+                    <h3 class="acesso-rapido-title">Acesso Rápido</h3>
+                </div>
+                
+                <!-- Plataforma de Vídeos -->
+                <a href="#" id="linkPlataformaVideos" class="btn-plataforma-videos" target="_blank">
+                    <span class="btn-icon">🎥</span>
+                    <span class="btn-text">
+                        <strong>Plataforma de Vídeos</strong>
+                        <small>Acesse as aulas e conteúdos</small>
+                    </span>
+                    <span class="btn-arrow">→</span>
+                </a>
+
+                <!-- Agendamento com Mentores -->
+                <div class="agendamento-section">
+                    <div class="agendamento-header">
+                        <span class="agendamento-icon">📅</span>
+                        <h4>Agendar Mentoria</h4>
+                    </div>
+                    <div id="mentoresContainer" class="mentores-grid">
+                        <!-- Mentores serão carregados aqui via JS -->
+                    </div>
+                </div>
+            </div>
+
             <!-- BIBLIOTECA DE RECURSOS -->
             <div id="bibliotecaSection" class="biblioteca-section hidden">
                 <div class="biblioteca-header">
@@ -1821,6 +1991,7 @@
             document.getElementById('progressText').textContent = `${preenchidos}/${total}`;
 
             renderizarBiblioteca();
+            configurarAcessoRapido();
             renderizarFormularios();
         }
 
@@ -2376,6 +2547,98 @@
             if (alunos.length === 0) return 0;
             const soma = alunos.reduce((acc, aluno) => acc + aluno.progresso, 0);
             return Math.round(soma / alunos.length);
+        }
+
+        function configurarAcessoRapido() {
+            // ==========================================
+            // 🔧 CONFIGURAÇÃO DE LINKS - EDITE AQUI!
+            // ==========================================
+            
+            // Obter turma do aluno logado
+            const turmaAluno = alunoData.turma;
+            
+            // Links da Plataforma de Vídeos (pode ser diferente por turma)
+            const linksPorTurma = {
+                "TURMA 1": "https://aluno.omentordelideres.com.br/login",
+                "TURMA 2": "https://aluno.omentordelideres.com.br/login"
+            };
+            
+            // Se quiser o MESMO link para todas as turmas, use isto:
+            // const linkPlataformaVideos = "https://sua-plataforma-unica.com";
+            
+            // Links de Agendamento por Mentor - SEPARADOS POR TURMA
+            const mentoresPorTurma = {
+                "TURMA 1": [
+                    {
+                        nome: "Influenciador Digital - Leonardo",
+                        link: "https://calendly.com/leonardomuniz-febracis/suporte-influenciador-digital?month=2025-11",
+                        icon: ""
+                    },
+                    {
+                        nome: "Escritor Best Seller - Luana",
+                        link: "https://calendly.com/luanarocha-febracis/suporte_escritor?month=2025-11",
+                        icon: ""
+                    },
+                    {
+                        nome: "Palestra/Mentoria - Michelle",
+                        link: "https://calendly.com/michellecastro-febracis/30min?month=2025-12",
+                        icon: ""
+                    }
+                    // Adicione mais mentores da TURMA 1 aqui
+                ],
+                "TURMA 2": [
+                    {
+                        nome: "Influenciador Digital - Leonardo",
+                        link: "https://calendar.app.google/aY65WhmjohSAqn3R6",
+                        icon: ""
+                    },
+                    {
+                        nome: "Escritor Best Seller - Luana",
+                        link: "https://calendar.app.google/bdA65V5Fy4JKmiAK6",
+                        icon: ""
+                    },
+                    {
+                        nome: "Palestra/Mentoria - Michelle",
+                        link: "https://calendar.app.google/1egzPjhvsj2VRc5W9",
+                        icon: "👩‍🎓"
+                    }
+                    // Adicione mais mentores da TURMA 2 aqui
+                ]
+            };
+
+            // ==========================================
+            // Aplicar Configurações (não editar abaixo)
+            // ==========================================
+
+            // Configurar link da plataforma de vídeos baseado na turma
+            const btnPlataforma = document.getElementById('linkPlataformaVideos');
+            if (btnPlataforma) {
+                // Use linksPorTurma[turmaAluno] para link diferente por turma
+                // OU use linkPlataformaVideos se definiu um link único acima
+                btnPlataforma.href = linksPorTurma[turmaAluno] || linksPorTurma["TURMA 1"];
+            }
+
+            // Configurar links dos mentores baseado na turma
+            const mentoresContainer = document.getElementById('mentoresContainer');
+            if (mentoresContainer) {
+                mentoresContainer.innerHTML = '';
+                
+                // Buscar mentores da turma do aluno
+                const mentoresDaTurma = mentoresPorTurma[turmaAluno] || mentoresPorTurma["TURMA 1"];
+                
+                mentoresDaTurma.forEach(mentor => {
+                    const btnMentor = document.createElement('a');
+                    btnMentor.className = 'btn-mentor';
+                    btnMentor.href = mentor.link;
+                    btnMentor.target = '_blank';
+                    btnMentor.innerHTML = `
+                        <span class="mentor-icon">${mentor.icon}</span>
+                        <span class="mentor-nome">${mentor.nome}</span>
+                        <span class="mentor-arrow">→</span>
+                    `;
+                    mentoresContainer.appendChild(btnMentor);
+                });
+            }
         }
 
         function renderizarFormularios() {

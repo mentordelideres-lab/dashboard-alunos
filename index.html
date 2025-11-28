@@ -36,13 +36,12 @@
         }
 
         .container {
-            width: 100vw !important;
-            max-width: 100vw !important;
-            margin: 0;
-            padding: 0 !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            margin: 0 auto;
+            padding: 0 8px !important;
             box-sizing: border-box;
             overflow-x: hidden !important;
-            position: relative;
         }
 
         /* Logo e Header */
@@ -106,26 +105,22 @@
         .dashboard-card {
             background: rgba(45, 45, 68, 0.5);
             border-radius: 20px;
-            padding: 20px 8px !important;
+            padding: 20px !important;
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255,255,255,0.1);
             box-shadow: 0 20px 60px rgba(0,0,0,0.5);
-            width: 100vw !important;
-            max-width: 100vw !important;
+            width: 100% !important;
+            max-width: 100% !important;
             box-sizing: border-box;
-            margin: 0;
-            overflow-x: hidden !important;
-            position: relative;
+            margin: 0 auto;
         }
 
         #masterContent {
-            width: 100vw !important;
-            max-width: 100vw !important;
+            width: 100% !important;
+            max-width: 100% !important;
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            overflow-x: hidden !important;
-            position: relative;
         }
 
         .input-group {
@@ -411,12 +406,9 @@
         /* Visão Estratégica */
         .strategic-section {
             margin-bottom: 30px;
-            width: 100vw !important;
-            max-width: 100vw !important;
+            width: 100% !important;
+            max-width: 100% !important;
             box-sizing: border-box;
-            padding: 0 8px;
-            overflow-x: hidden !important;
-            position: relative;
         }
 
         .strategic-title {
@@ -463,16 +455,14 @@
         }
 
         .comparison-table {
-            width: 100vw !important;
-            max-width: 100vw !important;
+            width: 100% !important;
+            max-width: 100% !important;
             background: rgba(26, 26, 46, 0.5);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 15px;
-            overflow-x: hidden !important;
+            overflow: hidden;
             margin-bottom: 30px;
             box-sizing: border-box;
-            padding: 0 8px;
-            position: relative;
         }
 
         .comparison-table table {
@@ -622,13 +612,13 @@
         }
 
         .formulario-details-content {
-            padding: 20px 8px !important;
+            padding: 20px 0 !important;
             background: rgba(26, 26, 46, 0.3);
             border-left: 4px solid #0dcaf0;
             width: 100vw !important;
             max-width: 100vw !important;
+            margin-left: calc(-50vw + 50%);
             box-sizing: border-box;
-            margin: 0;
             overflow-x: hidden !important;
             position: relative;
         }
@@ -640,6 +630,8 @@
             margin-top: 15px;
             width: 100% !important;
             max-width: 100% !important;
+            padding: 0 10px;
+            box-sizing: border-box;
         }
 
         @media (max-width: 900px) {

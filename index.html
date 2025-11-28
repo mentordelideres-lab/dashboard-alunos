@@ -624,7 +624,7 @@
         .turmas-comparison {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 12px !important;
+            gap: 10px !important;
             margin-top: 15px;
             width: 100% !important;
             max-width: 100% !important;
@@ -2228,7 +2228,6 @@
                                     turma1Preenchidos.map(aluno => `
                                         <div class="aluno-item">
                                             <div>${aluno.nome}</div>
-                                            <div class="aluno-item-email">${aluno.email}</div>
                                         </div>
                                     `).join('') 
                                     : '<div class="empty-list">Nenhum aluno preencheu</div>'
@@ -2244,7 +2243,6 @@
                                     turma1Pendentes.map(aluno => `
                                         <div class="aluno-item">
                                             <div>${aluno.nome}</div>
-                                            <div class="aluno-item-email">${aluno.email}</div>
                                         </div>
                                     `).join('')
                                     : '<div class="empty-list">Todos preencheram!</div>'
@@ -2267,7 +2265,6 @@
                                     turma2Preenchidos.map(aluno => `
                                         <div class="aluno-item">
                                             <div>${aluno.nome}</div>
-                                            <div class="aluno-item-email">${aluno.email}</div>
                                         </div>
                                     `).join('') 
                                     : '<div class="empty-list">Nenhum aluno preencheu</div>'
@@ -2283,7 +2280,6 @@
                                     turma2Pendentes.map(aluno => `
                                         <div class="aluno-item">
                                             <div>${aluno.nome}</div>
-                                            <div class="aluno-item-email">${aluno.email}</div>
                                         </div>
                                     `).join('')
                                     : '<div class="empty-list">Todos preencheram!</div>'

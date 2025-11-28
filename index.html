@@ -11,19 +11,35 @@
             box-sizing: border-box;
         }
 
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            overflow-x: hidden;
+            margin: 0;
+            padding: 0;
+            width: 100%;
+        }
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
             min-height: 100vh;
-            padding: 3px;
+            padding: 0;
+            margin: 0;
             color: #e4e4e4;
+            overflow-x: hidden;
+            width: 100%;
         }
 
         .container {
-            max-width: 100% !important;
             width: 100% !important;
-            margin: 0 auto;
-            padding: 0 2px !important;
+            max-width: 100% !important;
+            margin: 0;
+            padding: 0 !important;
+            box-sizing: border-box;
+            overflow-x: hidden;
         }
 
         /* Logo e Header */
@@ -87,17 +103,24 @@
         .dashboard-card {
             background: rgba(45, 45, 68, 0.5);
             border-radius: 20px;
-            padding: 20px 5px !important;
+            padding: 20px 2px !important;
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255,255,255,0.1);
             box-shadow: 0 20px 60px rgba(0,0,0,0.5);
             width: 100% !important;
             max-width: 100% !important;
+            box-sizing: border-box;
+            margin: 0;
+            overflow-x: hidden;
         }
 
         #masterContent {
             width: 100% !important;
             max-width: 100% !important;
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
         }
 
         .input-group {
@@ -385,6 +408,9 @@
             margin-bottom: 30px;
             width: 100% !important;
             max-width: 100% !important;
+            box-sizing: border-box;
+            padding: 0 2px;
+            overflow-x: hidden;
         }
 
         .strategic-title {
@@ -438,6 +464,8 @@
             border-radius: 15px;
             overflow: visible !important;
             margin-bottom: 30px;
+            box-sizing: border-box;
+            padding: 0 2px;
         }
 
         .comparison-table table {
@@ -587,11 +615,14 @@
         }
 
         .formulario-details-content {
-            padding: 20px 5px !important;
+            padding: 20px 2px !important;
             background: rgba(26, 26, 46, 0.3);
             border-left: 4px solid #0dcaf0;
-            max-width: 100% !important;
             width: 100% !important;
+            max-width: 100% !important;
+            box-sizing: border-box;
+            margin: 0;
+            overflow-x: hidden;
         }
 
         .turmas-comparison {

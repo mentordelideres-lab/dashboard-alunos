@@ -1453,6 +1453,15 @@
             recursosFiltrados.forEach(recurso => {
                 const card = document.createElement('div');
                 card.className = 'recurso-card';
+                
+                // Garantir que o link está correto
+                let linkFinal = recurso.link;
+                if (linkFinal && linkFinal !== '#') {
+                    // Remover parâmetros desnecessários e garantir que abre corretamente
+                    linkFinal = linkFinal.replace('/edit?usp=sharing', '/view?usp=sharing');
+                    linkFinal = linkFinal.replace('/edit', '/view');
+                }
+                
                 card.innerHTML = `
                     <div class="recurso-header">
                         <span class="recurso-icon">${recurso.icone}</span>
@@ -1462,8 +1471,8 @@
                     </div>
                     ${recurso.categoria ? `<span class="recurso-categoria">${recurso.categoria}</span>` : ''}
                     <p class="recurso-descricao">${recurso.descricao}</p>
-                    <a href="${recurso.link}" target="_blank" class="btn-download">
-                        📥 Baixar PDF
+                    <a href="${linkFinal}" target="_blank" rel="noopener noreferrer" class="btn-download" onclick="console.log('Abrindo PDF:', '${linkFinal}')">
+                        📥 Abrir PDF
                     </a>
                 `;
                 container.appendChild(card);
@@ -1772,7 +1781,8 @@
             try {
                 showMessage('messageBoxModal', 'Salvando...', 'info');
                 
-                await fetch(APPS_SCRIPT_URL, {
+                // Enviar para Apps Script
+                fetch(APPS_SCRIPT_URL, {
                     method: 'POST',
                     mode: 'no-cors',
                     headers: { 'Content-Type': 'application/json' },
@@ -1783,18 +1793,13 @@
                     })
                 });
                 
-                // Atualizar dados locais
-                alunoData.nomePreferido = nomePreferido;
-                alunoData.nomeExibicao = nomePreferido;
-                
-                // Atualizar exibição
-                document.getElementById('alunoNome').textContent = `Olá, ${nomePreferido}!`;
-                
-                showMessage('messageBoxModal', '✅ Nome atualizado com sucesso!', 'success');
+                // Aguardar 2 segundos para o Apps Script processar
+                showMessage('messageBoxModal', '✅ Nome salvo! Atualizando página...', 'success');
                 
                 setTimeout(() => {
-                    fecharModalEditarNome();
-                }, 1500);
+                    // Recarregar a página para pegar os dados atualizados
+                    window.location.reload();
+                }, 2000);
                 
             } catch (error) {
                 console.error('Erro:', error);

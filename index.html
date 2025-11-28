@@ -514,6 +514,122 @@
             color: #ff3b30;
         }
 
+        /* Drill-down de Formulários */
+        .formulario-row {
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .formulario-row:hover {
+            background: rgba(13, 202, 240, 0.05) !important;
+        }
+
+        .formulario-row.expanded {
+            background: rgba(13, 202, 240, 0.1) !important;
+        }
+
+        .expand-icon-table {
+            display: inline-block;
+            margin-left: 10px;
+            transition: transform 0.3s;
+            color: #0dcaf0;
+            font-weight: bold;
+        }
+
+        .expanded .expand-icon-table {
+            transform: rotate(180deg);
+        }
+
+        .formulario-details {
+            display: none;
+        }
+
+        .formulario-details.active {
+            display: block;
+        }
+
+        .formulario-details-content {
+            padding: 25px;
+            background: rgba(26, 26, 46, 0.3);
+            border-left: 4px solid #0dcaf0;
+        }
+
+        .turmas-comparison {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+            margin-top: 15px;
+        }
+
+        .turma-alunos-box {
+            background: rgba(45, 45, 68, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .turma-alunos-title {
+            font-size: 1.2em;
+            font-weight: 700;
+            color: #0dcaf0;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .alunos-section {
+            margin-bottom: 20px;
+        }
+
+        .alunos-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .alunos-section-title {
+            font-size: 1em;
+            font-weight: 600;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .alunos-section-title.preenchidos {
+            color: #34c759;
+        }
+
+        .alunos-section-title.pendentes {
+            color: #ffc107;
+        }
+
+        .aluno-item {
+            padding: 8px 12px;
+            margin: 5px 0;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 8px;
+            font-size: 0.9em;
+            color: #e4e4e4;
+            transition: all 0.2s;
+        }
+
+        .aluno-item:hover {
+            background: rgba(255, 255, 255, 0.06);
+            transform: translateX(5px);
+        }
+
+        .aluno-item-email {
+            font-size: 0.85em;
+            color: #b8b8b8;
+            margin-top: 3px;
+        }
+
+        .empty-list {
+            color: #808080;
+            font-style: italic;
+            padding: 10px;
+            text-align: center;
+        }
+
         /* Progress Section */
         .progress-section {
             background: rgba(45, 45, 68, 0.5);
@@ -1834,6 +1950,7 @@
                 <!-- Comparativo Detalhado -->
                 <div class="strategic-section">
                     <h3 class="strategic-title">📈 Comparativo por Formulário</h3>
+                    <p style="color: #b8b8b8; margin-bottom: 15px; font-size: 0.9em;">💡 Clique em um formulário para ver a lista detalhada de alunos</p>
                     <div class="comparison-table">
                         <table>
                             <thead>
@@ -1846,9 +1963,10 @@
                             </thead>
                             <tbody>
                                 ${analiseFormularios.map((form, idx) => `
-                                    <tr>
+                                    <tr class="formulario-row" id="form-row-${idx}" onclick="toggleFormularioDetalhes(${idx})">
                                         <td>
                                             <strong>${FORMULARIOS[idx].nome}</strong>
+                                            <span class="expand-icon-table">▼</span>
                                             <div class="progress-bar-mini">
                                                 <div class="progress-fill-mini" style="width: ${form.mediaGeral}%"></div>
                                             </div>
@@ -1863,6 +1981,13 @@
                                             <span class="gap-indicator ${form.gap > 0 ? 'gap-positive' : 'gap-negative'}">
                                                 ${form.gap > 0 ? '+' : ''}${form.gap}%
                                             </span>
+                                        </td>
+                                    </tr>
+                                    <tr class="formulario-details" id="form-details-${idx}">
+                                        <td colspan="4">
+                                            <div class="formulario-details-content">
+                                                ${renderizarAlunosPorFormulario(idx)}
+                                            </div>
                                         </td>
                                     </tr>
                                 `).join('')}
@@ -1944,6 +2069,108 @@
             });
             
             return analise;
+        }
+
+        function toggleFormularioDetalhes(idx) {
+            const row = document.getElementById(`form-row-${idx}`);
+            const details = document.getElementById(`form-details-${idx}`);
+            
+            // Toggle classes
+            row.classList.toggle('expanded');
+            details.classList.toggle('active');
+        }
+
+        function renderizarAlunosPorFormulario(formIdx) {
+            // Separar alunos por turma e status
+            const turma1Preenchidos = allStudentsData.turma1.filter(a => 
+                a.formularios[formIdx] === 'Preenchido'
+            );
+            const turma1Pendentes = allStudentsData.turma1.filter(a => 
+                a.formularios[formIdx] !== 'Preenchido'
+            );
+            
+            const turma2Preenchidos = allStudentsData.turma2.filter(a => 
+                a.formularios[formIdx] === 'Preenchido'
+            );
+            const turma2Pendentes = allStudentsData.turma2.filter(a => 
+                a.formularios[formIdx] !== 'Preenchido'
+            );
+            
+            return `
+                <div class="turmas-comparison">
+                    <!-- Turma 1 -->
+                    <div class="turma-alunos-box">
+                        <div class="turma-alunos-title">📊 Turma 1 (${allStudentsData.turma1.length} alunos)</div>
+                        
+                        <!-- Preenchidos -->
+                        <div class="alunos-section">
+                            <div class="alunos-section-title preenchidos">
+                                ✅ Preenchidos (${turma1Preenchidos.length})
+                            </div>
+                            ${turma1Preenchidos.length > 0 ? 
+                                turma1Preenchidos.map(aluno => `
+                                    <div class="aluno-item">
+                                        <div>${aluno.nome}</div>
+                                        <div class="aluno-item-email">${aluno.email}</div>
+                                    </div>
+                                `).join('') 
+                                : '<div class="empty-list">Nenhum aluno preencheu</div>'
+                            }
+                        </div>
+                        
+                        <!-- Pendentes -->
+                        ${turma1Pendentes.length > 0 ? `
+                            <div class="alunos-section">
+                                <div class="alunos-section-title pendentes">
+                                    ⏳ Pendentes (${turma1Pendentes.length})
+                                </div>
+                                ${turma1Pendentes.map(aluno => `
+                                    <div class="aluno-item">
+                                        <div>${aluno.nome}</div>
+                                        <div class="aluno-item-email">${aluno.email}</div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        ` : ''}
+                    </div>
+                    
+                    <!-- Turma 2 -->
+                    <div class="turma-alunos-box">
+                        <div class="turma-alunos-title">📊 Turma 2 (${allStudentsData.turma2.length} alunos)</div>
+                        
+                        <!-- Preenchidos -->
+                        <div class="alunos-section">
+                            <div class="alunos-section-title preenchidos">
+                                ✅ Preenchidos (${turma2Preenchidos.length})
+                            </div>
+                            ${turma2Preenchidos.length > 0 ? 
+                                turma2Preenchidos.map(aluno => `
+                                    <div class="aluno-item">
+                                        <div>${aluno.nome}</div>
+                                        <div class="aluno-item-email">${aluno.email}</div>
+                                    </div>
+                                `).join('') 
+                                : '<div class="empty-list">Nenhum aluno preencheu</div>'
+                            }
+                        </div>
+                        
+                        <!-- Pendentes -->
+                        ${turma2Pendentes.length > 0 ? `
+                            <div class="alunos-section">
+                                <div class="alunos-section-title pendentes">
+                                    ⏳ Pendentes (${turma2Pendentes.length})
+                                </div>
+                                ${turma2Pendentes.map(aluno => `
+                                    <div class="aluno-item">
+                                        <div>${aluno.nome}</div>
+                                        <div class="aluno-item-email">${aluno.email}</div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        ` : ''}
+                    </div>
+                </div>
+            `;
         }
 
         function gerarInsights(analiseFormularios, gap, alunosRisco, alunosCem, todosAlunos) {

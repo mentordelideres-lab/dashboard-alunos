@@ -233,6 +233,133 @@
             border-color: rgba(255,255,255,0.5);
         }
 
+        /* Botão Editar Nome e Sair (Aluno) */
+        .aluno-header-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .btn-edit-name {
+            background: rgba(255,255,255,0.1);
+            color: #e4e4e4;
+            padding: 8px 15px;
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9em;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .btn-edit-name:hover {
+            background: rgba(255,255,255,0.2);
+            border-color: rgba(255,255,255,0.4);
+        }
+
+        .logout-btn-aluno {
+            background: rgba(255,255,255,0.1);
+            color: #e4e4e4;
+            padding: 8px 15px;
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9em;
+            transition: all 0.3s;
+        }
+
+        .logout-btn-aluno:hover {
+            background: rgba(255,255,255,0.2);
+            border-color: rgba(255,255,255,0.4);
+        }
+
+        /* Modal de Edição de Nome */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: rgba(45, 45, 68, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 500px;
+            width: 90%;
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+        }
+
+        .modal-header {
+            margin-bottom: 25px;
+        }
+
+        .modal-title {
+            font-size: 1.8em;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 10px;
+        }
+
+        .modal-subtitle {
+            color: #b8b8b8;
+            font-size: 1em;
+        }
+
+        .modal-body {
+            margin-bottom: 25px;
+        }
+
+        .modal-footer {
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn-modal {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-cancel {
+            background: rgba(255,255,255,0.1);
+            color: #e4e4e4;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .btn-cancel:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .btn-save {
+            background: linear-gradient(135deg, #0dcaf0 0%, #0ba8cc 100%);
+            color: white;
+        }
+
+        .btn-save:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(13, 202, 240, 0.4);
+        }
+
         /* Progress Section */
         .progress-section {
             background: rgba(45, 45, 68, 0.5);
@@ -853,6 +980,12 @@
                     <h2 id="alunoNome">Carregando...</h2>
                     <p id="alunoTurma">Turma</p>
                 </div>
+                <div class="aluno-header-actions">
+                    <button class="btn-edit-name" onclick="mostrarModalEditarNome()">
+                        ✏️ Editar Nome
+                    </button>
+                    <button class="logout-btn-aluno" onclick="logout()">Sair</button>
+                </div>
             </div>
 
             <div class="progress-section">
@@ -878,8 +1011,39 @@
 
             <h3 class="section-title">📝 Seus Formulários</h3>
             <div id="formulariosContainer" class="formularios-grid"></div>
+        </div>
 
-            <button class="logout-btn" onclick="logout()">Sair</button>
+        <!-- Modal de Edição de Nome -->
+        <div id="modalEditarNome" class="modal-overlay" onclick="fecharModalEditarNome(event)">
+            <div class="modal-content" onclick="event.stopPropagation()">
+                <div class="modal-header">
+                    <h2 class="modal-title">✏️ Editar Nome</h2>
+                    <p class="modal-subtitle">Como gostaria de ser chamado?</p>
+                </div>
+                <div class="modal-body">
+                    <div id="messageBoxModal"></div>
+                    <div class="input-group">
+                        <label for="nomePreferidoInput">Nome de Exibição:</label>
+                        <input 
+                            type="text" 
+                            id="nomePreferidoInput" 
+                            placeholder="Digite como gostaria de ser chamado"
+                            maxlength="50"
+                        >
+                        <small style="color: #b8b8b8; display: block; margin-top: 5px;">
+                            Este nome aparecerá no seu dashboard
+                        </small>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn-modal btn-cancel" onclick="fecharModalEditarNome()">
+                        Cancelar
+                    </button>
+                    <button class="btn-modal btn-save" onclick="salvarNomePreferido()">
+                        Salvar
+                    </button>
+                </div>
+            </div>
         </div>
 
         <!-- Dashboard Master -->
@@ -1062,13 +1226,16 @@
                 
                 if (emailAluno === email) {
                     const senhaAluno = row.c[9]?.v || '';
+                    const nomeReal = row.c[0]?.v || 'Sem nome';
+                    const nomePreferido = row.c[10]?.v || ''; // Coluna K
                     
                     // Primeiro acesso
                     if (!senhaAluno || senhaAluno === '') {
                         return {
                             primeiroAcesso: true,
                             aluno: {
-                                nome: row.c[0]?.v || 'Sem nome',
+                                nome: nomeReal,
+                                nomePreferido: nomePreferido,
                                 email: emailAluno,
                                 turma: turma
                             }
@@ -1080,7 +1247,9 @@
                         return {
                             primeiroAcesso: false,
                             aluno: {
-                                nome: row.c[0]?.v || 'Sem nome',
+                                nome: nomeReal,
+                                nomePreferido: nomePreferido,
+                                nomeExibicao: nomePreferido || nomeReal,
                                 email: emailAluno,
                                 turma: turma,
                                 formularios: [
@@ -1250,7 +1419,8 @@
         function mostrarDashboard() {
             mostrarTela('dashboardScreen');
 
-            document.getElementById('alunoNome').textContent = `Olá, ${alunoData.nome}!`;
+            const nomeParaExibir = alunoData.nomeExibicao || alunoData.nome;
+            document.getElementById('alunoNome').textContent = `Olá, ${nomeParaExibir}!`;
             document.getElementById('alunoTurma').textContent = alunoData.turma;
 
             const preenchidos = alunoData.formularios.filter(f => f === 'Preenchido').length;
@@ -1562,6 +1732,74 @@
             const className = type === 'error' ? 'error-message' : 
                              type === 'success' ? 'success-message' : 'info-message';
             box.innerHTML = `<div class="${className}">${message}</div>`;
+        }
+
+        function mostrarModalEditarNome() {
+            const modal = document.getElementById('modalEditarNome');
+            const input = document.getElementById('nomePreferidoInput');
+            
+            // Preencher com o nome atual
+            input.value = alunoData.nomePreferido || alunoData.nome;
+            
+            showMessage('messageBoxModal', '', 'clear');
+            modal.classList.add('active');
+            input.focus();
+        }
+
+        function fecharModalEditarNome(event) {
+            // Se clicou no overlay (não no conteúdo)
+            if (!event || event.target.id === 'modalEditarNome') {
+                const modal = document.getElementById('modalEditarNome');
+                modal.classList.remove('active');
+                showMessage('messageBoxModal', '', 'clear');
+            }
+        }
+
+        async function salvarNomePreferido() {
+            const input = document.getElementById('nomePreferidoInput');
+            const nomePreferido = input.value.trim();
+            
+            if (!nomePreferido || nomePreferido === '') {
+                showMessage('messageBoxModal', 'Por favor, digite um nome.', 'error');
+                return;
+            }
+            
+            if (nomePreferido.length > 50) {
+                showMessage('messageBoxModal', 'Nome muito longo. Máximo 50 caracteres.', 'error');
+                return;
+            }
+            
+            try {
+                showMessage('messageBoxModal', 'Salvando...', 'info');
+                
+                await fetch(APPS_SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'salvarNomePreferido',
+                        email: alunoData.email,
+                        nomePreferido: nomePreferido
+                    })
+                });
+                
+                // Atualizar dados locais
+                alunoData.nomePreferido = nomePreferido;
+                alunoData.nomeExibicao = nomePreferido;
+                
+                // Atualizar exibição
+                document.getElementById('alunoNome').textContent = `Olá, ${nomePreferido}!`;
+                
+                showMessage('messageBoxModal', '✅ Nome atualizado com sucesso!', 'success');
+                
+                setTimeout(() => {
+                    fecharModalEditarNome();
+                }, 1500);
+                
+            } catch (error) {
+                console.error('Erro:', error);
+                showMessage('messageBoxModal', 'Erro ao salvar. Tente novamente.', 'error');
+            }
         }
 
         function logout() {

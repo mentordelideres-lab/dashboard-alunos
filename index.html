@@ -436,13 +436,22 @@
             background: rgba(26, 26, 46, 0.5);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 15px;
-            overflow: hidden;
+            overflow: visible !important;
             margin-bottom: 30px;
         }
 
         .comparison-table table {
-            width: 100%;
+            width: 100% !important;
             border-collapse: collapse;
+        }
+
+        .comparison-table tr {
+            width: 100% !important;
+        }
+
+        .comparison-table td {
+            width: 100% !important;
+            max-width: 100% !important;
         }
 
         .comparison-table th {
@@ -569,6 +578,12 @@
 
         .formulario-details.active {
             display: block;
+            width: 100% !important;
+        }
+
+        .formulario-details td {
+            width: 100% !important;
+            max-width: 100% !important;
         }
 
         .formulario-details-content {

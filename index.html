@@ -1728,7 +1728,18 @@
     <script>
         // ==================== CONFIGURAÇÃO ====================
         const PLANILHA_ID = '1OjxHwWh6kWaNgQrCPP57GB_FMs4LVFH3Orbve3ciylQ';
-        const PLANILHA_URL = `https://docs.google.com/spreadsheets/d/${PLANILHA_ID}/gviz/tq?tqx=out:json`;
+        
+        // GIDs de cada aba (configurados corretamente!)
+        const ABAS = {
+            TURMA_1: 1942550026,   // Aba TURMA 1
+            TURMA_2: 811800566,    // Aba TURMA 2
+            RECURSOS: 209666554,   // Aba RECURSOS
+            CONFIG: 129627600      // Aba CONFIG
+        };
+        
+        // URLs para cada aba
+        const getURL = (gid) => `https://docs.google.com/spreadsheets/d/${PLANILHA_ID}/gviz/tq?tqx=out:json&gid=${gid}`;
+
 
         // ==================== DADOS DOS ARQUÉTIPOS ====================
         const ARQUETIPOS_DATA = {
@@ -1889,48 +1900,158 @@
         }
 
         // ==================== CARREGAR DADOS ====================
+        let linksFormularios = {}; // Armazena links dos formulários por turma
+        
         async function carregarDados() {
             try {
-                const response = await fetch(PLANILHA_URL);
-                const text = await response.text();
-                const json = JSON.parse(text.substring(47, text.length - 2));
+                console.log('🔄 Carregando dados de múltiplas abas...');
                 
                 todosAlunos = [];
                 biblioteca = [];
+                linksFormularios = {};
                 
-                json.table.rows.forEach((row, index) => {
-                    if (index === 0) return; // Pula header
+                // ========== PASSO 1: Carregar CONFIG (Links dos formulários) ==========
+                console.log('📋 Carregando CONFIG...');
+                try {
+                    const configResponse = await fetch(getURL(ABAS.CONFIG));
+                    const configText = await configResponse.text();
+                    const configJson = JSON.parse(configText.substring(47, configText.length - 2));
                     
-                    // Na planilha do usuário, coluna A = Nome (não tem coluna "Tipo")
-                    const nome = row.c[0]?.v;
-                    
-                    // Se tem nome preenchido e não é header, é um aluno
-                    if (nome && nome.trim() !== '' && !nome.includes('Nome') && !nome.includes('FORMULARIO')) {
-                        todosAlunos.push({
-                            nome: row.c[0]?.v || '',                    // Coluna A
-                            email: row.c[1]?.v || '',                   // Coluna B
-                            turma: row.c[2]?.v || '',                   // Coluna C
-                            nomePreferido: row.c[10]?.v || row.c[0]?.v.split(' ')[0] || '', // Coluna K
-                            senha: row.c[9]?.v || '',                   // Coluna J
-                            codigoRecuperacao: '',                      // Não existe na planilha
-                            primeiroAcesso: 'Não',                     // Todos direto no dashboard
-                            arquetipo: row.c[11]?.v || '',              // Coluna L
-                            formularios: [
-                                { nome: 'Anamnese Geral + Visão de Futuro', status: row.c[3]?.v || 'Pendente', link: '' },
-                                { nome: 'Jornada do Herói', status: row.c[4]?.v || 'Pendente', link: '' },
-                                { nome: 'Escritor Best Seller', status: row.c[5]?.v || 'Pendente', link: '' },
-                                { nome: 'Influenciador Digital', status: row.c[6]?.v || 'Pendente', link: '' },
-                                { nome: 'Palestrante Poderoso', status: row.c[7]?.v || 'Pendente', link: '' },
-                                { nome: 'Mentor High Ticket', status: row.c[8]?.v || 'Pendente', link: '' }
-                            ]
-                        });
-                    }
-                });
+                    configJson.table.rows.forEach((row, index) => {
+                        if (index === 0) return; // Pula header
+                        
+                        const turma = row.c[0]?.v; // Coluna A = TURMA
+                        if (turma && (turma.includes('TURMA 1') || turma.includes('TURMA 2'))) {
+                            linksFormularios[turma] = {
+                                anamnese: row.c[1]?.v || '',           // Coluna B
+                                jornada: row.c[2]?.v || '',            // Coluna C
+                                escritor: row.c[3]?.v || '',           // Coluna D
+                                influenciador: row.c[4]?.v || '',      // Coluna E
+                                palestrante: row.c[5]?.v || '',        // Coluna F
+                                mentor: row.c[6]?.v || ''              // Coluna G
+                            };
+                            console.log(`✅ Links carregados para ${turma}:`, linksFormularios[turma]);
+                        }
+                    });
+                } catch (erro) {
+                    console.warn('⚠️ Erro ao carregar CONFIG:', erro);
+                }
                 
-                console.log('✅ Dados carregados:', todosAlunos.length, 'alunos e', biblioteca.length, 'recursos');
+                // ========== PASSO 2: Carregar TURMA 1 ==========
+                console.log('👥 Carregando TURMA 1...');
+                try {
+                    const t1Response = await fetch(getURL(ABAS.TURMA_1));
+                    const t1Text = await t1Response.text();
+                    const t1Json = JSON.parse(t1Text.substring(47, t1Text.length - 2));
+                    
+                    t1Json.table.rows.forEach((row, index) => {
+                        if (index === 0) return; // Pula header
+                        
+                        const nome = row.c[0]?.v;
+                        if (nome && nome.trim() !== '' && !nome.includes('Nome')) {
+                            const turma = row.c[2]?.v || 'TURMA 1';
+                            const links = linksFormularios[turma] || linksFormularios['TURMA 1'] || {};
+                            
+                            todosAlunos.push({
+                                nome: nome,
+                                email: row.c[1]?.v || '',
+                                turma: turma,
+                                nomePreferido: row.c[10]?.v || nome.split(' ')[0] || '',
+                                senha: row.c[9]?.v || '',
+                                codigoRecuperacao: '',
+                                primeiroAcesso: 'Não',
+                                arquetipo: row.c[11]?.v || '',
+                                formularios: [
+                                    { nome: 'Anamnese Geral + Visão de Futuro', status: row.c[3]?.v || 'Pendente', link: links.anamnese || '' },
+                                    { nome: 'Jornada do Herói', status: row.c[4]?.v || 'Pendente', link: links.jornada || '' },
+                                    { nome: 'Escritor Best Seller', status: row.c[5]?.v || 'Pendente', link: links.escritor || '' },
+                                    { nome: 'Influenciador Digital', status: row.c[6]?.v || 'Pendente', link: links.influenciador || '' },
+                                    { nome: 'Palestrante Poderoso', status: row.c[7]?.v || 'Pendente', link: links.palestrante || '' },
+                                    { nome: 'Mentor High Ticket', status: row.c[8]?.v || 'Pendente', link: links.mentor || '' }
+                                ]
+                            });
+                        }
+                    });
+                    console.log(`✅ TURMA 1 carregada: ${t1Json.table.rows.length - 1} alunos`);
+                } catch (erro) {
+                    console.error('❌ Erro ao carregar TURMA 1:', erro);
+                }
+                
+                // ========== PASSO 3: Carregar TURMA 2 ==========
+                console.log('👥 Carregando TURMA 2...');
+                try {
+                    const t2Response = await fetch(getURL(ABAS.TURMA_2));
+                    const t2Text = await t2Response.text();
+                    const t2Json = JSON.parse(t2Text.substring(47, t2Text.length - 2));
+                    
+                    t2Json.table.rows.forEach((row, index) => {
+                        if (index === 0) return; // Pula header
+                        
+                        const nome = row.c[0]?.v;
+                        if (nome && nome.trim() !== '' && !nome.includes('Nome')) {
+                            const turma = row.c[2]?.v || 'TURMA 2';
+                            const links = linksFormularios[turma] || linksFormularios['TURMA 2'] || {};
+                            
+                            todosAlunos.push({
+                                nome: nome,
+                                email: row.c[1]?.v || '',
+                                turma: turma,
+                                nomePreferido: row.c[10]?.v || nome.split(' ')[0] || '',
+                                senha: row.c[9]?.v || '',
+                                codigoRecuperacao: '',
+                                primeiroAcesso: 'Não',
+                                arquetipo: row.c[11]?.v || '',
+                                formularios: [
+                                    { nome: 'Anamnese Geral + Visão de Futuro', status: row.c[3]?.v || 'Pendente', link: links.anamnese || '' },
+                                    { nome: 'Jornada do Herói', status: row.c[4]?.v || 'Pendente', link: links.jornada || '' },
+                                    { nome: 'Escritor Best Seller', status: row.c[5]?.v || 'Pendente', link: links.escritor || '' },
+                                    { nome: 'Influenciador Digital', status: row.c[6]?.v || 'Pendente', link: links.influenciador || '' },
+                                    { nome: 'Palestrante Poderoso', status: row.c[7]?.v || 'Pendente', link: links.palestrante || '' },
+                                    { nome: 'Mentor High Ticket', status: row.c[8]?.v || 'Pendente', link: links.mentor || '' }
+                                ]
+                            });
+                        }
+                    });
+                    console.log(`✅ TURMA 2 carregada: ${t2Json.table.rows.length - 1} alunos`);
+                } catch (erro) {
+                    console.error('❌ Erro ao carregar TURMA 2:', erro);
+                }
+                
+                // ========== PASSO 4: Carregar RECURSOS ==========
+                console.log('📚 Carregando RECURSOS...');
+                try {
+                    const recResponse = await fetch(getURL(ABAS.RECURSOS));
+                    const recText = await recResponse.text();
+                    const recJson = JSON.parse(recText.substring(47, recText.length - 2));
+                    
+                    recJson.table.rows.forEach((row, index) => {
+                        if (index === 0) return; // Pula header
+                        
+                        const titulo = row.c[0]?.v;
+                        if (titulo && titulo.trim() !== '' && !titulo.includes('Nome do Arquivo')) {
+                            biblioteca.push({
+                                titulo: titulo,
+                                turma: row.c[1]?.v || '',         // Coluna B
+                                link: row.c[2]?.v || '',          // Coluna C
+                                descricao: row.c[3]?.v || '',     // Coluna D
+                                categoria: row.c[4]?.v || '',     // Coluna E
+                                emoji: row.c[5]?.v || '📄'        // Coluna F
+                            });
+                        }
+                    });
+                    console.log(`✅ RECURSOS carregados: ${biblioteca.length} itens`);
+                } catch (erro) {
+                    console.warn('⚠️ Erro ao carregar RECURSOS:', erro);
+                }
+                
+                console.log('✅ TOTAL:', todosAlunos.length, 'alunos e', biblioteca.length, 'recursos');
+                console.log('📊 TURMA 1:', todosAlunos.filter(a => a.turma.includes('TURMA 1')).length);
+                console.log('📊 TURMA 2:', todosAlunos.filter(a => a.turma.includes('TURMA 2')).length);
+                
                 return true;
             } catch (erro) {
-                console.error('❌ Erro ao carregar dados:', erro);
+                console.error('❌ Erro geral ao carregar dados:', erro);
+                alert('⚠️ Erro ao carregar dados da planilha!\n\nVerifique se:\n1. A planilha está pública\n2. Os GIDs das abas estão corretos\n3. Você tem acesso à planilha');
                 return false;
             }
         }
@@ -2024,15 +2145,8 @@
                 nomePreferido: aluno.nomePreferido,
                 email: emailAluno,
                 turma: turma,
-                arquetipo: aluno.arquetipo || '',  // ← CORREÇÃO 1 APLICADA!
-                formularios: [
-                    { nome: 'Trajetória de Carreira', status: aluno.formularios[0].status, link: aluno.formularios[0].link },
-                    { nome: 'Roda da Vida e do Trabalho', status: aluno.formularios[1].status, link: aluno.formularios[1].link },
-                    { nome: 'Inventário de Personalidade', status: aluno.formularios[2].status, link: aluno.formularios[2].link },
-                    { nome: 'Análise Profunda', status: aluno.formularios[3].status, link: aluno.formularios[3].link },
-                    { nome: 'Portfólio de Liderança', status: aluno.formularios[4].status, link: aluno.formularios[4].link },
-                    { nome: 'Plano de Desenvolvimento', status: aluno.formularios[5].status, link: aluno.formularios[5].link }
-                ],
+                arquetipo: aluno.arquetipo || '',
+                formularios: aluno.formularios,  // Usa os formulários que já vêm da planilha com nomes corretos
                 primeiroAcesso: aluno.primeiroAcesso === 'Sim'
             };
         }
@@ -2710,8 +2824,8 @@
 
         function renderizarDetalhesFormulario(nomeFormulario, nomeTurma) {
             const alunosTurma = todosAlunos.filter(a => a.turma === nomeTurma);
-            const formIndex = ['Trajetória de Carreira', 'Roda da Vida e do Trabalho', 'Inventário de Personalidade', 
-                               'Análise Profunda', 'Portfólio de Liderança', 'Plano de Desenvolvimento'].indexOf(nomeFormulario);
+            const formIndex = ['Anamnese Geral + Visão de Futuro', 'Jornada do Herói', 'Escritor Best Seller', 
+                               'Influenciador Digital', 'Palestrante Poderoso', 'Mentor High Ticket'].indexOf(nomeFormulario);
 
             const preenchidos = alunosTurma.filter(a => a.formularios[formIndex].status === 'Preenchido');
             const pendentes = alunosTurma.filter(a => a.formularios[formIndex].status === 'Pendente');

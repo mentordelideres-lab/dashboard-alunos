@@ -3270,7 +3270,13 @@
                 tab.addEventListener('click', () => {
                     document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
                     tab.classList.add('active');
-                    renderizarAlunos(tab.dataset.tab);
+                    const filtro = tab.dataset.tab;
+                    
+                    if (filtro === 'todos') {
+                        renderizarVisaoGeral();
+                    } else {
+                        renderizarAlunos(filtro);
+                    }
                 });
             });
         }
@@ -3327,6 +3333,396 @@
                     </div>
                 `;
             }).join('');
+        }
+
+        // ==================== VISÃO GERAL COMPLETA ====================
+        
+        function renderizarVisaoGeral() {
+            const container = document.getElementById('alunosContainer');
+            
+            // Calcular métricas estratégicas
+            const totalAlunos = todosAlunos.length;
+            
+            // Alunos com 100%
+            const alunosCem = todosAlunos.filter(a => {
+                const prog = Math.round((a.formularios.filter(f => f.status === 'Preenchido').length / 6) * 100);
+                return prog === 100;
+            }).length;
+            
+            // Alunos em risco (0%)
+            const alunosRisco = todosAlunos.filter(a => {
+                const prog = Math.round((a.formularios.filter(f => f.status === 'Preenchido').length / 6) * 100);
+                return prog === 0;
+            }).length;
+            
+            // Médias
+            const turma1Alunos = todosAlunos.filter(a => a.turma === 'TURMA 1');
+            const turma2Alunos = todosAlunos.filter(a => a.turma === 'TURMA 2');
+            const turma1Media = calcularMedia(turma1Alunos);
+            const turma2Media = calcularMedia(turma2Alunos);
+            const gap = turma1Media - turma2Media;
+            
+            // Análise por formulário
+            const analiseFormularios = analisarFormulariosPorTurma();
+            
+            // Top 5 e Bottom 5
+            const topAlunos = todosAlunos.filter(a => {
+                const prog = Math.round((a.formularios.filter(f => f.status === 'Preenchido').length / 6) * 100);
+                return prog === 100;
+            }).slice(0, 5);
+            const alunosEmRisco = todosAlunos.filter(a => {
+                const prog = Math.round((a.formularios.filter(f => f.status === 'Preenchido').length / 6) * 100);
+                return prog === 0;
+            });
+            
+            container.innerHTML = `
+                <!-- KPIs Executivos -->
+                <div class="strategic-section">
+                    <h3 class="strategic-title">📊 Indicadores Executivos</h3>
+                    <div class="kpi-grid">
+                        <div class="kpi-card">
+                            <div class="kpi-label">Taxa de Conclusão Total</div>
+                            <div class="kpi-value">${alunosCem}</div>
+                            <div class="kpi-sublabel">${Math.round((alunosCem/totalAlunos)*100)}% dos ${totalAlunos} alunos</div>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-label">Alunos em Risco</div>
+                            <div class="kpi-value" style="color: ${alunosRisco > 0 ? '#ff3b30' : '#34c759'};">${alunosRisco}</div>
+                            <div class="kpi-sublabel">0% de progresso</div>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-label">Gap Entre Turmas</div>
+                            <div class="kpi-value" style="color: ${Math.abs(gap) > 30 ? '#ff3b30' : Math.abs(gap) > 15 ? '#ffc107' : '#34c759'};">${Math.abs(gap)}%</div>
+                            <div class="kpi-sublabel">Turma 1 vs Turma 2</div>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-label">Média Geral</div>
+                            <div class="kpi-value">${calcularMedia(todosAlunos)}%</div>
+                            <div class="kpi-sublabel">Todas as turmas</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Comparativo Detalhado -->
+                <div class="strategic-section">
+                    <h3 class="strategic-title">📈 Comparativo por Formulário</h3>
+                    <p style="color: #b8b8b8; margin-bottom: 15px; font-size: 0.9em;">💡 Clique em um formulário para ver a lista detalhada de alunos</p>
+                    <div class="comparison-table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Formulário</th>
+                                    <th>Turma 1 (${turma1Alunos.length} alunos)</th>
+                                    <th>Turma 2 (${turma2Alunos.length} alunos)</th>
+                                    <th>Gap</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${analiseFormularios.map((form, idx) => `
+                                    <tr class="formulario-row" id="form-row-${idx}" onclick="toggleFormularioDetalhes(${idx})">
+                                        <td>
+                                            <strong>${formularioNomes[idx]}</strong>
+                                            <span class="expand-icon-table">▼</span>
+                                            <div class="progress-bar-mini">
+                                                <div class="progress-fill-mini" style="width: ${form.mediaGeral}%"></div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <strong>${form.turma1Preenchidos}</strong> (${form.turma1Percent}%)
+                                        </td>
+                                        <td>
+                                            <strong>${form.turma2Preenchidos}</strong> (${form.turma2Percent}%)
+                                        </td>
+                                        <td>
+                                            <span class="gap-indicator ${form.gap > 0 ? 'gap-positive' : 'gap-negative'}">
+                                                ${form.gap > 0 ? '+' : ''}${form.gap}%
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    <tr class="formulario-details" id="form-details-${idx}">
+                                        <td colspan="4">
+                                            <div class="formulario-details-content">
+                                                ${renderizarAlunosPorFormulario(idx)}
+                                            </div>
+                                        </td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Insights Estratégicos -->
+                <div class="strategic-section">
+                    <h3 class="strategic-title">💡 Insights e Recomendações</h3>
+                    ${gerarInsights(analiseFormularios, gap, alunosRisco, alunosCem, todosAlunos)}
+                </div>
+
+                <!-- Listas de Destaques e Atenção -->
+                <div class="strategic-section">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+                        <!-- Top Performers -->
+                        ${topAlunos.length > 0 ? `
+                            <div class="formulario-card">
+                                <h3 style="margin-bottom: 15px;">🏆 Alunos com 100%</h3>
+                                ${topAlunos.slice(0, 5).map(aluno => `
+                                    <div style="padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                                        <div style="font-weight: 600;">${aluno.nomePreferido || aluno.nome}</div>
+                                        <div style="font-size: 0.85em; color: #b8b8b8;">${aluno.turma}</div>
+                                    </div>
+                                `).join('')}
+                                ${alunosCem > 5 ? `<p style="margin-top: 10px; color: #b8b8b8; font-size: 0.9em;">+ ${alunosCem - 5} alunos com 100%</p>` : ''}
+                            </div>
+                        ` : ''}
+                        
+                        <!-- Alunos em Risco -->
+                        ${alunosEmRisco.length > 0 ? `
+                            <div class="formulario-card">
+                                <h3 style="margin-bottom: 15px;">⚠️ Alunos em Risco (0%)</h3>
+                                ${alunosEmRisco.slice(0, 5).map(aluno => `
+                                    <div style="padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                                        <div style="font-weight: 600;">${aluno.nomePreferido || aluno.nome}</div>
+                                        <div style="font-size: 0.85em; color: #b8b8b8;">${aluno.turma}</div>
+                                    </div>
+                                `).join('')}
+                                ${alunosRisco > 5 ? `<p style="margin-top: 10px; color: #b8b8b8; font-size: 0.9em;">+ ${alunosRisco - 5} alunos precisam de atenção</p>` : ''}
+                            </div>
+                        ` : ''}
+                    </div>
+                </div>
+            `;
+        }
+
+        function analisarFormulariosPorTurma() {
+            const analise = [];
+            const turma1Alunos = todosAlunos.filter(a => a.turma === 'TURMA 1');
+            const turma2Alunos = todosAlunos.filter(a => a.turma === 'TURMA 2');
+            
+            formularioNomes.forEach((nome, idx) => {
+                // Turma 1
+                const turma1Preenchidos = turma1Alunos.filter(a => 
+                    a.formularios[idx].status === 'Preenchido'
+                ).length;
+                const turma1Percent = turma1Alunos.length > 0 ? Math.round((turma1Preenchidos / turma1Alunos.length) * 100) : 0;
+                
+                // Turma 2
+                const turma2Preenchidos = turma2Alunos.filter(a => 
+                    a.formularios[idx].status === 'Preenchido'
+                ).length;
+                const turma2Percent = turma2Alunos.length > 0 ? Math.round((turma2Preenchidos / turma2Alunos.length) * 100) : 0;
+                
+                // Gap e média
+                const gap = turma1Percent - turma2Percent;
+                const mediaGeral = Math.round(((turma1Preenchidos + turma2Preenchidos) / 
+                    (turma1Alunos.length + turma2Alunos.length)) * 100);
+                
+                analise.push({
+                    turma1Preenchidos,
+                    turma1Percent,
+                    turma2Preenchidos,
+                    turma2Percent,
+                    gap,
+                    mediaGeral
+                });
+            });
+            
+            return analise;
+        }
+
+        function toggleFormularioDetalhes(idx) {
+            const row = document.getElementById(`form-row-${idx}`);
+            const details = document.getElementById(`form-details-${idx}`);
+            
+            // Toggle classes
+            row.classList.toggle('expanded');
+            details.classList.toggle('active');
+        }
+
+        function renderizarAlunosPorFormulario(formIdx) {
+            const turma1Alunos = todosAlunos.filter(a => a.turma === 'TURMA 1');
+            const turma2Alunos = todosAlunos.filter(a => a.turma === 'TURMA 2');
+            
+            // Separar alunos por turma e status
+            const turma1Preenchidos = turma1Alunos.filter(a => 
+                a.formularios[formIdx].status === 'Preenchido'
+            );
+            const turma1Pendentes = turma1Alunos.filter(a => 
+                a.formularios[formIdx].status !== 'Preenchido'
+            );
+            
+            const turma2Preenchidos = turma2Alunos.filter(a => 
+                a.formularios[formIdx].status === 'Preenchido'
+            );
+            const turma2Pendentes = turma2Alunos.filter(a => 
+                a.formularios[formIdx].status !== 'Preenchido'
+            );
+            
+            return `
+                <div class="turmas-comparison">
+                    <!-- Turma 1 -->
+                    <div class="turma-alunos-box">
+                        <div class="turma-alunos-title">📊 Turma 1 (${turma1Alunos.length} alunos)</div>
+                        
+                        <div class="turma-alunos-content">
+                            <!-- Preenchidos -->
+                            <div class="alunos-section">
+                                <div class="alunos-section-title preenchidos">
+                                    ✅ Preenchidos (${turma1Preenchidos.length})
+                                </div>
+                                ${turma1Preenchidos.length > 0 ? 
+                                    turma1Preenchidos.map(aluno => `
+                                        <div class="aluno-item">
+                                            <div>${aluno.nomePreferido || aluno.nome}</div>
+                                        </div>
+                                    `).join('') 
+                                    : '<div class="empty-list">Nenhum aluno preencheu</div>'
+                                }
+                            </div>
+                            
+                            <!-- Pendentes -->
+                            <div class="alunos-section">
+                                <div class="alunos-section-title pendentes">
+                                    ⏳ Pendentes (${turma1Pendentes.length})
+                                </div>
+                                ${turma1Pendentes.length > 0 ? 
+                                    turma1Pendentes.map(aluno => `
+                                        <div class="aluno-item">
+                                            <div>${aluno.nomePreferido || aluno.nome}</div>
+                                        </div>
+                                    `).join('')
+                                    : '<div class="empty-list">Todos preencheram!</div>'
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Turma 2 -->
+                    <div class="turma-alunos-box">
+                        <div class="turma-alunos-title">📊 Turma 2 (${turma2Alunos.length} alunos)</div>
+                        
+                        <div class="turma-alunos-content">
+                            <!-- Preenchidos -->
+                            <div class="alunos-section">
+                                <div class="alunos-section-title preenchidos">
+                                    ✅ Preenchidos (${turma2Preenchidos.length})
+                                </div>
+                                ${turma2Preenchidos.length > 0 ? 
+                                    turma2Preenchidos.map(aluno => `
+                                        <div class="aluno-item">
+                                            <div>${aluno.nomePreferido || aluno.nome}</div>
+                                        </div>
+                                    `).join('') 
+                                    : '<div class="empty-list">Nenhum aluno preencheu</div>'
+                                }
+                            </div>
+                            
+                            <!-- Pendentes -->
+                            <div class="alunos-section">
+                                <div class="alunos-section-title pendentes">
+                                    ⏳ Pendentes (${turma2Pendentes.length})
+                                </div>
+                                ${turma2Pendentes.length > 0 ? 
+                                    turma2Pendentes.map(aluno => `
+                                        <div class="aluno-item">
+                                            <div>${aluno.nomePreferido || aluno.nome}</div>
+                                        </div>
+                                    `).join('')
+                                    : '<div class="empty-list">Todos preencheram!</div>'
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function gerarInsights(analiseFormularios, gap, alunosRisco, alunosCem, todosAlunos) {
+            let insights = '';
+            
+            // Insight sobre gap
+            if (Math.abs(gap) > 30) {
+                const turmaFrente = gap > 0 ? 'Turma 1' : 'Turma 2';
+                insights += `
+                    <div class="insight-box">
+                        <h4>⚠️ Gap Significativo Entre Turmas</h4>
+                        <p>A ${turmaFrente} está ${Math.abs(gap)}% à frente. Considere:</p>
+                        <p>• Sessões de mentoria extras para a turma com menor desempenho</p>
+                        <p>• Identificar dificuldades específicas</p>
+                        <p>• Ajustar ritmo ou materiais de apoio</p>
+                    </div>
+                `;
+            } else if (Math.abs(gap) > 15) {
+                const turmaFrente = gap > 0 ? 'Turma 1' : 'Turma 2';
+                insights += `
+                    <div class="insight-box">
+                        <h4>📊 Diferença Moderada Entre Turmas</h4>
+                        <p>A ${turmaFrente} está ${Math.abs(gap)}% à frente. Gap aceitável, mas monitore a evolução.</p>
+                    </div>
+                `;
+            }
+            
+            // Insight sobre alunos em risco
+            if (alunosRisco > 0) {
+                const percentRisco = Math.round((alunosRisco / todosAlunos.length) * 100);
+                insights += `
+                    <div class="insight-box">
+                        <h4>⚠️ Alunos Sem Progresso</h4>
+                        <p>${alunosRisco} alunos (${percentRisco}%) não iniciaram nenhum formulário.</p>
+                        <p><strong>Ação recomendada:</strong> Contato individual urgente para entender barreiras.</p>
+                    </div>
+                `;
+            }
+            
+            // Identificar formulário mais crítico
+            const formCritico = analiseFormularios.reduce((min, curr, idx) => 
+                curr.mediaGeral < min.mediaGeral ? {mediaGeral: curr.mediaGeral, idx} : min,
+                {mediaGeral: 100, idx: 0}
+            );
+            
+            if (formCritico.mediaGeral < 50) {
+                insights += `
+                    <div class="insight-box">
+                        <h4>🎯 Formulário com Menor Adesão</h4>
+                        <p><strong>${formularioNomes[formCritico.idx]}</strong> - apenas ${formCritico.mediaGeral}% de conclusão.</p>
+                        <p><strong>Recomendação:</strong> Revisar dificuldade, clareza das instruções ou oferecer suporte adicional.</p>
+                    </div>
+                `;
+            }
+            
+            // Celebração se houver muitos com 100%
+            if (alunosCem > 0) {
+                const percentCem = Math.round((alunosCem / todosAlunos.length) * 100);
+                if (percentCem >= 20) {
+                    insights += `
+                        <div class="insight-box">
+                            <h4>🎉 Excelente Engajamento!</h4>
+                            <p>${alunosCem} alunos (${percentCem}%) completaram 100% dos formulários!</p>
+                            <p>Continue o trabalho excelente com esse grupo.</p>
+                        </div>
+                    `;
+                }
+            }
+            
+            // Se não houver insights críticos, dar mensagem positiva
+            if (insights === '') {
+                insights = `
+                    <div class="insight-box">
+                        <h4>✅ Sistema Funcionando Bem</h4>
+                        <p>Não há alertas críticos no momento. Continue monitorando o progresso regularmente.</p>
+                    </div>
+                `;
+            }
+            
+            return insights;
+        }
+
+        function calcularMedia(alunos) {
+            if (alunos.length === 0) return 0;
+            const soma = alunos.reduce((acc, aluno) => {
+                const prog = Math.round((aluno.formularios.filter(f => f.status === 'Preenchido').length / 6) * 100);
+                return acc + prog;
+            }, 0);
+            return Math.round(soma / alunos.length);
         }
 
         // ==================== FUNÇÕES NOVAS DO MASTER ====================

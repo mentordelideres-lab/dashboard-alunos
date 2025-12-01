@@ -1393,6 +1393,198 @@
                 width: 100%;
             }
         }
+        /* ==================== SEÇÃO ARQUÉTIPO ==================== */
+
+.arquetipo-section {
+    background: rgba(45, 45, 68, 0.5);
+    padding: 30px;
+    border-radius: 20px;
+    margin-bottom: 30px;
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+.arquetipo-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid rgba(13, 202, 240, 0.3);
+}
+
+.arquetipo-icon-header {
+    font-size: 2.5em;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+.arquetipo-title-main {
+    font-size: 2em;
+    font-weight: 700;
+    color: #0dcaf0;
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.arquetipo-card {
+    background: linear-gradient(135deg, rgba(26, 26, 46, 0.8) 0%, rgba(26, 26, 46, 0.4) 100%);
+    border: 2px solid rgba(13, 202, 240, 0.3);
+    border-radius: 20px;
+    padding: 40px;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+}
+
+.arquetipo-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(13, 202, 240, 0.1) 0%, transparent 70%);
+    animation: rotate 10s linear infinite;
+}
+
+@keyframes rotate {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.arquetipo-card-content {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+}
+
+.arquetipo-emoji {
+    font-size: 6em;
+    margin-bottom: 20px;
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+}
+
+.arquetipo-nome {
+    font-size: 2.5em;
+    font-weight: 900;
+    color: #ffffff;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    text-shadow: 0 0 20px rgba(13, 202, 240, 0.5);
+}
+
+.arquetipo-frase {
+    font-size: 1.3em;
+    font-style: italic;
+    color: #0dcaf0;
+    margin-bottom: 35px;
+    line-height: 1.6;
+    font-weight: 500;
+}
+
+.arquetipo-detalhes {
+    display: grid;
+    gap: 20px;
+    margin-bottom: 35px;
+    text-align: left;
+}
+
+.arquetipo-item {
+    background: rgba(45, 45, 68, 0.6);
+    padding: 20px;
+    border-radius: 15px;
+    border-left: 4px solid #0dcaf0;
+    transition: all 0.3s;
+}
+
+.arquetipo-item:hover {
+    background: rgba(45, 45, 68, 0.8);
+    transform: translateX(5px);
+    border-left-color: #ffffff;
+}
+
+.arquetipo-label {
+    display: block;
+    font-size: 0.9em;
+    font-weight: 700;
+    color: #0dcaf0;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.arquetipo-texto {
+    font-size: 1.05em;
+    color: #e4e4e4;
+    line-height: 1.6;
+    margin: 0;
+}
+
+.btn-download-arquetipo {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    background: linear-gradient(135deg, #0dcaf0 0%, #0ba8cc 100%);
+    color: white;
+    padding: 18px 35px;
+    border-radius: 50px;
+    font-size: 1.1em;
+    font-weight: 700;
+    text-decoration: none;
+    transition: all 0.3s;
+    border: 2px solid transparent;
+    box-shadow: 0 5px 20px rgba(13, 202, 240, 0.3);
+}
+
+.btn-download-arquetipo:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 10px 30px rgba(13, 202, 240, 0.5);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.btn-download-arquetipo .btn-icon {
+    font-size: 1.3em;
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+    .arquetipo-section {
+        padding: 20px;
+    }
+    
+    .arquetipo-card {
+        padding: 25px;
+    }
+    
+    .arquetipo-emoji {
+        font-size: 4em;
+    }
+    
+    .arquetipo-nome {
+        font-size: 1.8em;
+    }
+    
+    .arquetipo-frase {
+        font-size: 1.1em;
+    }
+    
+    .btn-download-arquetipo {
+        padding: 15px 25px;
+        font-size: 1em;
+    }
+}
     </style>
 </head>
 <body>
@@ -1688,6 +1880,181 @@
         let recursosData = [];
         let allStudentsData = { turma1: [], turma2: [] };
         let primeiroAcessoEmail = null;
+        // ==================== DADOS DOS ARQUÉTIPOS ====================
+const ARQUETIPOS_DATA = {
+    "Inocente": {
+        nome: "Inocente",
+        frase: "A esperança não é tolice. É resistência com propósito.",
+        forca: "Fé inabalável, pureza e esperança que inspira.",
+        desafio: "Evitar ingenuidade. Confiar sem perder o senso de realidade.",
+        missao: "Ser fonte de luz, alegria e leveza em um mundo carregado de dor.",
+        emoji: "🕊️",
+        cor: "#87ceeb",
+        pdfUrl: "https://drive.google.com/file/d/1BHVakykvtbOIJ_1hNamKu1XQmyNUJ90m/view?usp=drive_link"
+    },
+    "Mago": {
+        nome: "Mago",
+        frase: "Transformar o mundo começa com a reprogramação de quem você é.",
+        forca: "Transformação, visão e poder de reprogramar realidades.",
+        desafio: "Manter os pés no chão enquanto voa alto.",
+        missao: "Reprogramar vidas, curar mentes e revelar o que está oculto.",
+        emoji: "🔮",
+        cor: "#673ab7",
+        pdfUrl: "https://drive.google.com/file/d/11qydMB9fQwtK_NwUqqiRBmWHo-l9OLs6/view?usp=drive_link"
+    },
+    "Prestativo": {
+        nome: "Prestativo",
+        frase: "Quem cura o outro, também se cura no caminho.",
+        forca: "Empatia, serviço e generosidade genuína.",
+        desafio: "Saber cuidar sem se anular. Ajudar sem se perder.",
+        missao: "Acolher, levantar e transformar a dor dos outros em força.",
+        emoji: "🤲",
+        cor: "#4caf50",
+        pdfUrl: "https://drive.google.com/file/d/12eJnI8QQZWJNxDaUdtDodXX2OeoQin9I/view?usp=drive_link"
+    },
+    "Sábio": {
+        nome: "Sábio",
+        frase: "Saber sem agir é o luxo dos covardes.",
+        forca: "Clareza, discernimento e visão de longo prazo.",
+        desafio: "Trocar o excesso de reflexão por decisões ousadas.",
+        missao: "Ensinar o caminho, revelar verdades e expandir consciências.",
+        emoji: "📖",
+        cor: "#2196f3",
+        pdfUrl: "https://drive.google.com/file/d/1KFYCzWI1Su3Uu-_n43zh9Zpxz-Pf-l2n/view?usp=drive_link"
+    },
+    "Amante": {
+        nome: "Amante",
+        frase: "Amar não é se entregar ao outro. É se revelar por inteiro.",
+        forca: "Conexão, beleza e paixão pela vida.",
+        desafio: "Viver a profundidade sem se perder na carência ou dependência emocional.",
+        missao: "Ensinar que a presença verdadeira é mais poderosa que qualquer status.",
+        emoji: "❤️",
+        cor: "#e91e63",
+        pdfUrl: "https://drive.google.com/file/d/1ZVpoxfLe7FmdCbGPbkU5I6Aem0pedD0C/view?usp=drive_link"
+    },
+    "Bobo da Corte": {
+        nome: "Bobo da Corte",
+        frase: "Quem ri de si mesmo desarma qualquer tempestade.",
+        forca: "Humor, leveza e alegria contagiante.",
+        desafio: "Levar a vida a sério sem perder a graça.",
+        missao: "Confiar no processo e aproveitar o prazer que a jornada traz.",
+        emoji: "🤹",
+        cor: "#ff9800",
+        pdfUrl: "https://drive.google.com/file/d/1rICMnizREBE18SXj8UlptJ5oG9_4EtjX/view?usp=drive_link"
+    },
+    "Criador": {
+        nome: "Criador",
+        frase: "Quem cria, governa. Porque quem tem visão, gera.",
+        forca: "Imaginação, inovação e poder de materializar ideias.",
+        desafio: "Vencer a autossabotagem e transformar ideias em ação.",
+        missao: "Criar realidades que antes só existiam nos sonhos.",
+        emoji: "🎨",
+        cor: "#9c27b0",
+        pdfUrl: "https://drive.google.com/file/d/1cN14uvBAA6bDEwBz13r68EZiP7ZrTxcK/view?usp=drive_link"
+    },
+    "Explorador": {
+        nome: "Explorador",
+        frase: "Quem não se move, morre de tédio disfarçado de conforto.",
+        forca: "Liberdade, coragem e sede por novos horizontes.",
+        desafio: "Manter constância sem precisar sempre de novidade.",
+        missao: "Desbravar caminhos para mostrar que há vida além da mediocridade.",
+        emoji: "🧭",
+        cor: "#795548",
+        pdfUrl: "https://drive.google.com/file/d/1lyUCBfEFdpU3d-b4H9OA_TBkw34KqxFI/view?usp=drive_link"
+    },
+    "Fora-da-Lei": {
+        nome: "Fora-da-Lei",
+        frase: "Ser diferente é seu dom, não sua maldição.",
+        forca: "Rebeldia, autenticidade e ousadia.",
+        desafio: "Quebrar o sistema sem destruir a si mesmo no processo.",
+        missao: "Romper padrões tóxicos e provar que dá pra fazer diferente — e melhor.",
+        emoji: "⚡",
+        cor: "#212121",
+        pdfUrl: "https://drive.google.com/file/d/1S7cSds2EBhYv9Z89keky4OZhoFwgOJ8N/view?usp=drive_link"
+    },
+    "Governante": {
+        nome: "Governante",
+        frase: "Liderar não é mandar. É mover com propósito e verdade.",
+        forca: "Liderança, estrutura e poder realizador.",
+        desafio: "Liderar com amor, não com controle.",
+        missao: "Organizar o caos, construir reinos e multiplicar riquezas.",
+        emoji: "👑",
+        cor: "#ffd700",
+        pdfUrl: "https://drive.google.com/file/d/1UyqIw8B6Y7c7KC4F39jPyua9YxCsPLS9/view?usp=drive_link"
+    },
+    "Herói": {
+        nome: "Herói",
+        frase: "Ou você lidera a sua dor, ou será liderado por ela.",
+        forca: "Coragem, ação e superação.",
+        desafio: "Não viver apenas para lutar. Aprender a descansar sem culpa.",
+        missao: "Vencer para mostrar ao mundo que é possível sair do fundo e chegar ao topo.",
+        emoji: "⚔️",
+        cor: "#f44336",
+        pdfUrl: "https://drive.google.com/file/d/1EQmKb9fpHicpe1NAAlUVBCmyNQ4NxAop/view?usp=drive_link"
+    },
+    "Homem Comum": {
+        nome: "Homem Comum",
+        frase: "Você não nasceu para ser mais um. Nasceu para provar que é possível.",
+        forca: "Simplicidade, humildade e senso de comunidade.",
+        desafio: "Romper com o conformismo e a zona de conforto.",
+        missao: "Provar que pessoas comuns podem viver vidas extraordinárias.",
+        emoji: "🤝",
+        cor: "#607d8b",
+        pdfUrl: "https://drive.google.com/file/d/1kTvylHOYpzbTu41GnvQisHcQbTk4Xv5A/view?usp=drive_link"
+    }
+};
+
+// ==================== FUNÇÃO PARA RENDERIZAR ARQUÉTIPO ====================
+function renderizarArquetipo() {
+    // Verificar se aluno tem arquétipo definido
+    const arquetipoAluno = alunoData.arquetipo;
+    
+    console.log('🌟 Arquétipo do aluno:', arquetipoAluno);
+    
+    // Se não tiver arquétipo, esconder seção
+    if (!arquetipoAluno || arquetipoAluno === '' || arquetipoAluno === 'Pendente') {
+        document.getElementById('arquetipoSection').classList.add('hidden');
+        console.log('❌ Aluno não tem arquétipo definido');
+        return;
+    }
+    
+    // Buscar dados do arquétipo
+    const dados = ARQUETIPOS_DATA[arquetipoAluno];
+    
+    if (!dados) {
+        console.error('❌ Arquétipo não encontrado:', arquetipoAluno);
+        document.getElementById('arquetipoSection').classList.add('hidden');
+        return;
+    }
+    
+    console.log('✅ Dados do arquétipo encontrados:', dados);
+    
+    // Mostrar seção
+    document.getElementById('arquetipoSection').classList.remove('hidden');
+    
+    // Preencher card
+    document.getElementById('arquetipoEmoji').textContent = dados.emoji;
+    document.getElementById('arquetipoNome').textContent = dados.nome;
+    document.getElementById('arquetipoFrase').textContent = `"${dados.frase}"`;
+    document.getElementById('arquetipoForca').textContent = dados.forca;
+    document.getElementById('arquetipoDesafio').textContent = dados.desafio;
+    document.getElementById('arquetipoMissao').textContent = dados.missao;
+    
+    // Configurar botão de download
+    const btnDownload = document.getElementById('btnDownloadArquetipo');
+    btnDownload.href = dados.pdfUrl;
+    
+    // Aplicar cor do arquétipo no card
+    const card = document.getElementById('arquetipoCard');
+    card.style.borderColor = dados.cor + '66'; // 40% de opacidade
+    
+    // Aplicar cor no nome
+    const nomeElement = document.getElementById('arquetipoNome');
+    nomeElement.style.color = dados.cor;
+    nomeElement.style.textShadow = `0 0 20px ${dados.cor}66`;
+    
+    console.log('✅ Arquétipo renderizado com sucesso!');
+}
 
         const FORMULARIOS = [
             { nome: 'Formulário Anamnese Geral + Visão de Futuro', coluna: 'D' },

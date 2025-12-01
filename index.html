@@ -421,6 +421,16 @@
             gap: 10px;
         }
 
+        .section-subtitle {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: #0dcaf0;
+            margin: 25px 0 15px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
         .kpi-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -2836,25 +2846,6 @@
                     </div>
                 </div>
 
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-value">${stats.totalAlunos}</div>
-                        <div class="stat-label">Total de Alunos</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value">${stats.progressoMedio}%</div>
-                        <div class="stat-label">Progresso Médio</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value">${stats.formulariosPreenchidos}</div>
-                        <div class="stat-label">Formulários Preenchidos</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value">${stats.formulariosPendentes}</div>
-                        <div class="stat-label">Formulários Pendentes</div>
-                    </div>
-                </div>
-
                 <div class="strategic-section">
                     <h2 class="strategic-title">📊 Visão Estratégica</h2>
                     
@@ -2869,29 +2860,17 @@
                             <div class="kpi-value">${stats.totalAlunos}</div>
                             <div class="kpi-sublabel">${stats.turma1} T1 + ${stats.turma2} T2</div>
                         </div>
-                        <div class="kpi-card">
-                            <div class="kpi-label">Formulários Totais</div>
-                            <div class="kpi-value">${stats.totalFormularios}</div>
-                            <div class="kpi-sublabel">${stats.formulariosPreenchidos} concluídos</div>
-                        </div>
-                        <div class="kpi-card">
-                            <div class="kpi-label">Taxa de Pendência</div>
-                            <div class="kpi-value">${Math.round((stats.formulariosPendentes / stats.totalFormularios) * 100)}%</div>
-                            <div class="kpi-sublabel">${stats.formulariosPendentes} pendentes</div>
-                        </div>
                     </div>
 
                     ${renderizarComparacaoTurmas(stats)}
                     ${renderizarInsights(stats)}
-                </div>
-
-                <!-- NOVA SEÇÃO 1: Estatísticas por Formulário -->
-                <div class="formularios-stats-section">
-                    <h2 class="section-title">📋 Estatísticas por Formulário</h2>
+                    
+                    <!-- Estatísticas por Formulário INTEGRADA -->
+                    <h3 class="section-subtitle">📋 Estatísticas por Formulário</h3>
                     ${renderizarEstatisticasFormularios()}
                 </div>
 
-                <!-- NOVA SEÇÃO 2: Detalhamento por Formulário -->
+                <!-- SEÇÃO 2: Detalhamento por Formulário -->
                 <div class="formularios-detalhes-section">
                     <h2 class="section-title">📝 Detalhamento por Formulário</h2>
                     ${renderizarDetalhamentFormularios()}
@@ -3211,7 +3190,7 @@
                                         <div class="alunos-chips">
                                             ${t1Preenchidos.length > 0 
                                                 ? t1Preenchidos.map(a => `
-                                                    <span class="aluno-chip">${a.nomePreferido || a.nome}</span>
+                                                    <span class="aluno-chip">${a.nome}</span>
                                                 `).join('')
                                                 : '<span class="empty-text">Nenhum aluno preencheu</span>'
                                             }
@@ -3222,7 +3201,7 @@
                                         <div class="alunos-chips">
                                             ${t1Pendentes.length > 0
                                                 ? t1Pendentes.map(a => `
-                                                    <span class="aluno-chip pendente">${a.nomePreferido || a.nome}</span>
+                                                    <span class="aluno-chip pendente">${a.nome}</span>
                                                 `).join('')
                                                 : '<span class="empty-text">Todos preencheram! 🎉</span>'
                                             }
@@ -3238,7 +3217,7 @@
                                         <div class="alunos-chips">
                                             ${t2Preenchidos.length > 0
                                                 ? t2Preenchidos.map(a => `
-                                                    <span class="aluno-chip">${a.nomePreferido || a.nome}</span>
+                                                    <span class="aluno-chip">${a.nome}</span>
                                                 `).join('')
                                                 : '<span class="empty-text">Nenhum aluno preencheu</span>'
                                             }
@@ -3249,7 +3228,7 @@
                                         <div class="alunos-chips">
                                             ${t2Pendentes.length > 0
                                                 ? t2Pendentes.map(a => `
-                                                    <span class="aluno-chip pendente">${a.nomePreferido || a.nome}</span>
+                                                    <span class="aluno-chip pendente">${a.nome}</span>
                                                 `).join('')
                                                 : '<span class="empty-text">Todos preencheram! 🎉</span>'
                                             }

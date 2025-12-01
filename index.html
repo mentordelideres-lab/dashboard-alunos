@@ -2349,6 +2349,15 @@
             
             console.log(`📚 Biblioteca: ${biblioteca.length} total, ${recursosFiltrados.length} para ${alunoData.turma}`);
             
+            // DEBUG: Ver o que tem nos recursos
+            if (recursosFiltrados.length > 0) {
+                console.log('📋 Primeiro recurso:', {
+                    titulo: recursosFiltrados[0].titulo,
+                    descricao: recursosFiltrados[0].descricao,
+                    categoria: recursosFiltrados[0].categoria
+                });
+            }
+            
             if (recursosFiltrados.length === 0) {
                 container.innerHTML = '';
                 return;
@@ -2363,13 +2372,9 @@
                     <div class="recursos-grid">
                         ${recursosFiltrados.map(recurso => `
                             <div class="recurso-card">
-                                <div class="recurso-header">
-                                    <span class="recurso-icon">${recurso.emoji}</span>
-                                    <div class="recurso-info">
-                                        <h4 class="recurso-title">${recurso.descricao || recurso.titulo}</h4>
-                                    </div>
-                                </div>
-                                <a href="${recurso.link}" target="_blank" class="btn-download">
+                                <span class="recurso-icon" style="font-size: 2em;">${recurso.emoji}</span>
+                                <h4 style="color: white; font-size: 1.1em; margin: 10px 0;">${recurso.titulo}</h4>
+                                <a href="${recurso.link}" target="_blank" class="btn-download" style="margin-top: 10px;">
                                     📥 Acessar Recurso
                                 </a>
                             </div>

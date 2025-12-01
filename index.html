@@ -438,6 +438,25 @@
             margin-bottom: 30px;
         }
 
+        .kpi-grid-strategic {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        @media (max-width: 1200px) {
+            .kpi-grid-strategic {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 700px) {
+            .kpi-grid-strategic {
+                grid-template-columns: 1fr;
+            }
+        }
+
         .kpi-card {
             background: rgba(26, 26, 46, 0.5);
             border: 1px solid rgba(255, 255, 255, 0.1);
@@ -462,6 +481,181 @@
             color: #808080;
             font-size: 0.8em;
             margin-top: 5px;
+        }
+
+        .kpi-alert {
+            border: 2px solid rgba(255, 193, 7, 0.6) !important;
+            background: rgba(255, 193, 7, 0.1) !important;
+        }
+
+        .kpi-alert .kpi-value {
+            color: #ffc107 !important;
+        }
+
+        /* Análise de Formulários - Card Dinâmico */
+        .analise-formularios-section {
+            background: rgba(26, 26, 46, 0.6);
+            border: 1px solid rgba(13, 202, 240, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 15px;
+        }
+
+        .analise-header {
+            margin-bottom: 20px;
+        }
+
+        .analise-header label {
+            color: #ffffff;
+            font-weight: 600;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .select-formulario {
+            width: 100%;
+            padding: 12px;
+            background: rgba(45, 45, 68, 0.8);
+            border: 1px solid rgba(13, 202, 240, 0.3);
+            border-radius: 8px;
+            color: #ffffff;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .select-formulario:hover {
+            border-color: rgba(13, 202, 240, 0.6);
+            background: rgba(45, 45, 68, 1);
+        }
+
+        .select-formulario:focus {
+            outline: none;
+            border-color: #0dcaf0;
+        }
+
+        .analise-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .analise-stat-turma {
+            background: rgba(45, 45, 68, 0.6);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .analise-stat-turma h4 {
+            color: #0dcaf0;
+            margin: 0 0 12px 0;
+            font-size: 1em;
+        }
+
+        .stat-big {
+            font-size: 2em;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 8px;
+        }
+
+        .stat-percent {
+            font-size: 1.4em;
+            font-weight: 600;
+            color: #0dcaf0;
+            margin-bottom: 12px;
+        }
+
+        .progress-bar-large {
+            width: 100%;
+            height: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill-large {
+            height: 100%;
+            background: linear-gradient(90deg, #0dcaf0 0%, #0ba8cc 100%);
+            transition: width 0.5s ease;
+        }
+
+        .analise-detalhes {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .analise-coluna h5 {
+            color: #0dcaf0;
+            margin: 0 0 15px 0;
+            font-size: 1em;
+            font-weight: 700;
+        }
+
+        .analise-grupo {
+            margin-bottom: 20px;
+        }
+
+        .grupo-title {
+            color: #ffffff;
+            font-size: 0.9em;
+            font-weight: 600;
+            margin: 0 0 10px 0;
+        }
+
+        .chips-scroll {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            max-height: 150px;
+            overflow-y: auto;
+            padding: 2px;
+        }
+
+        .chips-scroll::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .chips-scroll::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 3px;
+        }
+
+        .chips-scroll::-webkit-scrollbar-thumb {
+            background: rgba(13, 202, 240, 0.5);
+            border-radius: 3px;
+        }
+
+        .chip-nome {
+            background: rgba(13, 202, 240, 0.2);
+            color: #0dcaf0;
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 0.85em;
+            border: 1px solid rgba(13, 202, 240, 0.3);
+            white-space: nowrap;
+        }
+
+        .chip-nome.pendente {
+            background: rgba(255, 193, 7, 0.2);
+            color: #ffc107;
+            border-color: rgba(255, 193, 7, 0.3);
+        }
+
+        .empty-msg {
+            color: #888;
+            font-size: 0.9em;
+            font-style: italic;
+        }
+
+        @media (max-width: 900px) {
+            .analise-stats,
+            .analise-detalhes {
+                grid-template-columns: 1fr;
+            }
         }
 
         .comparison-table {
@@ -2849,7 +3043,7 @@
                 <div class="strategic-section">
                     <h2 class="strategic-title">📊 Visão Estratégica</h2>
                     
-                    <div class="kpi-grid">
+                    <div class="kpi-grid-strategic">
                         <div class="kpi-card">
                             <div class="kpi-label">Taxa de Conclusão</div>
                             <div class="kpi-value">${stats.progressoMedio}%</div>
@@ -2860,23 +3054,27 @@
                             <div class="kpi-value">${stats.totalAlunos}</div>
                             <div class="kpi-sublabel">${stats.turma1} T1 + ${stats.turma2} T2</div>
                         </div>
+                        <div class="kpi-card ${stats.alunosEmRisco > 0 ? 'kpi-alert' : ''}">
+                            <div class="kpi-label">Alunos em Risco</div>
+                            <div class="kpi-value">${stats.alunosEmRisco}</div>
+                            <div class="kpi-sublabel">&lt; 33% progresso</div>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-label">Turma Líder</div>
+                            <div class="kpi-value">${stats.turmaLider}</div>
+                            <div class="kpi-sublabel">${stats.turmaLiderPercent}%</div>
+                        </div>
                     </div>
 
                     ${renderizarComparacaoTurmas(stats)}
                     ${renderizarInsights(stats)}
                     
-                    <!-- Estatísticas por Formulário INTEGRADA -->
-                    <h3 class="section-subtitle">📋 Estatísticas por Formulário</h3>
-                    ${renderizarEstatisticasFormularios()}
+                    <!-- Análise de Formulário INTEGRADA -->
+                    <h3 class="section-subtitle">📋 Análise por Formulário</h3>
+                    ${renderizarAnaliseFormularios()}
                 </div>
 
-                <!-- SEÇÃO 2: Detalhamento por Formulário -->
-                <div class="formularios-detalhes-section">
-                    <h2 class="section-title">📝 Detalhamento por Formulário</h2>
-                    ${renderizarDetalhamentFormularios()}
-                </div>
-
-                <!-- NOVA SEÇÃO 3: Distribuição de Arquétipos -->
+                <!-- Distribuição de Arquétipos -->
                 <div class="arquetipos-stats-section">
                     <h2 class="section-title">🌟 Distribuição de Arquétipos</h2>
                     ${renderizarDistribuicaoArquetipos()}
@@ -2898,6 +3096,7 @@
 
             configurarTabs();
             renderizarAlunos('turma1');
+            atualizarAnaliseFormulario(); // Inicializar análise do primeiro formulário
         }
 
         function calcularEstatisticas() {
@@ -2925,6 +3124,40 @@
             });
 
             stats.progressoMedio = Math.round(somaProgresso / todosAlunos.length);
+
+            // Novos KPIs Estratégicos
+            // 1. Alunos em Risco (< 33% de progresso)
+            stats.alunosEmRisco = todosAlunos.filter(aluno => {
+                const progresso = (aluno.formularios.filter(f => f.status === 'Preenchido').length / 6) * 100;
+                return progresso < 33;
+            }).length;
+
+            // 2. Turma Líder
+            const turma1Alunos = todosAlunos.filter(a => a.turma === 'TURMA 1');
+            const turma2Alunos = todosAlunos.filter(a => a.turma === 'TURMA 2');
+            
+            const t1Percent = Math.round(
+                (turma1Alunos.reduce((acc, a) => 
+                    acc + a.formularios.filter(f => f.status === 'Preenchido').length, 0
+                ) / (turma1Alunos.length * 6)) * 100
+            );
+            
+            const t2Percent = Math.round(
+                (turma2Alunos.reduce((acc, a) => 
+                    acc + a.formularios.filter(f => f.status === 'Preenchido').length, 0
+                ) / (turma2Alunos.length * 6)) * 100
+            );
+
+            if (t1Percent > t2Percent) {
+                stats.turmaLider = 'TURMA 1';
+                stats.turmaLiderPercent = t1Percent;
+            } else if (t2Percent > t1Percent) {
+                stats.turmaLider = 'TURMA 2';
+                stats.turmaLiderPercent = t2Percent;
+            } else {
+                stats.turmaLider = 'EMPATE';
+                stats.turmaLiderPercent = t1Percent;
+            }
 
             return stats;
         }
@@ -2965,14 +3198,6 @@
                                 <td>${stats.turma2}</td>
                                 <td class="gap-indicator ${stats.turma1 > stats.turma2 ? 'gap-positive' : stats.turma1 < stats.turma2 ? 'gap-negative' : ''}">
                                     ${stats.turma1 - stats.turma2 > 0 ? '+' : ''}${stats.turma1 - stats.turma2}
-                                </td>
-                            </tr>
-                            <tr>
-                                <td><strong>Formulários Preenchidos</strong></td>
-                                <td>${t1.preenchidos}/${t1.total}</td>
-                                <td>${t2.preenchidos}/${t2.total}</td>
-                                <td class="gap-indicator ${t1.percentual > t2.percentual ? 'gap-positive' : t1.percentual < t2.percentual ? 'gap-negative' : ''}">
-                                    ${t1.percentual - t2.percentual > 0 ? '+' : ''}${t1.percentual - t2.percentual}%
                                 </td>
                             </tr>
                             <tr>
@@ -3106,7 +3331,116 @@
 
         // ==================== FUNÇÕES NOVAS DO MASTER ====================
         
-        // FUNÇÃO 1: Estatísticas por Formulário
+        // FUNÇÃO COMBINADA: Estatísticas + Detalhamento em 1 Card Dinâmico
+        function renderizarAnaliseFormularios() {
+            return `
+                <div class="analise-formularios-section">
+                    <div class="analise-header">
+                        <label for="selectFormulario">Selecione o Formulário:</label>
+                        <select id="selectFormulario" class="select-formulario" onchange="atualizarAnaliseFormulario()">
+                            <option value="0">Anamnese Geral + Visão de Futuro</option>
+                            <option value="1">Jornada do Herói</option>
+                            <option value="2">Escritor Best Seller</option>
+                            <option value="3">Influenciador Digital</option>
+                            <option value="4">Palestrante Poderoso</option>
+                            <option value="5">Mentor High Ticket</option>
+                        </select>
+                    </div>
+                    <div id="analiseFormularioContent"></div>
+                </div>
+            `;
+        }
+
+        function atualizarAnaliseFormulario() {
+            const index = parseInt(document.getElementById('selectFormulario').value);
+            const nomesFormularios = [
+                'Anamnese Geral + Visão de Futuro',
+                'Jornada do Herói',
+                'Escritor Best Seller',
+                'Influenciador Digital',
+                'Palestrante Poderoso',
+                'Mentor High Ticket'
+            ];
+
+            const turma1 = todosAlunos.filter(a => a.turma === 'TURMA 1');
+            const turma2 = todosAlunos.filter(a => a.turma === 'TURMA 2');
+
+            const t1Preenchidos = turma1.filter(a => a.formularios[index].status === 'Preenchido');
+            const t1Pendentes = turma1.filter(a => a.formularios[index].status === 'Pendente');
+            const t2Preenchidos = turma2.filter(a => a.formularios[index].status === 'Preenchido');
+            const t2Pendentes = turma2.filter(a => a.formularios[index].status === 'Pendente');
+
+            const t1Percent = Math.round((t1Preenchidos.length / turma1.length) * 100);
+            const t2Percent = Math.round((t2Preenchidos.length / turma2.length) * 100);
+
+            document.getElementById('analiseFormularioContent').innerHTML = `
+                <div class="analise-stats">
+                    <div class="analise-stat-turma">
+                        <h4>TURMA 1</h4>
+                        <div class="stat-big">${t1Preenchidos.length}/${turma1.length}</div>
+                        <div class="stat-percent">${t1Percent}%</div>
+                        <div class="progress-bar-large">
+                            <div class="progress-fill-large" style="width: ${t1Percent}%"></div>
+                        </div>
+                    </div>
+                    <div class="analise-stat-turma">
+                        <h4>TURMA 2</h4>
+                        <div class="stat-big">${t2Preenchidos.length}/${turma2.length}</div>
+                        <div class="stat-percent">${t2Percent}%</div>
+                        <div class="progress-bar-large">
+                            <div class="progress-fill-large" style="width: ${t2Percent}%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="analise-detalhes">
+                    <div class="analise-coluna">
+                        <h5>TURMA 1</h5>
+                        <div class="analise-grupo">
+                            <p class="grupo-title">✅ Preenchidos (${t1Preenchidos.length})</p>
+                            <div class="chips-scroll">
+                                ${t1Preenchidos.length > 0
+                                    ? t1Preenchidos.map(a => `<span class="chip-nome">${a.nome}</span>`).join('')
+                                    : '<span class="empty-msg">Nenhum aluno</span>'
+                                }
+                            </div>
+                        </div>
+                        <div class="analise-grupo">
+                            <p class="grupo-title">⏳ Pendentes (${t1Pendentes.length})</p>
+                            <div class="chips-scroll">
+                                ${t1Pendentes.length > 0
+                                    ? t1Pendentes.map(a => `<span class="chip-nome pendente">${a.nome}</span>`).join('')
+                                    : '<span class="empty-msg">Todos preencheram! 🎉</span>'
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <div class="analise-coluna">
+                        <h5>TURMA 2</h5>
+                        <div class="analise-grupo">
+                            <p class="grupo-title">✅ Preenchidos (${t2Preenchidos.length})</p>
+                            <div class="chips-scroll">
+                                ${t2Preenchidos.length > 0
+                                    ? t2Preenchidos.map(a => `<span class="chip-nome">${a.nome}</span>`).join('')
+                                    : '<span class="empty-msg">Nenhum aluno</span>'
+                                }
+                            </div>
+                        </div>
+                        <div class="analise-grupo">
+                            <p class="grupo-title">⏳ Pendentes (${t2Pendentes.length})</p>
+                            <div class="chips-scroll">
+                                ${t2Pendentes.length > 0
+                                    ? t2Pendentes.map(a => `<span class="chip-nome pendente">${a.nome}</span>`).join('')
+                                    : '<span class="empty-msg">Todos preencheram! 🎉</span>'
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // FUNÇÃO 1: Estatísticas por Formulário (ANTIGA - SERÁ REMOVIDA)
         function renderizarEstatisticasFormularios() {
             const nomesFormularios = [
                 'Anamnese Geral + Visão de Futuro',

@@ -1589,966 +1589,1080 @@
 </head>
 <body>
     <div class="container">
-        <!-- Brand Header -->
+        <!-- Logo e Header -->
         <div class="brand-header">
             <div class="logo-container">
                 <div class="logo-lion">🦁</div>
             </div>
             <h1 class="brand-title">Mentor de Líderes</h1>
-            <p class="brand-subtitle">Dashboard de Acompanhamento</p>
+            <p class="brand-subtitle">Transformando Potencial em Liderança</p>
         </div>
 
-        <!-- Login Screen -->
-        <div id="loginScreen" class="login-card">
-            <div id="messageBox"></div>
-            
-            <form id="loginForm">
-                <div class="input-group">
-                    <label for="emailInput">Email:</label>
-                    <input 
-                        type="email" 
-                        id="emailInput" 
-                        placeholder="seu.email@exemplo.com"
-                        required
-                    >
-                </div>
-                <div class="input-group">
-                    <label for="senhaInput">Senha:</label>
-                    <input 
-                        type="password" 
-                        id="senhaInput" 
-                        placeholder="Digite sua senha"
-                        required
-                    >
-                </div>
-                <button type="submit" class="btn-primary">Acessar Dashboard</button>
-            </form>
-
-            <div class="link-button">
-                <a onclick="mostrarEsqueciSenha()">Esqueci minha senha</a>
-            </div>
-        </div>
-
-        <!-- Esqueci Senha Screen -->
-        <div id="esqueciSenhaScreen" class="login-card hidden">
-            <h2 style="margin-bottom: 20px;">🔑 Recuperar Senha</h2>
-            <p style="margin-bottom: 20px; color: #b8b8b8;">Enviaremos um link para seu email</p>
-            
-            <div id="messageBoxEsqueci"></div>
-            
-            <form id="esqueciSenhaForm">
-                <div class="input-group">
-                    <label for="emailEsqueciInput">Digite seu email cadastrado:</label>
-                    <input 
-                        type="email" 
-                        id="emailEsqueciInput" 
-                        placeholder="seu.email@exemplo.com"
-                        required
-                    >
-                </div>
-                <button type="submit" class="btn-primary">Enviar Link de Recuperação</button>
-            </form>
-
-            <div class="link-button">
-                <a onclick="voltarLogin()">Voltar para o login</a>
-            </div>
-        </div>
-
-        <!-- Criar Senha Screen -->
-        <div id="criarSenhaScreen" class="login-card hidden">
-            <h2 style="margin-bottom: 10px;">👋 Bem-vindo!</h2>
-            <p style="margin-bottom: 30px; color: #b8b8b8;">Crie sua senha de acesso</p>
-            
-            <div id="messageBoxCriar"></div>
-            
-            <div class="info-message">
-                <strong>Olá, <span id="nomeAlunoCriar"></span>!</strong><br>
-                Este é seu primeiro acesso. Por favor, crie uma senha segura.
-            </div>
-            
-            <form id="criarSenhaForm">
-                <div class="input-group">
-                    <label for="novaSenhaInput">Nova Senha:</label>
-                    <input 
-                        type="password" 
-                        id="novaSenhaInput" 
-                        placeholder="Mínimo 6 caracteres"
-                        required
-                        minlength="6"
-                    >
-                    <div class="password-strength">
-                        <div class="password-strength-bar" id="strengthBar"></div>
+        <!-- Tela de Login -->
+        <div id="loginScreen">
+            <div class="login-card">
+                <div id="loginMessage"></div>
+                <form id="loginForm">
+                    <div class="input-group">
+                        <label for="emailInput">Email</label>
+                        <input type="email" id="emailInput" placeholder="seu@email.com" required>
                     </div>
-                    <small id="strengthText" style="color: #b8b8b8; display: block; margin-top: 5px;">Digite uma senha</small>
+                    <div class="input-group">
+                        <label for="senhaInput">Senha</label>
+                        <input type="password" id="senhaInput" placeholder="Digite sua senha" required>
+                    </div>
+                    <button type="submit" class="btn-primary" id="btnLogin">Entrar</button>
+                </form>
+                <div class="link-button">
+                    <a id="linkEsqueciSenha">Esqueci minha senha</a>
                 </div>
-                <div class="input-group">
-                    <label for="confirmarSenhaInput">Confirmar Senha:</label>
-                    <input 
-                        type="password" 
-                        id="confirmarSenhaInput" 
-                        placeholder="Digite a senha novamente"
-                        required
-                        minlength="6"
-                    >
+            </div>
+        </div>
+
+        <!-- Tela de Recuperação de Senha -->
+        <div id="recuperarSenhaScreen" class="hidden">
+            <div class="login-card">
+                <div id="recuperarMessage"></div>
+                <form id="recuperarForm">
+                    <div class="input-group">
+                        <label for="emailRecuperar">Email</label>
+                        <input type="email" id="emailRecuperar" placeholder="seu@email.com" required>
+                    </div>
+                    <button type="submit" class="btn-primary" id="btnRecuperar">Recuperar Senha</button>
+                </form>
+                <div class="link-button">
+                    <a id="linkVoltarLogin">Voltar para o login</a>
                 </div>
-                <button type="submit" class="btn-primary" id="btnCriarSenha">Criar Senha e Entrar</button>
-            </form>
+            </div>
+        </div>
+
+        <!-- Tela de Redefinir Senha -->
+        <div id="redefinirSenhaScreen" class="hidden">
+            <div class="login-card">
+                <div id="redefinirMessage"></div>
+                <form id="redefinirForm">
+                    <div class="input-group">
+                        <label for="codigoRecuperacao">Código de Recuperação</label>
+                        <input type="text" id="codigoRecuperacao" placeholder="Digite o código recebido" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="novaSenha">Nova Senha</label>
+                        <input type="password" id="novaSenha" placeholder="Digite a nova senha" required>
+                        <div class="password-strength">
+                            <div class="password-strength-bar" id="strengthBar"></div>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="confirmarSenha">Confirmar Nova Senha</label>
+                        <input type="password" id="confirmarSenha" placeholder="Confirme a nova senha" required>
+                    </div>
+                    <button type="submit" class="btn-primary" id="btnRedefinir">Redefinir Senha</button>
+                </form>
+                <div class="link-button">
+                    <a id="linkVoltarLogin2">Voltar para o login</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tela de Primeiro Acesso -->
+        <div id="primeiroAcessoScreen" class="hidden">
+            <div class="login-card">
+                <h2 style="text-align: center; margin-bottom: 20px;">🎉 Bem-vindo(a)!</h2>
+                <div id="primeiroAcessoMessage"></div>
+                <form id="primeiroAcessoForm">
+                    <div class="input-group">
+                        <label for="nomePreferidoInput">Como gostaria de ser chamado(a)?</label>
+                        <input type="text" id="nomePreferidoInput" placeholder="Digite seu nome preferido" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="novaSenhaPrimeiroAcesso">Crie sua senha</label>
+                        <input type="password" id="novaSenhaPrimeiroAcesso" placeholder="Digite sua nova senha" required>
+                        <div class="password-strength">
+                            <div class="password-strength-bar" id="strengthBarPrimeiroAcesso"></div>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="confirmarSenhaPrimeiroAcesso">Confirme sua senha</label>
+                        <input type="password" id="confirmarSenhaPrimeiroAcesso" placeholder="Confirme sua nova senha" required>
+                    </div>
+                    <button type="submit" class="btn-primary" id="btnPrimeiroAcesso">Continuar</button>
+                </form>
+            </div>
         </div>
 
         <!-- Dashboard do Aluno -->
-        <div id="dashboardScreen" class="dashboard-card hidden">
-            <div class="dashboard-header">
-                <div>
-                    <h2 id="alunoNome">Carregando...</h2>
-                    <p id="alunoTurma">Turma</p>
-                </div>
-                <div class="aluno-header-actions">
-                    <button class="btn-edit-name" onclick="mostrarModalEditarNome()">
-                        ✏️ Editar Nome
-                    </button>
-                    <button class="logout-btn-aluno" onclick="logout()">Sair</button>
-                </div>
-            </div>
-
-            <div class="progress-section">
-                <div class="progress-header">
-                    <h3>Seu Progresso</h3>
-                    <span class="progress-percentage" id="progressPercentage">0%</span>
-                </div>
-                <!-- SEÇÃO ARQUÉTIPO -->
-<div id="arquetipoSection" class="arquetipo-section hidden">
-    <div class="arquetipo-header">
-        <span class="arquetipo-icon-header">🌟</span>
-        <h2 class="arquetipo-title-main">Seu Arquétipo</h2>
-    </div>
-    
-    <div class="arquetipo-card" id="arquetipoCard">
-        <div class="arquetipo-card-content">
-            <!-- Emoji grande -->
-            <div class="arquetipo-emoji" id="arquetipoEmoji">🌟</div>
-            
-            <!-- Nome do arquétipo -->
-            <h3 class="arquetipo-nome" id="arquetipoNome">Carregando...</h3>
-            
-            <!-- Frase inspiradora -->
-            <p class="arquetipo-frase" id="arquetipoFrase">""</p>
-            
-            <!-- Detalhes -->
-            <div class="arquetipo-detalhes">
-                <div class="arquetipo-item">
-                    <span class="arquetipo-label">💪 FORÇA</span>
-                    <p class="arquetipo-texto" id="arquetipoForca">...</p>
-                </div>
-                
-                <div class="arquetipo-item">
-                    <span class="arquetipo-label">⚡ DESAFIO</span>
-                    <p class="arquetipo-texto" id="arquetipoDesafio">...</p>
-                </div>
-                
-                <div class="arquetipo-item">
-                    <span class="arquetipo-label">🎯 MISSÃO</span>
-                    <p class="arquetipo-texto" id="arquetipoMissao">...</p>
-                </div>
-            </div>
-            
-            <!-- Botão de download -->
-            <a href="#" id="btnDownloadArquetipo" class="btn-download-arquetipo" target="_blank">
-                <span class="btn-icon">📥</span>
-                <span>Baixar PDF do Arquétipo</span>
-            </a>
-        </div>
-    </div>
-</div>
-                <div class="progress-bar">
-                    <div class="progress-fill" id="progressFill" style="width: 0%">
-                        <span id="progressText">0/0</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ACESSO RÁPIDO -->
-            <div class="acesso-rapido-section">
-                <div class="acesso-rapido-header">
-                    <span class="acesso-rapido-icon">🚀</span>
-                    <h3 class="acesso-rapido-title">Acesso Rápido</h3>
-                </div>
-                
-                <!-- Plataforma de Vídeos -->
-                <a href="#" id="linkPlataformaVideos" class="btn-plataforma-videos" target="_blank">
-                    <span class="btn-icon">🎥</span>
-                    <span class="btn-text">
-                        <strong>Plataforma de Vídeos</strong>
-                        <small>Acesse as aulas e conteúdos</small>
-                    </span>
-                    <span class="btn-arrow">→</span>
-                </a>
-
-                <!-- Agendamento com Mentores -->
-                <div class="agendamento-section">
-                    <div class="agendamento-header">
-                        <span class="agendamento-icon">📅</span>
-                        <h4>Agendar Mentoria</h4>
-                    </div>
-                    <div id="mentoresContainer" class="mentores-grid">
-                        <!-- Mentores serão carregados aqui via JS -->
-                    </div>
-                </div>
-            </div>
-
-            <!-- BIBLIOTECA DE RECURSOS -->
-            <div id="bibliotecaSection" class="biblioteca-section hidden">
-                <div class="biblioteca-header">
-                    <span class="biblioteca-icon">📚</span>
-                    <h2 class="biblioteca-title">Biblioteca de Recursos</h2>
-                </div>
-                <div id="recursosContainer" class="recursos-grid"></div>
-            </div>
-
-            <h3 class="section-title">📝 Seus Formulários</h3>
-            <div id="formulariosContainer" class="formularios-grid"></div>
-        </div>
-
-        <!-- Modal de Edição de Nome -->
-        <div id="modalEditarNome" class="modal-overlay" onclick="fecharModalEditarNome(event)">
-            <div class="modal-content" onclick="event.stopPropagation()">
-                <div class="modal-header">
-                    <h2 class="modal-title">✏️ Editar Nome</h2>
-                    <p class="modal-subtitle">Como gostaria de ser chamado?</p>
-                </div>
-                <div class="modal-body">
-                    <div id="messageBoxModal"></div>
-                    <div class="input-group">
-                        <label for="nomePreferidoInput">Nome de Exibição:</label>
-                        <input 
-                            type="text" 
-                            id="nomePreferidoInput" 
-                            placeholder="Digite como gostaria de ser chamado"
-                            maxlength="50"
-                        >
-                        <small style="color: #b8b8b8; display: block; margin-top: 5px;">
-                            Este nome aparecerá no seu dashboard
-                        </small>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn-modal btn-cancel" onclick="fecharModalEditarNome()">
-                        Cancelar
-                    </button>
-                    <button class="btn-modal btn-save" onclick="salvarNomePreferido()">
-                        Salvar
-                    </button>
-                </div>
+        <div id="dashboardScreen" class="hidden">
+            <div class="dashboard-card">
+                <div id="dashboardContent"></div>
             </div>
         </div>
 
         <!-- Dashboard Master -->
-        <div id="masterDashboard" class="dashboard-card hidden">
-            <div class="dashboard-header">
-                <div>
-                    <h2>Painel Administrativo</h2>
-                    <p>Mentor de Líderes</p>
-                </div>
-                <div class="master-header-actions">
-                    <span class="badge-master">👑 MASTER</span>
-                    <button class="logout-btn-header" onclick="logout()">Sair</button>
+        <div id="masterDashboard" class="hidden">
+            <div class="dashboard-card">
+                <div id="masterContent"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Edição de Nome -->
+    <div id="modalEditarNome" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">✏️ Editar Nome Preferido</h3>
+                <p class="modal-subtitle">Como você gostaria de ser chamado(a)?</p>
+            </div>
+            <div class="modal-body">
+                <div class="input-group">
+                    <label for="novoNomePreferido">Nome Preferido</label>
+                    <input type="text" id="novoNomePreferido" placeholder="Digite seu nome preferido">
                 </div>
             </div>
-
-            <div class="stats-grid" id="statsGrid"></div>
-
-            <div class="tabs">
-                <button class="tab active" onclick="trocarAba(event, 'turma1')">Turma 1</button>
-                <button class="tab" onclick="trocarAba(event, 'turma2')">Turma 2</button>
-                <button class="tab" onclick="trocarAba(event, 'geral')">Visão Geral</button>
+            <div class="modal-footer">
+                <button class="btn-modal btn-cancel" id="btnCancelarNome">Cancelar</button>
+                <button class="btn-modal btn-save" id="btnSalvarNome">Salvar</button>
             </div>
-
-            <div id="masterContent"></div>
         </div>
     </div>
 
     <script>
-        // Configuração
-        const SHEET_ID = '1OjxHwWh6kWaNgQrCPP57GB_FMs4LVFH3Orbve3ciylQ';
-        const SHEETS_BASE_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=`;
-        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxPoJtzkVonMhXxYqA9a886dEAYIIoBD8p4ocjjALn4wJw1zhMzVhATaI-cuyUEdkXw3w/exec';
+        // ==================== CONFIGURAÇÃO ====================
+        const PLANILHA_ID = '1OjxHwWh6kWaNgQrCPP57GB_FMs4LVFH3Orbve3ciylQ';
+        const PLANILHA_URL = `https://docs.google.com/spreadsheets/d/${PLANILHA_ID}/gviz/tq?tqx=out:json`;
 
-        const MASTER_EMAIL = 'mentordelideres@gmail.com';
-        const MASTER_PASSWORD = 'master2024';
-
-        let alunoData = null;
-        let configData = null;
-        let recursosData = [];
-        let allStudentsData = { turma1: [], turma2: [] };
-        let primeiroAcessoEmail = null;
         // ==================== DADOS DOS ARQUÉTIPOS ====================
-const ARQUETIPOS_DATA = {
-    "Inocente": {
-        nome: "Inocente",
-        frase: "A esperança não é tolice. É resistência com propósito.",
-        forca: "Fé inabalável, pureza e esperança que inspira.",
-        desafio: "Evitar ingenuidade. Confiar sem perder o senso de realidade.",
-        missao: "Ser fonte de luz, alegria e leveza em um mundo carregado de dor.",
-        emoji: "🕊️",
-        cor: "#87ceeb",
-        pdfUrl: "https://drive.google.com/file/d/1BHVakykvtbOIJ_1hNamKu1XQmyNUJ90m/view?usp=drive_link"
-    },
-    "Mago": {
-        nome: "Mago",
-        frase: "Transformar o mundo começa com a reprogramação de quem você é.",
-        forca: "Transformação, visão e poder de reprogramar realidades.",
-        desafio: "Manter os pés no chão enquanto voa alto.",
-        missao: "Reprogramar vidas, curar mentes e revelar o que está oculto.",
-        emoji: "🔮",
-        cor: "#673ab7",
-        pdfUrl: "https://drive.google.com/file/d/11qydMB9fQwtK_NwUqqiRBmWHo-l9OLs6/view?usp=drive_link"
-    },
-    "Prestativo": {
-        nome: "Prestativo",
-        frase: "Quem cura o outro, também se cura no caminho.",
-        forca: "Empatia, serviço e generosidade genuína.",
-        desafio: "Saber cuidar sem se anular. Ajudar sem se perder.",
-        missao: "Acolher, levantar e transformar a dor dos outros em força.",
-        emoji: "🤲",
-        cor: "#4caf50",
-        pdfUrl: "https://drive.google.com/file/d/12eJnI8QQZWJNxDaUdtDodXX2OeoQin9I/view?usp=drive_link"
-    },
-    "Sábio": {
-        nome: "Sábio",
-        frase: "Saber sem agir é o luxo dos covardes.",
-        forca: "Clareza, discernimento e visão de longo prazo.",
-        desafio: "Trocar o excesso de reflexão por decisões ousadas.",
-        missao: "Ensinar o caminho, revelar verdades e expandir consciências.",
-        emoji: "📖",
-        cor: "#2196f3",
-        pdfUrl: "https://drive.google.com/file/d/1KFYCzWI1Su3Uu-_n43zh9Zpxz-Pf-l2n/view?usp=drive_link"
-    },
-    "Amante": {
-        nome: "Amante",
-        frase: "Amar não é se entregar ao outro. É se revelar por inteiro.",
-        forca: "Conexão, beleza e paixão pela vida.",
-        desafio: "Viver a profundidade sem se perder na carência ou dependência emocional.",
-        missao: "Ensinar que a presença verdadeira é mais poderosa que qualquer status.",
-        emoji: "❤️",
-        cor: "#e91e63",
-        pdfUrl: "https://drive.google.com/file/d/1ZVpoxfLe7FmdCbGPbkU5I6Aem0pedD0C/view?usp=drive_link"
-    },
-    "Bobo da Corte": {
-        nome: "Bobo da Corte",
-        frase: "Quem ri de si mesmo desarma qualquer tempestade.",
-        forca: "Humor, leveza e alegria contagiante.",
-        desafio: "Levar a vida a sério sem perder a graça.",
-        missao: "Confiar no processo e aproveitar o prazer que a jornada traz.",
-        emoji: "🤹",
-        cor: "#ff9800",
-        pdfUrl: "https://drive.google.com/file/d/1rICMnizREBE18SXj8UlptJ5oG9_4EtjX/view?usp=drive_link"
-    },
-    "Criador": {
-        nome: "Criador",
-        frase: "Quem cria, governa. Porque quem tem visão, gera.",
-        forca: "Imaginação, inovação e poder de materializar ideias.",
-        desafio: "Vencer a autossabotagem e transformar ideias em ação.",
-        missao: "Criar realidades que antes só existiam nos sonhos.",
-        emoji: "🎨",
-        cor: "#9c27b0",
-        pdfUrl: "https://drive.google.com/file/d/1cN14uvBAA6bDEwBz13r68EZiP7ZrTxcK/view?usp=drive_link"
-    },
-    "Explorador": {
-        nome: "Explorador",
-        frase: "Quem não se move, morre de tédio disfarçado de conforto.",
-        forca: "Liberdade, coragem e sede por novos horizontes.",
-        desafio: "Manter constância sem precisar sempre de novidade.",
-        missao: "Desbravar caminhos para mostrar que há vida além da mediocridade.",
-        emoji: "🧭",
-        cor: "#795548",
-        pdfUrl: "https://drive.google.com/file/d/1lyUCBfEFdpU3d-b4H9OA_TBkw34KqxFI/view?usp=drive_link"
-    },
-    "Fora-da-Lei": {
-        nome: "Fora-da-Lei",
-        frase: "Ser diferente é seu dom, não sua maldição.",
-        forca: "Rebeldia, autenticidade e ousadia.",
-        desafio: "Quebrar o sistema sem destruir a si mesmo no processo.",
-        missao: "Romper padrões tóxicos e provar que dá pra fazer diferente — e melhor.",
-        emoji: "⚡",
-        cor: "#212121",
-        pdfUrl: "https://drive.google.com/file/d/1S7cSds2EBhYv9Z89keky4OZhoFwgOJ8N/view?usp=drive_link"
-    },
-    "Governante": {
-        nome: "Governante",
-        frase: "Liderar não é mandar. É mover com propósito e verdade.",
-        forca: "Liderança, estrutura e poder realizador.",
-        desafio: "Liderar com amor, não com controle.",
-        missao: "Organizar o caos, construir reinos e multiplicar riquezas.",
-        emoji: "👑",
-        cor: "#ffd700",
-        pdfUrl: "https://drive.google.com/file/d/1UyqIw8B6Y7c7KC4F39jPyua9YxCsPLS9/view?usp=drive_link"
-    },
-    "Herói": {
-        nome: "Herói",
-        frase: "Ou você lidera a sua dor, ou será liderado por ela.",
-        forca: "Coragem, ação e superação.",
-        desafio: "Não viver apenas para lutar. Aprender a descansar sem culpa.",
-        missao: "Vencer para mostrar ao mundo que é possível sair do fundo e chegar ao topo.",
-        emoji: "⚔️",
-        cor: "#f44336",
-        pdfUrl: "https://drive.google.com/file/d/1EQmKb9fpHicpe1NAAlUVBCmyNQ4NxAop/view?usp=drive_link"
-    },
-    "Homem Comum": {
-        nome: "Homem Comum",
-        frase: "Você não nasceu para ser mais um. Nasceu para provar que é possível.",
-        forca: "Simplicidade, humildade e senso de comunidade.",
-        desafio: "Romper com o conformismo e a zona de conforto.",
-        missao: "Provar que pessoas comuns podem viver vidas extraordinárias.",
-        emoji: "🤝",
-        cor: "#607d8b",
-        pdfUrl: "https://drive.google.com/file/d/1kTvylHOYpzbTu41GnvQisHcQbTk4Xv5A/view?usp=drive_link"
-    }
-};
+        const ARQUETIPOS_DATA = {
+            "Inocente": {
+                emoji: "🕊️",
+                frase: "A confiança e a otimismo são meus guias para um mundo melhor",
+                forca: "Pureza de intenções, fé inabalável, capacidade de ver o bem em todas as situações",
+                desafio: "Evitar a ingenuidade excessiva e desenvolver discernimento sem perder a esperança",
+                missao: "Trazer luz e renovação, inspirando outros a acreditar em possibilidades positivas",
+                cor: "#87ceeb",
+                link: "https://drive.google.com/file/d/1BHVakykvtbOIJ_1hNamKu1XQmyNUJ90m/view"
+            },
+            "Mago": {
+                emoji: "🔮",
+                frase: "Transformo sonhos em realidade através do conhecimento e da ação",
+                forca: "Visão transformadora, capacidade de materializar ideias, poder de catalizar mudanças",
+                desafio: "Usar o poder com responsabilidade e não manipular outras pessoas",
+                missao: "Transformar o mundo através da inovação e fazer o impossível acontecer",
+                cor: "#673ab7",
+                link: "https://drive.google.com/file/d/11qydMB9fQwtK_NwUqqiRBmWHo-l9OLs6/view"
+            },
+            "Prestativo": {
+                emoji: "🤲",
+                frase: "Minha força está em cuidar e servir aos outros com amor genuíno",
+                forca: "Compaixão profunda, generosidade natural, capacidade de nutrir e apoiar",
+                desafio: "Aprender a cuidar de si mesmo sem se esquecer de suas próprias necessidades",
+                missao: "Fazer a diferença através do serviço altruísta e do cuidado com o próximo",
+                cor: "#4caf50",
+                link: "https://drive.google.com/file/d/12eJnI8QQZWJNxDaUdtDodXX2OeoQin9I/view"
+            },
+            "Sábio": {
+                emoji: "📖",
+                frase: "Busco a verdade e compartilho conhecimento para iluminar caminhos",
+                forca: "Sabedoria profunda, pensamento analítico, busca constante pelo conhecimento",
+                desafio: "Transformar conhecimento em ação e não se perder na paralisia pela análise",
+                missao: "Descobrir verdades e compartilhar sabedoria para melhorar o mundo",
+                cor: "#2196f3",
+                link: "https://drive.google.com/file/d/1KFYCzWI1Su3Uu-_n43zh9Zpxz-Pf-l2n/view"
+            },
+            "Amante": {
+                emoji: "❤️",
+                frase: "Vivo intensamente cada momento, celebrando paixão e conexões profundas",
+                forca: "Paixão intensa, capacidade de criar vínculos profundos, apreciação da beleza",
+                desafio: "Manter equilíbrio e identidade própria sem perder a intensidade",
+                missao: "Cultivar amor, intimidade e experiências que celebram a vida",
+                cor: "#e91e63",
+                link: "https://drive.google.com/file/d/1ZVpoxfLe7FmdCbGPbkU5I6Aem0pedD0C/view"
+            },
+            "Bobo da Corte": {
+                emoji: "🤹",
+                frase: "Através da alegria e do humor, transformo o comum em extraordinário",
+                forca: "Alegria contagiante, espontaneidade, capacidade de viver o momento presente",
+                desafio: "Desenvolver seriedade quando necessário sem perder a leveza",
+                missao: "Trazer alegria e ajudar outros a aproveitarem a jornada da vida",
+                cor: "#ff9800",
+                link: "https://drive.google.com/file/d/1rICMnizREBE18SXj8UlptJ5oG9_4EtjX/view"
+            },
+            "Criador": {
+                emoji: "🎨",
+                frase: "Dou vida à imaginação, criando algo único e duradouro",
+                forca: "Imaginação fértil, habilidades criativas, visão artística única",
+                desafio: "Completar projetos e não se perder no perfeccionismo paralisante",
+                missao: "Criar algo de valor duradouro e expressar a visão interior",
+                cor: "#9c27b0",
+                link: "https://drive.google.com/file/d/1cN14uvBAA6bDEwBz13r68EZiP7ZrTxcK/view"
+            },
+            "Explorador": {
+                emoji: "🧭",
+                frase: "Busco novos horizontes e experiências que expandem minha alma",
+                forca: "Coragem para explorar, autonomia, busca constante por autenticidade",
+                desafio: "Encontrar propósito além da busca e criar raízes quando necessário",
+                missao: "Descobrir novos territórios e viver uma vida autêntica e significativa",
+                cor: "#795548",
+                link: "https://drive.google.com/file/d/1lyUCBfEFdpU3d-b4H9OA_TBkw34KqxFI/view"
+            },
+            "Fora-da-Lei": {
+                emoji: "⚡",
+                frase: "Desafio o status quo para criar um mundo melhor e mais justo",
+                forca: "Coragem de desafiar, pensamento revolucionário, energia para mudanças radicais",
+                desafio: "Canalizar a rebeldia de forma construtiva sem se tornar destrutivo",
+                missao: "Romper com o que não funciona e libertar os oprimidos",
+                cor: "#212121",
+                link: "https://drive.google.com/file/d/1S7cSds2EBhYv9Z89keky4OZhoFwgOJ8N/view"
+            },
+            "Governante": {
+                emoji: "👑",
+                frase: "Lidero com responsabilidade para criar ordem e prosperidade",
+                forca: "Liderança natural, capacidade de organizar, visão estratégica",
+                desafio: "Evitar o controle excessivo e aprender a delegar com confiança",
+                missao: "Criar um ambiente próspero e estável para todos",
+                cor: "#ffd700",
+                link: "https://drive.google.com/file/d/1UyqIw8B6Y7c7KC4F39jPyua9YxCsPLS9/view"
+            },
+            "Herói": {
+                emoji: "⚔️",
+                frase: "Enfrento desafios com coragem para proteger o que importa",
+                forca: "Coragem excepcional, determinação inabalável, capacidade de superar obstáculos",
+                desafio: "Reconhecer limitações e aceitar ajuda sem sentir fraqueza",
+                missao: "Provar o valor através de atos corajosos e inspirar outros",
+                cor: "#f44336",
+                link: "https://drive.google.com/file/d/1EQmKb9fpHicpe1NAAlUVBCmyNQ4NxAop/view"
+            },
+            "Homem Comum": {
+                emoji: "🤝",
+                frase: "Minha força está na autenticidade e na conexão genuína com todos",
+                forca: "Empatia natural, autenticidade, capacidade de criar senso de comunidade",
+                desafio: "Desenvolver confiança própria sem perder a humildade",
+                missao: "Pertencer e ajudar outros a se sentirem aceitos como são",
+                cor: "#607d8b",
+                link: "https://drive.google.com/file/d/1kTvylHOYpzbTu41GnvQisHcQbTk4Xv5A/view"
+            }
+        };
 
-// ==================== FUNÇÃO PARA RENDERIZAR ARQUÉTIPO ====================
-function renderizarArquetipo() {
-    // Verificar se aluno tem arquétipo definido
-    const arquetipoAluno = alunoData.arquetipo;
-    
-    console.log('🌟 Arquétipo do aluno:', arquetipoAluno);
-    
-    // Se não tiver arquétipo, esconder seção
-    if (!arquetipoAluno || arquetipoAluno === '' || arquetipoAluno === 'Pendente') {
-        document.getElementById('arquetipoSection').classList.add('hidden');
-        console.log('❌ Aluno não tem arquétipo definido');
-        return;
-    }
-    
-    // Buscar dados do arquétipo
-    const dados = ARQUETIPOS_DATA[arquetipoAluno];
-    
-    if (!dados) {
-        console.error('❌ Arquétipo não encontrado:', arquetipoAluno);
-        document.getElementById('arquetipoSection').classList.add('hidden');
-        return;
-    }
-    
-    console.log('✅ Dados do arquétipo encontrados:', dados);
-    
-    // Mostrar seção
-    document.getElementById('arquetipoSection').classList.remove('hidden');
-    
-    // Preencher card
-    document.getElementById('arquetipoEmoji').textContent = dados.emoji;
-    document.getElementById('arquetipoNome').textContent = dados.nome;
-    document.getElementById('arquetipoFrase').textContent = `"${dados.frase}"`;
-    document.getElementById('arquetipoForca').textContent = dados.forca;
-    document.getElementById('arquetipoDesafio').textContent = dados.desafio;
-    document.getElementById('arquetipoMissao').textContent = dados.missao;
-    
-    // Configurar botão de download
-    const btnDownload = document.getElementById('btnDownloadArquetipo');
-    btnDownload.href = dados.pdfUrl;
-    
-    // Aplicar cor do arquétipo no card
-    const card = document.getElementById('arquetipoCard');
-    card.style.borderColor = dados.cor + '66'; // 40% de opacidade
-    
-    // Aplicar cor no nome
-    const nomeElement = document.getElementById('arquetipoNome');
-    nomeElement.style.color = dados.cor;
-    nomeElement.style.textShadow = `0 0 20px ${dados.cor}66`;
-    
-    console.log('✅ Arquétipo renderizado com sucesso!');
-}
+        // ==================== VARIÁVEIS GLOBAIS ====================
+        let todosAlunos = [];
+        let alunoData = null;
+        let biblioteca = [];
 
-        const FORMULARIOS = [
-            { nome: 'Formulário Anamnese Geral + Visão de Futuro', coluna: 'D' },
-            { nome: 'Formulário Jornada do Herói', coluna: 'E' },
-            { nome: 'Formulário Escritor Best Seller', coluna: 'F' },
-            { nome: 'Formulário Influenciador Digital', coluna: 'G' },
-            { nome: 'Formulário Palestrante Poderoso', coluna: 'H' },
-            { nome: 'Formulário Mentor High Ticket', coluna: 'I' }
-        ];
+        // ==================== UTILITÁRIOS ====================
+        function mostrarMensagem(elementId, mensagem, tipo) {
+            const el = document.getElementById(elementId);
+            el.className = tipo === 'erro' ? 'error-message' : 
+                          tipo === 'sucesso' ? 'success-message' : 'info-message';
+            el.textContent = mensagem;
+            el.style.display = 'block';
+        }
 
-        // Força da senha
-        document.getElementById('novaSenhaInput')?.addEventListener('input', (e) => {
-            const senha = e.target.value;
-            const strength = calcularForcaSenha(senha);
-            const bar = document.getElementById('strengthBar');
-            const text = document.getElementById('strengthText');
-            
-            bar.style.width = strength.percent + '%';
-            bar.className = 'password-strength-bar strength-' + strength.level;
-            text.textContent = strength.text;
-        });
+        function limparMensagem(elementId) {
+            document.getElementById(elementId).style.display = 'none';
+        }
+
+        function trocarTela(esconderIds, mostrarId) {
+            esconderIds.forEach(id => document.getElementById(id).classList.add('hidden'));
+            document.getElementById(mostrarId).classList.remove('hidden');
+        }
 
         function calcularForcaSenha(senha) {
-            if (senha.length === 0) return { percent: 0, level: 'weak', text: 'Digite uma senha' };
-            if (senha.length < 6) return { percent: 25, level: 'weak', text: 'Senha fraca - mínimo 6 caracteres' };
-            
-            let force = 0;
-            if (senha.length >= 8) force += 25;
-            if (/[a-z]/.test(senha)) force += 25;
-            if (/[A-Z]/.test(senha)) force += 25;
-            if (/[0-9]/.test(senha)) force += 25;
-            
-            if (force < 50) return { percent: force, level: 'weak', text: 'Senha fraca' };
-            if (force < 75) return { percent: force, level: 'medium', text: 'Senha média' };
-            return { percent: 100, level: 'strong', text: 'Senha forte!' };
+            let forca = 0;
+            if (senha.length >= 8) forca++;
+            if (senha.length >= 12) forca++;
+            if (/[a-z]/.test(senha) && /[A-Z]/.test(senha)) forca++;
+            if (/\d/.test(senha)) forca++;
+            if (/[^a-zA-Z0-9]/.test(senha)) forca++;
+            return Math.min(forca, 3);
         }
 
-        // Login
-        document.getElementById('loginForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const email = document.getElementById('emailInput').value.toLowerCase().trim();
-            const senha = document.getElementById('senhaInput').value;
-            await autenticar(email, senha);
-        });
-
-        // Criar Senha
-        document.getElementById('criarSenhaForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const novaSenha = document.getElementById('novaSenhaInput').value;
-            const confirmarSenha = document.getElementById('confirmarSenhaInput').value;
+        function atualizarBarraForca(senhaInput, barraId) {
+            const senha = senhaInput.value;
+            const barra = document.getElementById(barraId);
+            const forca = calcularForcaSenha(senha);
             
-            if (novaSenha !== confirmarSenha) {
-                showMessage('messageBoxCriar', 'As senhas não coincidem!', 'error');
-                return;
-            }
+            barra.style.width = (forca * 33.33) + '%';
+            barra.className = 'password-strength-bar';
             
-            if (novaSenha.length < 6) {
-                showMessage('messageBoxCriar', 'A senha deve ter no mínimo 6 caracteres!', 'error');
-                return;
-            }
-            
-            await salvarNovaSenha(primeiroAcessoEmail, novaSenha);
-        });
+            if (forca === 1) barra.classList.add('strength-weak');
+            else if (forca === 2) barra.classList.add('strength-medium');
+            else if (forca === 3) barra.classList.add('strength-strong');
+        }
 
-        // Esqueci Senha
-        document.getElementById('esqueciSenhaForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const email = document.getElementById('emailEsqueciInput').value.toLowerCase().trim();
-            await solicitarRecuperacaoSenha(email);
-        });
-
-        async function autenticar(email, senha) {
+        // ==================== CARREGAR DADOS ====================
+        async function carregarDados() {
             try {
-                showMessage('messageBox', '', 'clear');
-                
-                email = email.trim().toLowerCase();
-                senha = senha.trim();
-                
-                console.log('🔐 Tentando login...');
-                
-                // Verificar master
-                if (email === MASTER_EMAIL.toLowerCase() && senha === MASTER_PASSWORD) {
-                    console.log('👑 Login Master - OK!');
-                    await carregarDadosMaster();
-                    mostrarDashboardMaster();
-                    return;
-                }
-                
-                console.log('👤 Buscando aluno...');
-
-                // Buscar aluno
-                const turma1Data = await fetchSheetData('TURMA 1');
-                const turma2Data = await fetchSheetData('TURMA 2');
-                
-                let resultado = verificarAluno(turma1Data, email, senha, 'TURMA 1');
-                if (!resultado) {
-                    resultado = verificarAluno(turma2Data, email, senha, 'TURMA 2');
-                }
-
-                if (!resultado) {
-                    showMessage('messageBox', 'Email ou senha incorretos.', 'error');
-                    return;
-                }
-
-                // Verificar se é primeiro acesso
-                if (resultado.primeiroAcesso) {
-                    primeiroAcessoEmail = email;
-                    document.getElementById('nomeAlunoCriar').textContent = resultado.aluno.nome;
-                    mostrarTela('criarSenhaScreen');
-                    return;
-                }
-
-                configData = await fetchSheetData('CONFIG');
-                
-                // Carregar recursos
-                try {
-                    recursosData = await fetchSheetData('RECURSOS');
-                    console.log('📚 Recursos carregados');
-                } catch (error) {
-                    console.log('ℹ️ Aba RECURSOS não encontrada - biblioteca desabilitada');
-                    recursosData = [];
-                }
-
-                alunoData = resultado.aluno;
-                mostrarDashboard();
-
-            } catch (error) {
-                console.error('❌ Erro completo:', error);
-                showMessage('messageBox', 'Erro ao conectar. Verifique sua internet e se a planilha está acessível.', 'error');
-            }
-        }
-
-        function verificarAluno(rows, email, senha, turma) {
-            for (let i = 1; i < rows.length; i++) {
-                const row = rows[i];
-                if (!row.c || !row.c[1]) continue;
-                
-                const emailAluno = row.c[1].v ? row.c[1].v.toLowerCase().trim() : '';
-                
-                if (emailAluno === email) {
-                    const senhaAluno = row.c[9]?.v || '';
-                    const nomeReal = row.c[0]?.v || 'Sem nome';
-                    const nomePreferido = row.c[10]?.v || ''; // Coluna K
-                    
-                    // Primeiro acesso
-                    if (!senhaAluno || senhaAluno === '') {
-                        return {
-                            primeiroAcesso: true,
-                            aluno: {
-                                nome: nomeReal,
-                                nomePreferido: nomePreferido,
-                                email: emailAluno,
-                                turma: turma
-                            }
-                        };
-                    }
-                    
-                    // Login normal
-                    if (senhaAluno === senha) {
-                        return {
-                            primeiroAcesso: false,
-                            aluno: {
-                                nome: nomeReal,
-                                nomePreferido: nomePreferido,
-                                nomeExibicao: nomePreferido || nomeReal,
-                                email: emailAluno,
-                                turma: turma,
-                                formularios: [
-                                    row.c[3]?.v || 'Pendente',
-                                    row.c[4]?.v || 'Pendente',
-                                    row.c[5]?.v || 'Pendente',
-                                    row.c[6]?.v || 'Pendente',
-                                    row.c[7]?.v || 'Pendente',
-                                    row.c[8]?.v || 'Pendente'
-                                ]
-                            }
-                        };
-                    }
-                }
-            }
-            return null;
-        }
-
-        async function salvarNovaSenha(email, senha) {
-            try {
-                const btn = document.getElementById('btnCriarSenha');
-                btn.disabled = true;
-                btn.textContent = 'Salvando...';
-                
-                await fetch(APPS_SCRIPT_URL, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        action: 'salvarSenha',
-                        email: email,
-                        senha: senha
-                    })
-                });
-
-                showMessage('messageBoxCriar', 'Senha criada com sucesso! Entrando...', 'success');
-                
-                setTimeout(() => {
-                    autenticar(email, senha);
-                }, 1500);
-
-            } catch (error) {
-                console.error('Erro:', error);
-                showMessage('messageBoxCriar', 'Erro ao salvar senha. Tente novamente.', 'error');
-                btn.disabled = false;
-                btn.textContent = 'Criar Senha e Entrar';
-            }
-        }
-
-        async function solicitarRecuperacaoSenha(email) {
-            try {
-                showMessage('messageBoxEsqueci', 'Verificando email...', 'info');
-                
-                const turma1Data = await fetchSheetData('TURMA 1');
-                const turma2Data = await fetchSheetData('TURMA 2');
-                
-                let alunoEncontrado = false;
-                for (let i = 1; i < turma1Data.length; i++) {
-                    const row = turma1Data[i];
-                    if (row.c && row.c[1] && row.c[1].v.toLowerCase().trim() === email) {
-                        alunoEncontrado = true;
-                        break;
-                    }
-                }
-                
-                if (!alunoEncontrado) {
-                    for (let i = 1; i < turma2Data.length; i++) {
-                        const row = turma2Data[i];
-                        if (row.c && row.c[1] && row.c[1].v.toLowerCase().trim() === email) {
-                            alunoEncontrado = true;
-                            break;
-                        }
-                    }
-                }
-
-                if (!alunoEncontrado) {
-                    showMessage('messageBoxEsqueci', 'Email não encontrado no sistema.', 'error');
-                    return;
-                }
-
-                await fetch(APPS_SCRIPT_URL, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        action: 'recuperarSenha',
-                        email: email
-                    })
-                });
-
-                showMessage('messageBoxEsqueci', 
-                    '✅ Link de recuperação enviado para seu email! Verifique sua caixa de entrada.', 
-                    'success');
-                
-                setTimeout(() => {
-                    voltarLogin();
-                }, 3000);
-
-            } catch (error) {
-                console.error('Erro:', error);
-                showMessage('messageBoxEsqueci', 'Erro ao enviar email. Tente novamente.', 'error');
-            }
-        }
-
-        async function fetchSheetData(sheetName) {
-            const url = SHEETS_BASE_URL + encodeURIComponent(sheetName);
-            console.log('🔍 Acessando:', url);
-            
-            try {
-                const response = await fetch(url);
-                console.log('📡 Status:', response.status);
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                
+                const response = await fetch(PLANILHA_URL);
                 const text = await response.text();
-                const jsonText = text.substring(text.indexOf('{')).slice(0, -2);
-                const json = JSON.parse(jsonText);
+                const json = JSON.parse(text.substring(47, text.length - 2));
                 
-                console.log('✅ Dados carregados');
+                todosAlunos = [];
+                biblioteca = [];
                 
-                return json.table.rows;
-            } catch (error) {
-                console.error('❌ Erro:', error);
-                throw error;
-            }
-        }
-
-        async function carregarDadosMaster() {
-            const turma1Data = await fetchSheetData('TURMA 1');
-            const turma2Data = await fetchSheetData('TURMA 2');
-            
-            allStudentsData.turma1 = processarTurma(turma1Data, 'TURMA 1');
-            allStudentsData.turma2 = processarTurma(turma2Data, 'TURMA 2');
-        }
-
-        function processarTurma(rows, turma) {
-            const alunos = [];
-            for (let i = 1; i < rows.length; i++) {
-                const row = rows[i];
-                if (!row.c || !row.c[0]) continue;
-                
-                const formularios = [
-                    row.c[3]?.v || 'Pendente',
-                    row.c[4]?.v || 'Pendente',
-                    row.c[5]?.v || 'Pendente',
-                    row.c[6]?.v || 'Pendente',
-                    row.c[7]?.v || 'Pendente',
-                    row.c[8]?.v || 'Pendente'
-                ];
-
-                const preenchidos = formularios.filter(f => f === 'Preenchido').length;
-
-                alunos.push({
-                    nome: row.c[0]?.v || 'Sem nome',
-                    email: row.c[1]?.v || 'Sem email',
-                    turma: turma,
-                    formularios: formularios,
-                    progresso: Math.round((preenchidos / 6) * 100),
-                    temSenha: !!(row.c[9]?.v)
+                json.table.rows.forEach((row, index) => {
+                    if (index === 0) return;
+                    
+                    const tipo = row.c[0]?.v;
+                    
+                    if (tipo === 'Aluno') {
+                        todosAlunos.push({
+                            nome: row.c[1]?.v || '',
+                            nomePreferido: row.c[2]?.v || '',
+                            email: row.c[3]?.v || '',
+                            senha: row.c[4]?.v || '',
+                            codigoRecuperacao: row.c[5]?.v || '',
+                            turma: row.c[6]?.v || '',
+                            primeiroAcesso: row.c[7]?.v || 'Sim',
+                            arquetipo: row.c[11]?.v || '',
+                            formularios: [
+                                { nome: 'Trajetória de Carreira', status: row.c[12]?.v || 'Pendente', link: row.c[13]?.v || '' },
+                                { nome: 'Roda da Vida e do Trabalho', status: row.c[14]?.v || 'Pendente', link: row.c[15]?.v || '' },
+                                { nome: 'Inventário de Personalidade', status: row.c[16]?.v || 'Pendente', link: row.c[17]?.v || '' },
+                                { nome: 'Análise Profunda', status: row.c[18]?.v || 'Pendente', link: row.c[19]?.v || '' },
+                                { nome: 'Portfólio de Liderança', status: row.c[20]?.v || 'Pendente', link: row.c[21]?.v || '' },
+                                { nome: 'Plano de Desenvolvimento', status: row.c[22]?.v || 'Pendente', link: row.c[23]?.v || '' }
+                            ]
+                        });
+                    } else if (tipo === 'Biblioteca') {
+                        biblioteca.push({
+                            titulo: row.c[1]?.v || '',
+                            descricao: row.c[2]?.v || '',
+                            categoria: row.c[3]?.v || '',
+                            link: row.c[4]?.v || '',
+                            emoji: row.c[5]?.v || '📄'
+                        });
+                    }
                 });
+                
+                console.log('✅ Dados carregados:', todosAlunos.length, 'alunos e', biblioteca.length, 'recursos');
+                return true;
+            } catch (erro) {
+                console.error('❌ Erro ao carregar dados:', erro);
+                return false;
             }
-            return alunos;
         }
 
-        function mostrarDashboard() {
-            mostrarTela('dashboardScreen');
-
-            const nomeParaExibir = alunoData.nomeExibicao || alunoData.nome;
-            document.getElementById('alunoNome').textContent = `Olá, ${nomeParaExibir}!`;
-            document.getElementById('alunoTurma').textContent = alunoData.turma;
-
-            const preenchidos = alunoData.formularios.filter(f => f === 'Preenchido').length;
-            const total = alunoData.formularios.length;
-            const percentual = Math.round((preenchidos / total) * 100);
-
-            document.getElementById('progressPercentage').textContent = `${percentual}%`;
-            document.getElementById('progressFill').style.width = `${percentual}%`;
-            document.getElementById('progressText').textContent = `${preenchidos}/${total}`;
-
-            renderizarBiblioteca();
-            configurarAcessoRapido();
-            renderizarFormularios();
-        }
-
-        function renderizarBiblioteca() {
-            const section = document.getElementById('bibliotecaSection');
-            const container = document.getElementById('recursosContainer');
-
-            // Filtrar recursos pela turma do aluno
-            const recursosFiltrados = filtrarRecursosPorTurma(recursosData, alunoData.turma);
-
-            if (recursosFiltrados.length === 0) {
-                section.classList.add('hidden');
+        // ==================== FUNÇÃO ARQUÉTIPO (NOVA!) ====================
+        function renderizarArquetipo() {
+            console.log('🎯 Renderizando arquétipo...');
+            
+            const arquetipoSection = document.getElementById('arquetipoSection');
+            if (!arquetipoSection) {
+                console.error('❌ Seção de arquétipo não encontrada no HTML');
                 return;
             }
 
-            section.classList.remove('hidden');
-            container.innerHTML = '';
+            const arquetipoNome = alunoData.arquetipo;
+            console.log('📋 Arquétipo do aluno:', arquetipoNome);
 
-            recursosFiltrados.forEach(recurso => {
-                const card = document.createElement('div');
-                card.className = 'recurso-card';
-                
-                // Garantir que o link está correto
-                let linkFinal = recurso.link;
-                if (linkFinal && linkFinal !== '#') {
-                    // Remover parâmetros desnecessários e garantir que abre corretamente
-                    linkFinal = linkFinal.replace('/edit?usp=sharing', '/view?usp=sharing');
-                    linkFinal = linkFinal.replace('/edit', '/view');
-                }
-                
-                card.innerHTML = `
-                    <div class="recurso-header">
-                        <span class="recurso-icon">${recurso.icone}</span>
-                        <div class="recurso-info">
-                            <h3 class="recurso-title">${recurso.nome}</h3>
-                        </div>
-                    </div>
-                    ${recurso.categoria ? `<span class="recurso-categoria">${recurso.categoria}</span>` : ''}
-                    <p class="recurso-descricao">${recurso.descricao}</p>
-                    <a href="${linkFinal}" target="_blank" rel="noopener noreferrer" class="btn-download" onclick="console.log('Abrindo PDF:', '${linkFinal}')">
-                        📥 Abrir PDF
-                    </a>
-                `;
-                container.appendChild(card);
-            });
-        }
-
-        function filtrarRecursosPorTurma(rows, turma) {
-            if (!rows || rows.length <= 1) return [];
-
-            const recursos = [];
-            for (let i = 1; i < rows.length; i++) {
-                const row = rows[i];
-                if (!row.c || !row.c[0]) continue;
-
-                const turmaRecurso = row.c[1]?.v || '';
-                
-                // Mostrar se for da turma específica ou AMBAS
-                if (turmaRecurso === turma || turmaRecurso === 'AMBAS') {
-                    recursos.push({
-                        nome: row.c[0]?.v || 'Sem título',
-                        turma: turmaRecurso,
-                        link: row.c[2]?.v || '#',
-                        descricao: row.c[3]?.v || 'Material de apoio para sua jornada',
-                        icone: row.c[4]?.v || '📄',
-                        categoria: row.c[5]?.v || ''
-                    });
-                }
+            // Se não tem arquétipo ou é "Pendente", esconde a seção
+            if (!arquetipoNome || arquetipoNome === 'Pendente' || arquetipoNome.trim() === '') {
+                console.log('⚠️ Aluno não tem arquétipo definido');
+                arquetipoSection.style.display = 'none';
+                return;
             }
 
-            return recursos;
-        }
-
-        function mostrarDashboardMaster() {
-            mostrarTela('masterDashboard');
-            renderizarEstatisticas();
-            renderizarAlunos(allStudentsData.turma1);
-        }
-
-        function renderizarEstatisticas() {
-            const todosAlunos = [...allStudentsData.turma1, ...allStudentsData.turma2];
-            const totalAlunos = todosAlunos.length;
+            // Busca dados do arquétipo
+            const arquetipo = ARQUETIPOS_DATA[arquetipoNome];
             
-            let totalFormularios = 0;
-            let totalPreenchidos = 0;
+            if (!arquetipo) {
+                console.error('❌ Arquétipo não encontrado:', arquetipoNome);
+                arquetipoSection.style.display = 'none';
+                return;
+            }
+
+            console.log('✅ Dados do arquétipo encontrados:', arquetipo);
+
+            // Aplica a cor personalizada
+            const card = arquetipoSection.querySelector('.arquetipo-card');
+            const nome = arquetipoSection.querySelector('.arquetipo-nome');
+            if (card) card.style.borderColor = arquetipo.cor;
+            if (nome) nome.style.textShadow = `0 0 20px ${arquetipo.cor}`;
+
+            // Preenche os dados
+            arquetipoSection.querySelector('.arquetipo-emoji').textContent = arquetipo.emoji;
+            arquetipoSection.querySelector('.arquetipo-nome').textContent = arquetipoNome;
+            arquetipoSection.querySelector('.arquetipo-frase').textContent = arquetipo.frase;
             
-            todosAlunos.forEach(aluno => {
-                totalFormularios += 6;
-                totalPreenchidos += aluno.formularios.filter(f => f === 'Preenchido').length;
-            });
-
-            const percentualGeral = totalFormularios > 0 ? Math.round((totalPreenchidos / totalFormularios) * 100) : 0;
-
-            const statsHTML = `
-                <div class="stat-card">
-                    <div class="stat-value">${totalAlunos}</div>
-                    <div class="stat-label">Total de Alunos</div>
+            arquetipoSection.querySelector('.arquetipo-detalhes').innerHTML = `
+                <div class="arquetipo-item">
+                    <span class="arquetipo-label">💪 Sua Força</span>
+                    <p class="arquetipo-texto">${arquetipo.forca}</p>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-value">${allStudentsData.turma1.length}</div>
-                    <div class="stat-label">Turma 1</div>
+                <div class="arquetipo-item">
+                    <span class="arquetipo-label">🎯 Seu Desafio</span>
+                    <p class="arquetipo-texto">${arquetipo.desafio}</p>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-value">${allStudentsData.turma2.length}</div>
-                    <div class="stat-label">Turma 2</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-value">${percentualGeral}%</div>
-                    <div class="stat-label">Conclusão Geral</div>
+                <div class="arquetipo-item">
+                    <span class="arquetipo-label">🌟 Sua Missão</span>
+                    <p class="arquetipo-texto">${arquetipo.missao}</p>
                 </div>
             `;
 
-            document.getElementById('statsGrid').innerHTML = statsHTML;
+            const btnDownload = arquetipoSection.querySelector('.btn-download-arquetipo');
+            btnDownload.href = arquetipo.link;
+            btnDownload.target = '_blank';
+
+            // Mostra a seção
+            arquetipoSection.style.display = 'block';
+            console.log('✅ Arquétipo renderizado com sucesso!');
         }
 
-        function trocarAba(event, aba) {
-            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
-            event.target.classList.add('active');
-
-            if (aba === 'turma1') {
-                renderizarAlunos(allStudentsData.turma1);
-            } else if (aba === 'turma2') {
-                renderizarAlunos(allStudentsData.turma2);
-            } else {
-                renderizarVisaoGeral();
+        // ==================== LOGIN ====================
+        async function verificarAluno(email, senha) {
+            const carregou = await carregarDados();
+            if (!carregou) return null;
+            
+            if (email === 'master@febracis.com.br' && senha === 'Master2024!') {
+                return { tipo: 'master' };
             }
+            
+            const aluno = todosAlunos.find(a => a.email.toLowerCase() === email.toLowerCase());
+            
+            if (!aluno) return null;
+            if (aluno.senha !== senha) return null;
+            
+            const emailAluno = aluno.email;
+            const turma = aluno.turma;
+            
+            return {
+                tipo: 'aluno',
+                nome: aluno.nome,
+                nomePreferido: aluno.nomePreferido,
+                email: emailAluno,
+                turma: turma,
+                arquetipo: aluno.arquetipo || '',  // ← CORREÇÃO 1 APLICADA!
+                formularios: [
+                    { nome: 'Trajetória de Carreira', status: aluno.formularios[0].status, link: aluno.formularios[0].link },
+                    { nome: 'Roda da Vida e do Trabalho', status: aluno.formularios[1].status, link: aluno.formularios[1].link },
+                    { nome: 'Inventário de Personalidade', status: aluno.formularios[2].status, link: aluno.formularios[2].link },
+                    { nome: 'Análise Profunda', status: aluno.formularios[3].status, link: aluno.formularios[3].link },
+                    { nome: 'Portfólio de Liderança', status: aluno.formularios[4].status, link: aluno.formularios[4].link },
+                    { nome: 'Plano de Desenvolvimento', status: aluno.formularios[5].status, link: aluno.formularios[5].link }
+                ],
+                primeiroAcesso: aluno.primeiroAcesso === 'Sim'
+            };
         }
 
-        function renderizarAlunos(alunos) {
-            const container = document.getElementById('masterContent');
-            let html = '';
-
-            alunos.forEach((aluno, index) => {
-                const senhaStatus = aluno.temSenha ? '✅ Senha criada' : '⚠️ Aguardando senha';
-                const alunoId = `aluno-${index}`;
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            limparMensagem('loginMessage');
+            
+            const email = document.getElementById('emailInput').value;
+            const senha = document.getElementById('senhaInput').value;
+            const btnLogin = document.getElementById('btnLogin');
+            
+            btnLogin.disabled = true;
+            btnLogin.textContent = 'Entrando...';
+            
+            const usuario = await verificarAluno(email, senha);
+            
+            if (!usuario) {
+                mostrarMensagem('loginMessage', 'Email ou senha incorretos', 'erro');
+                btnLogin.disabled = false;
+                btnLogin.textContent = 'Entrar';
+                return;
+            }
+            
+            if (usuario.tipo === 'master') {
+                trocarTela(['loginScreen'], 'masterDashboard');
+                await renderizarMasterDashboard();
+            } else {
+                alunoData = usuario;
                 
-                html += `
-                    <div class="aluno-card" id="${alunoId}">
-                        <div class="aluno-header" onclick="toggleAluno('${alunoId}')">
+                if (usuario.primeiroAcesso) {
+                    trocarTela(['loginScreen'], 'primeiroAcessoScreen');
+                } else {
+                    trocarTela(['loginScreen'], 'dashboardScreen');
+                    mostrarDashboard();
+                }
+            }
+            
+            btnLogin.disabled = false;
+            btnLogin.textContent = 'Entrar';
+        });
+
+        // ==================== DASHBOARD ALUNO ====================
+        function mostrarDashboard() {
+            const progress = calcularProgresso();
+            const nomeExibicao = alunoData.nomePreferido || alunoData.nome.split(' ')[0];
+            
+            const linksPlataforma = {
+                'TURMA 1': 'https://drive.google.com/drive/folders/1IU2yt38HVwVdcYHY8I2FgQ1yETU7PQy_',
+                'TURMA 2': 'https://drive.google.com/drive/folders/1G-Y7gMZZyI9M3sTTmPPCdUXqIKUfn4Zy'
+            };
+            
+            const calendarios = {
+                'TURMA 1': [
+                    { nome: 'Igor Vidor', link: 'https://calendly.com/igor-vidor/mentoria-individualizada-do-programa-mentor-de-lideres' },
+                    { nome: 'Vinicius de Freitas', link: 'https://calendly.com/vinicius-mentorespro/mentoria-individualizada-do-programa-mentor-de-lideres' }
+                ],
+                'TURMA 2': [
+                    { nome: 'Murilo Dias', link: 'https://calendly.com/murilo-feb/mentoria-individualizada-do-programa-mentor-de-lideres' },
+                    { nome: 'Raoni Rosa', link: 'https://calendly.com/raoni-feb/mentoria-individualizada-do-programa-mentor-de-lideres' }
+                ]
+            };
+            
+            const linkPlataforma = linksPlataforma[alunoData.turma] || '#';
+            const mentoresTurma = calendarios[alunoData.turma] || [];
+            
+            document.getElementById('dashboardContent').innerHTML = `
+                <div class="dashboard-header">
+                    <div>
+                        <h2>Olá, ${nomeExibicao}! 👋</h2>
+                        <p>${alunoData.turma}</p>
+                    </div>
+                    <div class="aluno-header-actions">
+                        <button class="btn-edit-name" id="btnEditarNome">
+                            ✏️ Editar Nome
+                        </button>
+                        <button class="logout-btn-aluno" id="btnLogoutAluno">Sair</button>
+                    </div>
+                </div>
+
+                <div class="progress-section">
+                    <div class="progress-header">
+                        <h3>📊 Seu Progresso</h3>
+                        <span class="progress-percentage">${progress}%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: ${progress}%"></div>
+                    </div>
+                </div>
+
+                <!-- SEÇÃO DE ARQUÉTIPO -->
+                <div id="arquetipoSection" class="arquetipo-section" style="display: none;">
+                    <div class="arquetipo-header">
+                        <span class="arquetipo-icon-header">🌟</span>
+                        <h3 class="arquetipo-title-main">SEU ARQUÉTIPO</h3>
+                    </div>
+                    <div class="arquetipo-card">
+                        <div class="arquetipo-card-content">
+                            <div class="arquetipo-emoji">🦁</div>
+                            <h4 class="arquetipo-nome">HERÓI</h4>
+                            <p class="arquetipo-frase">"Frase inspiradora aqui"</p>
+                            <div class="arquetipo-detalhes"></div>
+                            <a href="#" class="btn-download-arquetipo" target="_blank">
+                                <span class="btn-icon">📥</span>
+                                <span>Baixar PDF do Arquétipo</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="acesso-rapido-section">
+                    <div class="acesso-rapido-header">
+                        <span class="acesso-rapido-icon">🚀</span>
+                        <h3 class="acesso-rapido-title">Acesso Rápido</h3>
+                    </div>
+                    
+                    <a href="${linkPlataforma}" target="_blank" class="btn-plataforma-videos">
+                        <span class="btn-icon">🎬</span>
+                        <div class="btn-text">
+                            <strong>Plataforma de Vídeos</strong>
+                            <small>Acesse os conteúdos exclusivos da sua turma</small>
+                        </div>
+                        <span class="btn-arrow">→</span>
+                    </a>
+
+                    <div class="agendamento-section">
+                        <div class="agendamento-header">
+                            <span class="agendamento-icon">📅</span>
+                            <h4>Agende sua Mentoria</h4>
+                        </div>
+                        <div class="mentores-grid">
+                            ${mentoresTurma.map(mentor => `
+                                <a href="${mentor.link}" target="_blank" class="btn-mentor">
+                                    <span class="mentor-icon">👤</span>
+                                    <span class="mentor-nome">${mentor.nome}</span>
+                                    <span class="mentor-arrow">→</span>
+                                </a>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+
+                <div id="bibliotecaContainer"></div>
+                <h2 class="section-title">📝 Seus Formulários</h2>
+                <div id="formulariosContainer"></div>
+            `;
+
+            document.getElementById('btnEditarNome').addEventListener('click', abrirModalEditarNome);
+            document.getElementById('btnLogoutAluno').addEventListener('click', () => {
+                trocarTela(['dashboardScreen'], 'loginScreen');
+                document.getElementById('loginForm').reset();
+            });
+
+            renderizarBiblioteca();
+            configurarAcessoRapido();
+            renderizarArquetipo();  // ← CORREÇÃO 2 APLICADA!
+            renderizarFormularios();
+        }
+
+        function calcularProgresso() {
+            const preenchidos = alunoData.formularios.filter(f => f.status === 'Preenchido').length;
+            return Math.round((preenchidos / 6) * 100);
+        }
+
+        function renderizarBiblioteca() {
+            const container = document.getElementById('bibliotecaContainer');
+            
+            if (biblioteca.length === 0) {
+                container.innerHTML = '';
+                return;
+            }
+            
+            container.innerHTML = `
+                <div class="biblioteca-section">
+                    <div class="biblioteca-header">
+                        <span class="biblioteca-icon">📚</span>
+                        <h3 class="biblioteca-title">Biblioteca de Recursos</h3>
+                    </div>
+                    <div class="recursos-grid">
+                        ${biblioteca.map(recurso => `
+                            <div class="recurso-card">
+                                <div class="recurso-header">
+                                    <span class="recurso-icon">${recurso.emoji}</span>
+                                    <div class="recurso-info">
+                                        <h4 class="recurso-title">${recurso.titulo}</h4>
+                                    </div>
+                                </div>
+                                <p class="recurso-descricao">${recurso.descricao}</p>
+                                <span class="recurso-categoria">${recurso.categoria}</span>
+                                <a href="${recurso.link}" target="_blank" class="btn-download">
+                                    📥 Acessar Recurso
+                                </a>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function configurarAcessoRapido() {
+            // Configuração já está no HTML gerado
+        }
+
+        function renderizarFormularios() {
+            const container = document.getElementById('formulariosContainer');
+            container.innerHTML = `
+                <div class="formularios-grid">
+                    ${alunoData.formularios.map(form => `
+                        <div class="formulario-card">
+                            <div class="formulario-header">
+                                <h4 class="formulario-title">${form.nome}</h4>
+                                <span class="status-badge ${form.status === 'Preenchido' ? 'status-preenchido' : 'status-pendente'}">
+                                    ${form.status === 'Preenchido' ? '✓ Preenchido' : '⏳ Pendente'}
+                                </span>
+                            </div>
+                            ${form.status === 'Preenchido' 
+                                ? `<a href="${form.link}" target="_blank" class="btn-formulario btn-concluido">✓ Visualizar</a>`
+                                : `<a href="${form.link}" target="_blank" class="btn-formulario btn-preencher">Preencher Agora</a>`
+                            }
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        // ==================== MODAL EDITAR NOME ====================
+        function abrirModalEditarNome() {
+            const modal = document.getElementById('modalEditarNome');
+            const input = document.getElementById('novoNomePreferido');
+            input.value = alunoData.nomePreferido || '';
+            modal.classList.add('active');
+        }
+
+        function fecharModalEditarNome() {
+            const modal = document.getElementById('modalEditarNome');
+            modal.classList.remove('active');
+        }
+
+        document.getElementById('btnCancelarNome').addEventListener('click', fecharModalEditarNome);
+        
+        document.getElementById('btnSalvarNome').addEventListener('click', async () => {
+            const novoNome = document.getElementById('novoNomePreferido').value.trim();
+            if (!novoNome) {
+                alert('Por favor, digite um nome.');
+                return;
+            }
+            
+            alunoData.nomePreferido = novoNome;
+            alert('✅ Nome atualizado com sucesso!\n\n⚠️ Observação: Esta alteração é temporária nesta sessão. Para salvar permanentemente, você precisa atualizar a planilha do Google Sheets.');
+            
+            fecharModalEditarNome();
+            mostrarDashboard();
+        });
+
+        document.getElementById('modalEditarNome').addEventListener('click', (e) => {
+            if (e.target.id === 'modalEditarNome') {
+                fecharModalEditarNome();
+            }
+        });
+
+        // ==================== PRIMEIRO ACESSO ====================
+        document.getElementById('novaSenhaPrimeiroAcesso').addEventListener('input', function() {
+            atualizarBarraForca(this, 'strengthBarPrimeiroAcesso');
+        });
+
+        document.getElementById('primeiroAcessoForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            limparMensagem('primeiroAcessoMessage');
+            
+            const nomePreferido = document.getElementById('nomePreferidoInput').value.trim();
+            const novaSenha = document.getElementById('novaSenhaPrimeiroAcesso').value;
+            const confirmarSenha = document.getElementById('confirmarSenhaPrimeiroAcesso').value();
+            
+            if (novaSenha !== confirmarSenha) {
+                mostrarMensagem('primeiroAcessoMessage', 'As senhas não coincidem', 'erro');
+                return;
+            }
+            
+            if (calcularForcaSenha(novaSenha) < 2) {
+                mostrarMensagem('primeiroAcessoMessage', 'Senha muito fraca. Use pelo menos 8 caracteres com letras e números.', 'erro');
+                return;
+            }
+            
+            alunoData.nomePreferido = nomePreferido;
+            alunoData.senha = novaSenha;
+            alunoData.primeiroAcesso = false;
+            
+            mostrarMensagem('primeiroAcessoMessage', '✅ Configuração concluída!\n\n⚠️ Para salvar permanentemente, atualize a planilha:\n- Nome Preferido na coluna C\n- Nova Senha na coluna E\n- "Primeiro Acesso" = "Não" na coluna H', 'sucesso');
+            
+            setTimeout(() => {
+                trocarTela(['primeiroAcessoScreen'], 'dashboardScreen');
+                mostrarDashboard();
+            }, 3000);
+        });
+
+        // ==================== RECUPERAÇÃO DE SENHA ====================
+        document.getElementById('linkEsqueciSenha').addEventListener('click', () => {
+            trocarTela(['loginScreen'], 'recuperarSenhaScreen');
+            limparMensagem('recuperarMessage');
+        });
+
+        document.getElementById('linkVoltarLogin').addEventListener('click', () => {
+            trocarTela(['recuperarSenhaScreen'], 'loginScreen');
+        });
+
+        document.getElementById('linkVoltarLogin2').addEventListener('click', () => {
+            trocarTela(['redefinirSenhaScreen'], 'loginScreen');
+        });
+
+        document.getElementById('recuperarForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            limparMensagem('recuperarMessage');
+            
+            const email = document.getElementById('emailRecuperar').value;
+            await carregarDados();
+            
+            const aluno = todosAlunos.find(a => a.email.toLowerCase() === email.toLowerCase());
+            
+            if (!aluno || !aluno.codigoRecuperacao) {
+                mostrarMensagem('recuperarMessage', 'Email não encontrado ou sem código de recuperação configurado', 'erro');
+                return;
+            }
+            
+            mostrarMensagem('recuperarMessage', `✅ Código encontrado: ${aluno.codigoRecuperacao}`, 'sucesso');
+            
+            setTimeout(() => {
+                trocarTela(['recuperarSenhaScreen'], 'redefinirSenhaScreen');
+            }, 2000);
+        });
+
+        document.getElementById('novaSenha').addEventListener('input', function() {
+            atualizarBarraForca(this, 'strengthBar');
+        });
+
+        document.getElementById('redefinirForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            limparMensagem('redefinirMessage');
+            
+            const codigo = document.getElementById('codigoRecuperacao').value;
+            const novaSenha = document.getElementById('novaSenha').value;
+            const confirmarSenha = document.getElementById('confirmarSenha').value;
+            
+            if (novaSenha !== confirmarSenha) {
+                mostrarMensagem('redefinirMessage', 'As senhas não coincidem', 'erro');
+                return;
+            }
+            
+            if (calcularForcaSenha(novaSenha) < 2) {
+                mostrarMensagem('redefinirMessage', 'Senha muito fraca. Use pelo menos 8 caracteres com letras e números.', 'erro');
+                return;
+            }
+            
+            await carregarDados();
+            const aluno = todosAlunos.find(a => a.codigoRecuperacao === codigo);
+            
+            if (!aluno) {
+                mostrarMensagem('redefinirMessage', 'Código de recuperação inválido', 'erro');
+                return;
+            }
+            
+            mostrarMensagem('redefinirMessage', `✅ Senha redefinida com sucesso!\n\n⚠️ Atualize a coluna E (Senha) na planilha para: ${novaSenha}`, 'sucesso');
+            
+            setTimeout(() => {
+                trocarTela(['redefinirSenhaScreen'], 'loginScreen');
+                document.getElementById('redefinirForm').reset();
+            }, 3000);
+        });
+
+        // ==================== MASTER DASHBOARD ====================
+        async function renderizarMasterDashboard() {
+            await carregarDados();
+            
+            const stats = calcularEstatisticas();
+            
+            document.getElementById('masterContent').innerHTML = `
+                <div class="dashboard-header">
+                    <div>
+                        <h2>Dashboard Master 🦁</h2>
+                        <p>Visão completa do programa</p>
+                    </div>
+                    <div class="master-header-actions">
+                        <span class="badge-master">ADMIN</span>
+                        <button class="logout-btn-header" id="btnLogoutMaster">Sair</button>
+                    </div>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value">${stats.totalAlunos}</div>
+                        <div class="stat-label">Total de Alunos</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${stats.progressoMedio}%</div>
+                        <div class="stat-label">Progresso Médio</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${stats.formulariosPreenchidos}</div>
+                        <div class="stat-label">Formulários Preenchidos</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${stats.formulariosPendentes}</div>
+                        <div class="stat-label">Formulários Pendentes</div>
+                    </div>
+                </div>
+
+                <div class="strategic-section">
+                    <h2 class="strategic-title">📊 Visão Estratégica</h2>
+                    
+                    <div class="kpi-grid">
+                        <div class="kpi-card">
+                            <div class="kpi-label">Taxa de Conclusão</div>
+                            <div class="kpi-value">${stats.progressoMedio}%</div>
+                            <div class="kpi-sublabel">Meta: 100%</div>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-label">Alunos Ativos</div>
+                            <div class="kpi-value">${stats.totalAlunos}</div>
+                            <div class="kpi-sublabel">${stats.turma1} T1 + ${stats.turma2} T2</div>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-label">Formulários Totais</div>
+                            <div class="kpi-value">${stats.totalFormularios}</div>
+                            <div class="kpi-sublabel">${stats.formulariosPreenchidos} concluídos</div>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-label">Taxa de Pendência</div>
+                            <div class="kpi-value">${Math.round((stats.formulariosPendentes / stats.totalFormularios) * 100)}%</div>
+                            <div class="kpi-sublabel">${stats.formulariosPendentes} pendentes</div>
+                        </div>
+                    </div>
+
+                    ${renderizarComparacaoTurmas(stats)}
+                    ${renderizarInsights(stats)}
+                </div>
+
+                <div class="tabs">
+                    <div class="tab active" data-tab="turma1">TURMA 1 (${stats.turma1})</div>
+                    <div class="tab" data-tab="turma2">TURMA 2 (${stats.turma2})</div>
+                    <div class="tab" data-tab="todos">TODOS (${stats.totalAlunos})</div>
+                </div>
+
+                <div id="alunosContainer"></div>
+            `;
+
+            document.getElementById('btnLogoutMaster').addEventListener('click', () => {
+                trocarTela(['masterDashboard'], 'loginScreen');
+                document.getElementById('loginForm').reset();
+            });
+
+            configurarTabs();
+            renderizarAlunos('todos');
+        }
+
+        function calcularEstatisticas() {
+            const stats = {
+                totalAlunos: todosAlunos.length,
+                turma1: todosAlunos.filter(a => a.turma === 'TURMA 1').length,
+                turma2: todosAlunos.filter(a => a.turma === 'TURMA 2').length,
+                formulariosPreenchidos: 0,
+                formulariosPendentes: 0,
+                totalFormularios: todosAlunos.length * 6,
+                progressoMedio: 0
+            };
+
+            let somaProgresso = 0;
+
+            todosAlunos.forEach(aluno => {
+                aluno.formularios.forEach(form => {
+                    if (form.status === 'Preenchido') {
+                        stats.formulariosPreenchidos++;
+                    } else {
+                        stats.formulariosPendentes++;
+                    }
+                });
+                somaProgresso += (aluno.formularios.filter(f => f.status === 'Preenchido').length / 6) * 100;
+            });
+
+            stats.progressoMedio = Math.round(somaProgresso / todosAlunos.length);
+
+            return stats;
+        }
+
+        function renderizarComparacaoTurmas(stats) {
+            const turma1Alunos = todosAlunos.filter(a => a.turma === 'TURMA 1');
+            const turma2Alunos = todosAlunos.filter(a => a.turma === 'TURMA 2');
+
+            const calcularStats = (alunos) => {
+                const preenchidos = alunos.reduce((acc, a) => 
+                    acc + a.formularios.filter(f => f.status === 'Preenchido').length, 0);
+                const total = alunos.length * 6;
+                return {
+                    preenchidos,
+                    total,
+                    percentual: Math.round((preenchidos / total) * 100)
+                };
+            };
+
+            const t1 = calcularStats(turma1Alunos);
+            const t2 = calcularStats(turma2Alunos);
+
+            return `
+                <div class="comparison-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Métrica</th>
+                                <th>TURMA 1</th>
+                                <th>TURMA 2</th>
+                                <th>Diferença</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Total de Alunos</strong></td>
+                                <td>${stats.turma1}</td>
+                                <td>${stats.turma2}</td>
+                                <td class="gap-indicator ${stats.turma1 > stats.turma2 ? 'gap-positive' : stats.turma1 < stats.turma2 ? 'gap-negative' : ''}">
+                                    ${stats.turma1 - stats.turma2 > 0 ? '+' : ''}${stats.turma1 - stats.turma2}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>Formulários Preenchidos</strong></td>
+                                <td>${t1.preenchidos}/${t1.total}</td>
+                                <td>${t2.preenchidos}/${t2.total}</td>
+                                <td class="gap-indicator ${t1.percentual > t2.percentual ? 'gap-positive' : t1.percentual < t2.percentual ? 'gap-negative' : ''}">
+                                    ${t1.percentual - t2.percentual > 0 ? '+' : ''}${t1.percentual - t2.percentual}%
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>Taxa de Conclusão</strong></td>
+                                <td>
+                                    ${t1.percentual}%
+                                    <div class="progress-bar-mini">
+                                        <div class="progress-fill-mini" style="width: ${t1.percentual}%"></div>
+                                    </div>
+                                </td>
+                                <td>
+                                    ${t2.percentual}%
+                                    <div class="progress-bar-mini">
+                                        <div class="progress-fill-mini" style="width: ${t2.percentual}%"></div>
+                                    </div>
+                                </td>
+                                <td>
+                                    ${t1.percentual > t2.percentual 
+                                        ? '<span class="success-badge">T1 Lidera</span>' 
+                                        : t2.percentual > t1.percentual 
+                                        ? '<span class="success-badge">T2 Lidera</span>' 
+                                        : '<span class="success-badge">Empate</span>'}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        }
+
+        function renderizarInsights(stats) {
+            const insights = [];
+
+            if (stats.formulariosPendentes > stats.formulariosPreenchidos) {
+                insights.push({
+                    titulo: '⚠️ Atenção: Alta Pendência',
+                    texto: `${stats.formulariosPendentes} formulários ainda estão pendentes. Considere enviar lembretes aos alunos.`
+                });
+            }
+
+            if (stats.progressoMedio < 50) {
+                insights.push({
+                    titulo: '📉 Progresso Abaixo da Meta',
+                    texto: `Progresso médio está em ${stats.progressoMedio}%. Recomenda-se ações de engajamento.`
+                });
+            } else if (stats.progressoMedio >= 80) {
+                insights.push({
+                    titulo: '🎯 Excelente Desempenho',
+                    texto: `Progresso médio de ${stats.progressoMedio}%! A turma está altamente engajada.`
+                });
+            }
+
+            if (insights.length === 0) {
+                insights.push({
+                    titulo: '✅ Programa em Andamento',
+                    texto: `${stats.formulariosPreenchidos} de ${stats.totalFormularios} formulários concluídos. Continue monitorando o progresso.`
+                });
+            }
+
+            return insights.map(insight => `
+                <div class="insight-box">
+                    <h4>${insight.titulo}</h4>
+                    <p>${insight.texto}</p>
+                </div>
+            `).join('');
+        }
+
+        function configurarTabs() {
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    renderizarAlunos(tab.dataset.tab);
+                });
+            });
+        }
+
+        function renderizarAlunos(filtro) {
+            let alunosFiltrados = todosAlunos;
+
+            if (filtro === 'turma1') {
+                alunosFiltrados = todosAlunos.filter(a => a.turma === 'TURMA 1');
+            } else if (filtro === 'turma2') {
+                alunosFiltrados = todosAlunos.filter(a => a.turma === 'TURMA 2');
+            }
+
+            const container = document.getElementById('alunosContainer');
+            container.innerHTML = alunosFiltrados.map(aluno => {
+                const progress = Math.round((aluno.formularios.filter(f => f.status === 'Preenchido').length / 6) * 100);
+                return `
+                    <div class="aluno-card">
+                        <div class="aluno-header" onclick="toggleAluno(this)">
                             <div class="aluno-info">
-                                <div class="aluno-nome">${aluno.nome}</div>
-                                <div class="aluno-email">${aluno.email}</div>
-                                <small style="color: ${aluno.temSenha ? '#51cf66' : '#ffc107'};">${senhaStatus}</small>
+                                <div class="aluno-nome">${aluno.nomePreferido || aluno.nome}</div>
+                                <div class="aluno-email">${aluno.email} • ${aluno.turma}</div>
                             </div>
                             <div class="aluno-stats">
-                                <div class="mini-progress">${aluno.progresso}% completo</div>
+                                <div class="mini-progress">${progress}%</div>
                                 <div class="expand-icon">▼</div>
                             </div>
                         </div>
@@ -2558,662 +2672,111 @@ function renderizarArquetipo() {
                                     <thead>
                                         <tr>
                                             <th>Formulário</th>
-                                            <th style="text-align: center;">Status</th>
+                                            <th>Status</th>
+                                            <th>Link</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        ${FORMULARIOS.map((form, idx) => {
-                                            const status = aluno.formularios[idx];
-                                            const isPreenchido = status === 'Preenchido';
-                                            return `
-                                                <tr>
-                                                    <td>${form.nome}</td>
-                                                    <td style="text-align: center;">
-                                                        <span class="status-icon" style="color: ${isPreenchido ? '#51cf66' : '#ff6b6b'}">
-                                                            ${isPreenchido ? '✅' : '❌'}
-                                                        </span>
-                                                        <span style="color: ${isPreenchido ? '#51cf66' : '#ff6b6b'}; font-weight: 600;">
-                                                            ${isPreenchido ? 'Preenchido' : 'Pendente'}
-                                                        </span>
-                                                    </td>
-                                                </tr>
-                                            `;
-                                        }).join('')}
+                                        ${aluno.formularios.map(form => `
+                                            <tr class="formulario-row" onclick="toggleFormularioDetalhes(this, '${form.nome}')">
+                                                <td>
+                                                    ${form.nome}
+                                                    <span class="expand-icon-table">▼</span>
+                                                </td>
+                                                <td>
+                                                    <span class="status-icon">${form.status === 'Preenchido' ? '✅' : '⏳'}</span>
+                                                    ${form.status}
+                                                </td>
+                                                <td>
+                                                    ${form.link ? `<a href="${form.link}" target="_blank" onclick="event.stopPropagation()">🔗 Abrir</a>` : '-'}
+                                                </td>
+                                            </tr>
+                                            <tr class="formulario-details">
+                                                <td colspan="3">
+                                                    <div class="formulario-details-content">
+                                                        <h4 style="margin-bottom: 20px; color: #0dcaf0; font-size: 1.3em;">📊 Análise: ${form.nome}</h4>
+                                                        <div class="turmas-comparison">
+                                                            ${renderizarDetalhesFormulario(form.nome, 'TURMA 1')}
+                                                            ${renderizarDetalhesFormulario(form.nome, 'TURMA 2')}
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        `).join('')}
                                     </tbody>
                                 </table>
                             </div>
                         </div>
                     </div>
                 `;
-            });
-
-            container.innerHTML = html;
+            }).join('');
         }
 
-        function toggleAluno(alunoId) {
-            const card = document.getElementById(alunoId);
+        function renderizarDetalhesFormulario(nomeFormulario, nomeTurma) {
+            const alunosTurma = todosAlunos.filter(a => a.turma === nomeTurma);
+            const formIndex = ['Trajetória de Carreira', 'Roda da Vida e do Trabalho', 'Inventário de Personalidade', 
+                               'Análise Profunda', 'Portfólio de Liderança', 'Plano de Desenvolvimento'].indexOf(nomeFormulario);
+
+            const preenchidos = alunosTurma.filter(a => a.formularios[formIndex].status === 'Preenchido');
+            const pendentes = alunosTurma.filter(a => a.formularios[formIndex].status === 'Pendente');
+
+            return `
+                <div class="turma-alunos-box">
+                    <h3 class="turma-alunos-title">${nomeTurma}</h3>
+                    <div class="turma-alunos-content">
+                        <div>
+                            <h4 class="alunos-section-title preenchidos">✅ Preenchidos (${preenchidos.length})</h4>
+                            <div class="alunos-section">
+                                ${preenchidos.length > 0 
+                                    ? preenchidos.map(a => `
+                                        <div class="aluno-item">
+                                            <div>${a.nomePreferido || a.nome}</div>
+                                            <div class="aluno-item-email">${a.email}</div>
+                                        </div>
+                                    `).join('')
+                                    : '<div class="empty-list">Nenhum aluno preencheu ainda</div>'
+                                }
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="alunos-section-title pendentes">⏳ Pendentes (${pendentes.length})</h4>
+                            <div class="alunos-section">
+                                ${pendentes.length > 0
+                                    ? pendentes.map(a => `
+                                        <div class="aluno-item">
+                                            <div>${a.nomePreferido || a.nome}</div>
+                                            <div class="aluno-item-email">${a.email}</div>
+                                        </div>
+                                    `).join('')
+                                    : '<div class="empty-list">Todos preencheram! 🎉</div>'
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function toggleAluno(element) {
+            const card = element.parentElement;
             card.classList.toggle('expanded');
         }
 
-        function renderizarVisaoGeral() {
-            const container = document.getElementById('masterContent');
-            
-            // Calcular métricas estratégicas
-            const todosAlunos = [...allStudentsData.turma1, ...allStudentsData.turma2];
-            const totalAlunos = todosAlunos.length;
-            
-            // Alunos com 100%
-            const alunosCem = todosAlunos.filter(a => a.progresso === 100).length;
-            
-            // Alunos em risco (0%)
-            const alunosRisco = todosAlunos.filter(a => a.progresso === 0).length;
-            
-            // Médias
-            const turma1Media = calcularMedia(allStudentsData.turma1);
-            const turma2Media = calcularMedia(allStudentsData.turma2);
-            const gap = turma1Media - turma2Media;
-            
-            // Análise por formulário
-            const analiseFormularios = analisarFormulariosPorTurma();
-            
-            // Top 5 e Bottom 5
-            const topAlunos = todosAlunos.filter(a => a.progresso === 100).slice(0, 5);
-            const alunosEmRisco = todosAlunos.filter(a => a.progresso === 0);
-            
-            container.innerHTML = `
-                <!-- KPIs Executivos -->
-                <div class="strategic-section">
-                    <h3 class="strategic-title">📊 Indicadores Executivos</h3>
-                    <div class="kpi-grid">
-                        <div class="kpi-card">
-                            <div class="kpi-label">Taxa de Conclusão Total</div>
-                            <div class="kpi-value">${alunosCem}</div>
-                            <div class="kpi-sublabel">${Math.round((alunosCem/totalAlunos)*100)}% dos ${totalAlunos} alunos</div>
-                        </div>
-                        <div class="kpi-card">
-                            <div class="kpi-label">Alunos em Risco</div>
-                            <div class="kpi-value" style="color: ${alunosRisco > 0 ? '#ff3b30' : '#34c759'};">${alunosRisco}</div>
-                            <div class="kpi-sublabel">0% de progresso</div>
-                        </div>
-                        <div class="kpi-card">
-                            <div class="kpi-label">Gap Entre Turmas</div>
-                            <div class="kpi-value" style="color: ${gap > 30 ? '#ff3b30' : gap > 15 ? '#ffc107' : '#34c759'};">${Math.abs(gap)}%</div>
-                            <div class="kpi-sublabel">Turma 1 vs Turma 2</div>
-                        </div>
-                        <div class="kpi-card">
-                            <div class="kpi-label">Média Geral</div>
-                            <div class="kpi-value">${calcularMedia(todosAlunos)}%</div>
-                            <div class="kpi-sublabel">Todas as turmas</div>
-                        </div>
-                    </div>
-                </div>
+        function toggleFormularioDetalhes(row, nomeFormulario) {
+            const detailsRow = row.nextElementSibling;
+            const isExpanded = row.classList.contains('expanded');
 
-                <!-- Comparativo Detalhado -->
-                <div class="strategic-section">
-                    <h3 class="strategic-title">📈 Comparativo por Formulário</h3>
-                    <p style="color: #b8b8b8; margin-bottom: 15px; font-size: 0.9em;">💡 Clique em um formulário para ver a lista detalhada de alunos</p>
-                    <div class="comparison-table">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Formulário</th>
-                                    <th>Turma 1 (${allStudentsData.turma1.length} alunos)</th>
-                                    <th>Turma 2 (${allStudentsData.turma2.length} alunos)</th>
-                                    <th>Gap</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                ${analiseFormularios.map((form, idx) => `
-                                    <tr class="formulario-row" id="form-row-${idx}" onclick="toggleFormularioDetalhes(${idx})">
-                                        <td>
-                                            <strong>${FORMULARIOS[idx].nome}</strong>
-                                            <span class="expand-icon-table">▼</span>
-                                            <div class="progress-bar-mini">
-                                                <div class="progress-fill-mini" style="width: ${form.mediaGeral}%"></div>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <strong>${form.turma1Preenchidos}</strong> (${form.turma1Percent}%)
-                                        </td>
-                                        <td>
-                                            <strong>${form.turma2Preenchidos}</strong> (${form.turma2Percent}%)
-                                        </td>
-                                        <td>
-                                            <span class="gap-indicator ${form.gap > 0 ? 'gap-positive' : 'gap-negative'}">
-                                                ${form.gap > 0 ? '+' : ''}${form.gap}%
-                                            </span>
-                                        </td>
-                                    </tr>
-                                    <tr class="formulario-details" id="form-details-${idx}">
-                                        <td colspan="4">
-                                            <div class="formulario-details-content">
-                                                ${renderizarAlunosPorFormulario(idx)}
-                                            </div>
-                                        </td>
-                                    </tr>
-                                `).join('')}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+            document.querySelectorAll('.formulario-row').forEach(r => r.classList.remove('expanded'));
+            document.querySelectorAll('.formulario-details').forEach(d => d.classList.remove('active'));
 
-                <!-- Insights Estratégicos -->
-                <div class="strategic-section">
-                    <h3 class="strategic-title">💡 Insights e Recomendações</h3>
-                    ${gerarInsights(analiseFormularios, gap, alunosRisco, alunosCem, todosAlunos)}
-                </div>
-
-                <!-- Listas de Destaques e Atenção -->
-                <div class="strategic-section">
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
-                        <!-- Top Performers -->
-                        ${topAlunos.length > 0 ? `
-                            <div class="formulario-card">
-                                <h3 style="margin-bottom: 15px;">🏆 Alunos com 100%</h3>
-                                ${topAlunos.slice(0, 5).map(aluno => `
-                                    <div style="padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05);">
-                                        <div style="font-weight: 600;">${aluno.nome}</div>
-                                        <div style="font-size: 0.85em; color: #b8b8b8;">${aluno.turma}</div>
-                                    </div>
-                                `).join('')}
-                                ${alunosCem > 5 ? `<p style="margin-top: 10px; color: #b8b8b8; font-size: 0.9em;">+ ${alunosCem - 5} alunos com 100%</p>` : ''}
-                            </div>
-                        ` : ''}
-                        
-                        <!-- Alunos em Risco -->
-                        ${alunosEmRisco.length > 0 ? `
-                            <div class="formulario-card">
-                                <h3 style="margin-bottom: 15px;">⚠️ Alunos em Risco (0%)</h3>
-                                ${alunosEmRisco.slice(0, 5).map(aluno => `
-                                    <div style="padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05);">
-                                        <div style="font-weight: 600;">${aluno.nome}</div>
-                                        <div style="font-size: 0.85em; color: #b8b8b8;">${aluno.turma}</div>
-                                    </div>
-                                `).join('')}
-                                ${alunosRisco > 5 ? `<p style="margin-top: 10px; color: #b8b8b8; font-size: 0.9em;">+ ${alunosRisco - 5} alunos precisam de atenção</p>` : ''}
-                            </div>
-                        ` : ''}
-                    </div>
-                </div>
-            `;
-        }
-
-        function analisarFormulariosPorTurma() {
-            const analise = [];
-            
-            FORMULARIOS.forEach((form, idx) => {
-                // Turma 1
-                const turma1Preenchidos = allStudentsData.turma1.filter(a => 
-                    a.formularios[idx] === 'Preenchido'
-                ).length;
-                const turma1Percent = Math.round((turma1Preenchidos / allStudentsData.turma1.length) * 100);
-                
-                // Turma 2
-                const turma2Preenchidos = allStudentsData.turma2.filter(a => 
-                    a.formularios[idx] === 'Preenchido'
-                ).length;
-                const turma2Percent = Math.round((turma2Preenchidos / allStudentsData.turma2.length) * 100);
-                
-                // Gap e média
-                const gap = turma1Percent - turma2Percent;
-                const mediaGeral = Math.round(((turma1Preenchidos + turma2Preenchidos) / 
-                    (allStudentsData.turma1.length + allStudentsData.turma2.length)) * 100);
-                
-                analise.push({
-                    turma1Preenchidos,
-                    turma1Percent,
-                    turma2Preenchidos,
-                    turma2Percent,
-                    gap,
-                    mediaGeral
-                });
-            });
-            
-            return analise;
-        }
-
-        function toggleFormularioDetalhes(idx) {
-            const row = document.getElementById(`form-row-${idx}`);
-            const details = document.getElementById(`form-details-${idx}`);
-            
-            // Toggle classes
-            row.classList.toggle('expanded');
-            details.classList.toggle('active');
-        }
-
-        function renderizarAlunosPorFormulario(formIdx) {
-            // Separar alunos por turma e status
-            const turma1Preenchidos = allStudentsData.turma1.filter(a => 
-                a.formularios[formIdx] === 'Preenchido'
-            );
-            const turma1Pendentes = allStudentsData.turma1.filter(a => 
-                a.formularios[formIdx] !== 'Preenchido'
-            );
-            
-            const turma2Preenchidos = allStudentsData.turma2.filter(a => 
-                a.formularios[formIdx] === 'Preenchido'
-            );
-            const turma2Pendentes = allStudentsData.turma2.filter(a => 
-                a.formularios[formIdx] !== 'Preenchido'
-            );
-            
-            return `
-                <div class="turmas-comparison">
-                    <!-- Turma 1 -->
-                    <div class="turma-alunos-box">
-                        <div class="turma-alunos-title">📊 Turma 1 (${allStudentsData.turma1.length} alunos)</div>
-                        
-                        <div class="turma-alunos-content">
-                            <!-- Preenchidos -->
-                            <div class="alunos-section">
-                                <div class="alunos-section-title preenchidos">
-                                    ✅ Preenchidos (${turma1Preenchidos.length})
-                                </div>
-                                ${turma1Preenchidos.length > 0 ? 
-                                    turma1Preenchidos.map(aluno => `
-                                        <div class="aluno-item">
-                                            <div>${aluno.nome}</div>
-                                        </div>
-                                    `).join('') 
-                                    : '<div class="empty-list">Nenhum aluno preencheu</div>'
-                                }
-                            </div>
-                            
-                            <!-- Pendentes -->
-                            <div class="alunos-section">
-                                <div class="alunos-section-title pendentes">
-                                    ⏳ Pendentes (${turma1Pendentes.length})
-                                </div>
-                                ${turma1Pendentes.length > 0 ? 
-                                    turma1Pendentes.map(aluno => `
-                                        <div class="aluno-item">
-                                            <div>${aluno.nome}</div>
-                                        </div>
-                                    `).join('')
-                                    : '<div class="empty-list">Todos preencheram!</div>'
-                                }
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Turma 2 -->
-                    <div class="turma-alunos-box">
-                        <div class="turma-alunos-title">📊 Turma 2 (${allStudentsData.turma2.length} alunos)</div>
-                        
-                        <div class="turma-alunos-content">
-                            <!-- Preenchidos -->
-                            <div class="alunos-section">
-                                <div class="alunos-section-title preenchidos">
-                                    ✅ Preenchidos (${turma2Preenchidos.length})
-                                </div>
-                                ${turma2Preenchidos.length > 0 ? 
-                                    turma2Preenchidos.map(aluno => `
-                                        <div class="aluno-item">
-                                            <div>${aluno.nome}</div>
-                                        </div>
-                                    `).join('') 
-                                    : '<div class="empty-list">Nenhum aluno preencheu</div>'
-                                }
-                            </div>
-                            
-                            <!-- Pendentes -->
-                            <div class="alunos-section">
-                                <div class="alunos-section-title pendentes">
-                                    ⏳ Pendentes (${turma2Pendentes.length})
-                                </div>
-                                ${turma2Pendentes.length > 0 ? 
-                                    turma2Pendentes.map(aluno => `
-                                        <div class="aluno-item">
-                                            <div>${aluno.nome}</div>
-                                        </div>
-                                    `).join('')
-                                    : '<div class="empty-list">Todos preencheram!</div>'
-                                }
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
-        }
-
-        function gerarInsights(analiseFormularios, gap, alunosRisco, alunosCem, todosAlunos) {
-            let insights = '';
-            
-            // Insight sobre gap
-            if (gap > 30) {
-                insights += `
-                    <div class="insight-box">
-                        <h4>⚠️ Gap Significativo Entre Turmas</h4>
-                        <p>A Turma 1 está ${gap}% à frente da Turma 2. Considere:</p>
-                        <p>• Sessões de mentoria extras para Turma 2</p>
-                        <p>• Identificar dificuldades específicas</p>
-                        <p>• Ajustar ritmo ou materiais de apoio</p>
-                    </div>
-                `;
-            } else if (gap > 15) {
-                insights += `
-                    <div class="insight-box">
-                        <h4>📊 Diferença Moderada Entre Turmas</h4>
-                        <p>A Turma 1 está ${gap}% à frente. Gap aceitável, mas monitore a evolução.</p>
-                    </div>
-                `;
-            }
-            
-            // Insight sobre alunos em risco
-            if (alunosRisco > 0) {
-                const percentRisco = Math.round((alunosRisco / todosAlunos.length) * 100);
-                insights += `
-                    <div class="insight-box">
-                        <h4>⚠️ Alunos Sem Progresso</h4>
-                        <p>${alunosRisco} alunos (${percentRisco}%) não iniciaram nenhum formulário.</p>
-                        <p><strong>Ação recomendada:</strong> Contato individual urgente para entender barreiras.</p>
-                    </div>
-                `;
-            }
-            
-            // Identificar formulário mais crítico
-            const formCritico = analiseFormularios.reduce((min, curr, idx) => 
-                curr.mediaGeral < min.mediaGeral ? {mediaGeral: curr.mediaGeral, idx} : min,
-                {mediaGeral: 100, idx: 0}
-            );
-            
-            if (formCritico.mediaGeral < 50) {
-                insights += `
-                    <div class="insight-box">
-                        <h4>🎯 Formulário com Menor Adesão</h4>
-                        <p><strong>${FORMULARIOS[formCritico.idx].nome}</strong> - apenas ${formCritico.mediaGeral}% de conclusão.</p>
-                        <p><strong>Recomendação:</strong> Revisar dificuldade, clareza das instruções ou oferecer suporte adicional.</p>
-                    </div>
-                `;
-            }
-            
-            // Celebração se houver muitos com 100%
-            if (alunosCem > 0) {
-                const percentCem = Math.round((alunosCem / todosAlunos.length) * 100);
-                if (percentCem >= 20) {
-                    insights += `
-                        <div class="insight-box">
-                            <h4>🎉 Excelente Engajamento!</h4>
-                            <p>${alunosCem} alunos (${percentCem}%) completaram 100% dos formulários!</p>
-                            <p>Continue o trabalho excelente com esse grupo.</p>
-                        </div>
-                    `;
-                }
-            }
-            
-            // Se não houver insights críticos, dar mensagem positiva
-            if (insights === '') {
-                insights = `
-                    <div class="insight-box">
-                        <h4>✅ Sistema Funcionando Bem</h4>
-                        <p>Não há alertas críticos no momento. Continue monitorando o progresso regularmente.</p>
-                    </div>
-                `;
-            }
-            
-            return insights;
-        }
-
-        function calcularMedia(alunos) {
-            if (alunos.length === 0) return 0;
-            const soma = alunos.reduce((acc, aluno) => acc + aluno.progresso, 0);
-            return Math.round(soma / alunos.length);
-        }
-
-        function configurarAcessoRapido() {
-            // ==========================================
-            // 🔧 CONFIGURAÇÃO DE LINKS - EDITE AQUI!
-            // ==========================================
-            
-            // Obter turma do aluno logado
-            const turmaAluno = alunoData.turma;
-            
-            // Links da Plataforma de Vídeos (pode ser diferente por turma)
-            const linksPorTurma = {
-                "TURMA 1": "https://aluno.omentordelideres.com.br/login",
-                "TURMA 2": "https://aluno.omentordelideres.com.br/login"
-            };
-            
-            // Se quiser o MESMO link para todas as turmas, use isto:
-            // const linkPlataformaVideos = "https://sua-plataforma-unica.com";
-            
-            // Links de Agendamento por Mentor - SEPARADOS POR TURMA
-            const mentoresPorTurma = {
-                "TURMA 1": [
-                    {
-                        nome: "Influenciador Digital - Leonardo",
-                        link: "https://calendly.com/leonardomuniz-febracis/suporte-influenciador-digital?month=2025-11",
-                        icon: ""
-                    },
-                    {
-                        nome: "Escritor Best Seller - Luana",
-                        link: "https://calendly.com/luanarocha-febracis/suporte_escritor?month=2025-11",
-                        icon: ""
-                    },
-                    {
-                        nome: "Palestra/Mentoria - Michelle",
-                        link: "https://calendly.com/michellecastro-febracis/30min?month=2025-12",
-                        icon: ""
-                    }
-                    // Adicione mais mentores da TURMA 1 aqui
-                ],
-                "TURMA 2": [
-                    {
-                        nome: "Influenciador Digital - Leonardo",
-                        link: "https://calendar.app.google/aY65WhmjohSAqn3R6",
-                        icon: ""
-                    },
-                    {
-                        nome: "Escritor Best Seller - Luana",
-                        link: "https://calendar.app.google/bdA65V5Fy4JKmiAK6",
-                        icon: ""
-                    },
-                    {
-                        nome: "Palestra/Mentoria - Michelle",
-                        link: "https://calendar.app.google/1egzPjhvsj2VRc5W9",
-                        icon: "👩‍🎓"
-                    }
-                    // Adicione mais mentores da TURMA 2 aqui
-                ]
-            };
-
-            // ==========================================
-            // Aplicar Configurações (não editar abaixo)
-            // ==========================================
-
-            // Configurar link da plataforma de vídeos baseado na turma
-            const btnPlataforma = document.getElementById('linkPlataformaVideos');
-            if (btnPlataforma) {
-                // Use linksPorTurma[turmaAluno] para link diferente por turma
-                // OU use linkPlataformaVideos se definiu um link único acima
-                btnPlataforma.href = linksPorTurma[turmaAluno] || linksPorTurma["TURMA 1"];
-            }
-
-            // Configurar links dos mentores baseado na turma
-            const mentoresContainer = document.getElementById('mentoresContainer');
-            if (mentoresContainer) {
-                mentoresContainer.innerHTML = '';
-                
-                // Buscar mentores da turma do aluno
-                const mentoresDaTurma = mentoresPorTurma[turmaAluno] || mentoresPorTurma["TURMA 1"];
-                
-                mentoresDaTurma.forEach(mentor => {
-                    const btnMentor = document.createElement('a');
-                    btnMentor.className = 'btn-mentor';
-                    btnMentor.href = mentor.link;
-                    btnMentor.target = '_blank';
-                    btnMentor.innerHTML = `
-                        <span class="mentor-icon">${mentor.icon}</span>
-                        <span class="mentor-nome">${mentor.nome}</span>
-                        <span class="mentor-arrow">→</span>
-                    `;
-                    mentoresContainer.appendChild(btnMentor);
-                });
+            if (!isExpanded) {
+                row.classList.add('expanded');
+                detailsRow.classList.add('active');
             }
         }
 
-        function renderizarFormularios() {
-            const container = document.getElementById('formulariosContainer');
-            container.innerHTML = '';
-
-            const linksFormularios = buscarLinksConfig(alunoData.turma);
-
-            FORMULARIOS.forEach((form, index) => {
-                const status = alunoData.formularios[index];
-                const isPendente = status !== 'Preenchido';
-                const link = linksFormularios[index];
-
-                const card = document.createElement('div');
-                card.className = 'formulario-card';
-                card.innerHTML = `
-                    <div class="formulario-header">
-                        <div class="formulario-title">${form.nome}</div>
-                        <span class="status-badge ${isPendente ? 'status-pendente' : 'status-preenchido'}">
-                            ${isPendente ? '⏳ Pendente' : '✅ Preenchido'}
-                        </span>
-                    </div>
-                    ${isPendente && link ? 
-                        `<a href="${link}" target="_blank" class="btn-formulario btn-preencher">
-                            📝 Preencher Agora
-                        </a>` :
-                        `<button class="btn-formulario btn-concluido" disabled>
-                            ✓ Concluído
-                        </button>`
-                    }
-                `;
-                container.appendChild(card);
-            });
-        }
-
-        function buscarLinksConfig(turma) {
-            if (!configData) return Array(6).fill(null);
-
-            let linhaConfig = null;
-            for (let i = 1; i < configData.length; i++) {
-                const row = configData[i];
-                if (row.c && row.c[0]?.v === turma) {
-                    linhaConfig = row;
-                    break;
-                }
-            }
-
-            if (!linhaConfig) return Array(6).fill(null);
-
-            return [
-                linhaConfig.c[1]?.v || null,
-                linhaConfig.c[2]?.v || null,
-                linhaConfig.c[3]?.v || null,
-                linhaConfig.c[4]?.v || null,
-                linhaConfig.c[5]?.v || null,
-                linhaConfig.c[6]?.v || null
-            ];
-        }
-
-        function mostrarTela(telaId) {
-            ['loginScreen', 'esqueciSenhaScreen', 'criarSenhaScreen', 'dashboardScreen', 'masterDashboard'].forEach(id => {
-                document.getElementById(id).classList.add('hidden');
-            });
-            document.getElementById(telaId).classList.remove('hidden');
-        }
-
-        function mostrarEsqueciSenha() {
-            mostrarTela('esqueciSenhaScreen');
-            showMessage('messageBoxEsqueci', '', 'clear');
-        }
-
-        function voltarLogin() {
-            mostrarTela('loginScreen');
-            showMessage('messageBox', '', 'clear');
-        }
-
-        function showMessage(boxId, message, type) {
-            const box = document.getElementById(boxId);
-            if (type === 'clear') {
-                box.innerHTML = '';
-                return;
-            }
-            
-            const className = type === 'error' ? 'error-message' : 
-                             type === 'success' ? 'success-message' : 'info-message';
-            box.innerHTML = `<div class="${className}">${message}</div>`;
-        }
-
-        function mostrarModalEditarNome() {
-            const modal = document.getElementById('modalEditarNome');
-            const input = document.getElementById('nomePreferidoInput');
-            
-            // Preencher com o nome atual
-            input.value = alunoData.nomePreferido || alunoData.nome;
-            
-            showMessage('messageBoxModal', '', 'clear');
-            modal.classList.add('active');
-            input.focus();
-        }
-
-        function fecharModalEditarNome(event) {
-            // Se clicou no overlay (não no conteúdo)
-            if (!event || event.target.id === 'modalEditarNome') {
-                const modal = document.getElementById('modalEditarNome');
-                modal.classList.remove('active');
-                showMessage('messageBoxModal', '', 'clear');
-            }
-        }
-
-        async function salvarNomePreferido() {
-            const input = document.getElementById('nomePreferidoInput');
-            const nomePreferido = input.value.trim();
-            
-            if (!nomePreferido || nomePreferido === '') {
-                showMessage('messageBoxModal', 'Por favor, digite um nome.', 'error');
-                return;
-            }
-            
-            if (nomePreferido.length > 50) {
-                showMessage('messageBoxModal', 'Nome muito longo. Máximo 50 caracteres.', 'error');
-                return;
-            }
-            
-            try {
-                showMessage('messageBoxModal', 'Salvando...', 'info');
-                
-                // Enviar para Apps Script
-                fetch(APPS_SCRIPT_URL, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        action: 'salvarNomePreferido',
-                        email: alunoData.email,
-                        nomePreferido: nomePreferido
-                    })
-                });
-                
-                // Aguardar 2 segundos para o Apps Script processar
-                showMessage('messageBoxModal', '✅ Nome salvo! Atualizando página...', 'success');
-                
-                setTimeout(() => {
-                    // Recarregar a página para pegar os dados atualizados
-                    window.location.reload();
-                }, 2000);
-                
-            } catch (error) {
-                console.error('Erro:', error);
-                showMessage('messageBoxModal', 'Erro ao salvar. Tente novamente.', 'error');
-            }
-        }
-
-        function logout() {
-            alunoData = null;
-            configData = null;
-            recursosData = [];
-            allStudentsData = { turma1: [], turma2: [] };
-            primeiroAcessoEmail = null;
-            
-            document.getElementById('emailInput').value = '';
-            document.getElementById('senhaInput').value = '';
-            
-            mostrarTela('loginScreen');
-        }
+        // ==================== INICIALIZAÇÃO ====================
+        carregarDados();
     </script>
 </body>
 </html>

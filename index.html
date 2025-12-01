@@ -805,67 +805,6 @@
             border-left: 5px solid #0dcaf0;
         }
 
-        /* Seção de Análise Individual */
-        .analise-section {
-            background: rgba(45, 45, 68, 0.5);
-            padding: 30px;
-            border-radius: 15px;
-            margin-bottom: 30px;
-            border: 1px solid rgba(255,255,255,0.1);
-        }
-
-        .analise-header {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 25px;
-        }
-
-        .analise-icon {
-            font-size: 2em;
-        }
-
-        .analise-title {
-            font-size: 1.4em;
-            font-weight: 700;
-            color: #ffffff;
-            margin: 0;
-        }
-
-        .analise-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-        }
-
-        .analise-card {
-            background: rgba(26, 26, 46, 0.6);
-            padding: 25px;
-            border-radius: 12px;
-            text-align: center;
-            border: 1px solid rgba(13, 202, 240, 0.2);
-            transition: all 0.3s;
-        }
-
-        .analise-card:hover {
-            transform: translateY(-5px);
-            border-color: rgba(13, 202, 240, 0.5);
-            box-shadow: 0 5px 20px rgba(13, 202, 240, 0.2);
-        }
-
-        .analise-number {
-            font-size: 3em;
-            font-weight: 700;
-            color: #0dcaf0;
-            margin-bottom: 10px;
-        }
-
-        .analise-label {
-            font-size: 1em;
-            color: #b8b8b8;
-            font-weight: 500;
-        }
-
         /* Biblioteca de Recursos */
         .biblioteca-section {
             background: rgba(45, 45, 68, 0.5);
@@ -1790,17 +1729,16 @@
         // ==================== CONFIGURAÇÃO ====================
         const PLANILHA_ID = '1OjxHwWh6kWaNgQrCPP57GB_FMs4LVFH3Orbve3ciylQ';
         
-        // GIDs de cada aba (configurados corretamente!)
+        // GIDs das abas da planilha
         const ABAS = {
-            TURMA_1: 1942550026,   // Aba TURMA 1
-            TURMA_2: 811800566,    // Aba TURMA 2
-            RECURSOS: 209666554,   // Aba RECURSOS
-            CONFIG: 129627600      // Aba CONFIG
+            TURMA_1: 1942550026,
+            TURMA_2: 811800566,
+            RECURSOS: 209666554,
+            CONFIG: 129627600
         };
         
-        // URLs para cada aba
+        // Função para gerar URL de cada aba
         const getURL = (gid) => `https://docs.google.com/spreadsheets/d/${PLANILHA_ID}/gviz/tq?tqx=out:json&gid=${gid}`;
-
 
         // ==================== DADOS DOS ARQUÉTIPOS ====================
         const ARQUETIPOS_DATA = {
@@ -1961,63 +1899,56 @@
         }
 
         // ==================== CARREGAR DADOS ====================
-        let linksFormularios = {}; // Armazena links dos formulários por turma
-        
         async function carregarDados() {
             try {
-                console.log('🔄 Carregando dados de múltiplas abas...');
+                console.log('🔄 Carregando dados das abas da planilha...');
                 
                 todosAlunos = [];
                 biblioteca = [];
-                linksFormularios = {};
+                let linksFormularios = {};
                 
-                // ========== PASSO 1: Carregar CONFIG (Links dos formulários) ==========
-                console.log('📋 Carregando CONFIG...');
+                // ===== PASSO 1: Carregar CONFIG (Links dos formulários) =====
                 try {
                     const configResponse = await fetch(getURL(ABAS.CONFIG));
                     const configText = await configResponse.text();
                     const configJson = JSON.parse(configText.substring(47, configText.length - 2));
                     
                     configJson.table.rows.forEach((row, index) => {
-                        if (index === 0) return; // Pula header
-                        
-                        const turma = row.c[0]?.v; // Coluna A = TURMA
-                        if (turma && (turma.includes('TURMA 1') || turma.includes('TURMA 2'))) {
+                        if (index === 0) return;
+                        const turma = row.c[0]?.v;
+                        if (turma && turma.includes('TURMA')) {
                             linksFormularios[turma] = {
-                                anamnese: row.c[1]?.v || '',           // Coluna B
-                                jornada: row.c[2]?.v || '',            // Coluna C
-                                escritor: row.c[3]?.v || '',           // Coluna D
-                                influenciador: row.c[4]?.v || '',      // Coluna E
-                                palestrante: row.c[5]?.v || '',        // Coluna F
-                                mentor: row.c[6]?.v || ''              // Coluna G
+                                anamnese: row.c[1]?.v || '',
+                                jornada: row.c[2]?.v || '',
+                                escritor: row.c[3]?.v || '',
+                                influenciador: row.c[4]?.v || '',
+                                palestrante: row.c[5]?.v || '',
+                                mentor: row.c[6]?.v || ''
                             };
-                            console.log(`✅ Links carregados para ${turma}:`, linksFormularios[turma]);
                         }
                     });
                 } catch (erro) {
-                    console.warn('⚠️ Erro ao carregar CONFIG:', erro);
+                    console.warn('⚠️ CONFIG não carregou:', erro.message);
                 }
                 
-                // ========== PASSO 2: Carregar TURMA 1 ==========
-                console.log('👥 Carregando TURMA 1...');
+                // ===== PASSO 2: Carregar TURMA 1 =====
                 try {
                     const t1Response = await fetch(getURL(ABAS.TURMA_1));
                     const t1Text = await t1Response.text();
                     const t1Json = JSON.parse(t1Text.substring(47, t1Text.length - 2));
                     
                     t1Json.table.rows.forEach((row, index) => {
-                        if (index === 0) return; // Pula header
-                        
+                        if (index === 0) return;
                         const nome = row.c[0]?.v;
                         if (nome && nome.trim() !== '' && !nome.includes('Nome')) {
                             const turma = row.c[2]?.v || 'TURMA 1';
-                            const links = linksFormularios[turma] || linksFormularios['TURMA 1'] || {};
+                            const links = linksFormularios[turma] || {};
                             
                             todosAlunos.push({
                                 nome: nome,
                                 email: row.c[1]?.v || '',
                                 turma: turma,
-                                nomePreferido: row.c[10]?.v || nome.split(' ')[0] || '',
+                                nomePreferido: row.c[10]?.v || nome.split(' ')[0],
                                 senha: row.c[9]?.v || '',
                                 codigoRecuperacao: '',
                                 primeiroAcesso: 'Não',
@@ -2033,31 +1964,30 @@
                             });
                         }
                     });
-                    console.log(`✅ TURMA 1 carregada: ${t1Json.table.rows.length - 1} alunos`);
+                    console.log(`✅ TURMA 1: ${todosAlunos.length} alunos`);
                 } catch (erro) {
-                    console.error('❌ Erro ao carregar TURMA 1:', erro);
+                    console.error('❌ TURMA 1 falhou:', erro.message);
                 }
                 
-                // ========== PASSO 3: Carregar TURMA 2 ==========
-                console.log('👥 Carregando TURMA 2...');
+                // ===== PASSO 3: Carregar TURMA 2 =====
                 try {
                     const t2Response = await fetch(getURL(ABAS.TURMA_2));
                     const t2Text = await t2Response.text();
                     const t2Json = JSON.parse(t2Text.substring(47, t2Text.length - 2));
                     
+                    const countAntes = todosAlunos.length;
                     t2Json.table.rows.forEach((row, index) => {
-                        if (index === 0) return; // Pula header
-                        
+                        if (index === 0) return;
                         const nome = row.c[0]?.v;
                         if (nome && nome.trim() !== '' && !nome.includes('Nome')) {
                             const turma = row.c[2]?.v || 'TURMA 2';
-                            const links = linksFormularios[turma] || linksFormularios['TURMA 2'] || {};
+                            const links = linksFormularios[turma] || {};
                             
                             todosAlunos.push({
                                 nome: nome,
                                 email: row.c[1]?.v || '',
                                 turma: turma,
-                                nomePreferido: row.c[10]?.v || nome.split(' ')[0] || '',
+                                nomePreferido: row.c[10]?.v || nome.split(' ')[0],
                                 senha: row.c[9]?.v || '',
                                 codigoRecuperacao: '',
                                 primeiroAcesso: 'Não',
@@ -2073,97 +2003,89 @@
                             });
                         }
                     });
-                    console.log(`✅ TURMA 2 carregada: ${t2Json.table.rows.length - 1} alunos`);
+                    console.log(`✅ TURMA 2: ${todosAlunos.length - countAntes} alunos`);
                 } catch (erro) {
-                    console.error('❌ Erro ao carregar TURMA 2:', erro);
+                    console.error('❌ TURMA 2 falhou:', erro.message);
                 }
                 
-                // ========== PASSO 4: Carregar RECURSOS ==========
-                console.log('📚 Carregando RECURSOS...');
+                // ===== PASSO 4: Carregar RECURSOS =====
                 try {
                     const recResponse = await fetch(getURL(ABAS.RECURSOS));
                     const recText = await recResponse.text();
                     const recJson = JSON.parse(recText.substring(47, recText.length - 2));
                     
                     recJson.table.rows.forEach((row, index) => {
-                        if (index === 0) return; // Pula header
-                        
+                        if (index === 0) return;
                         const titulo = row.c[0]?.v;
                         if (titulo && titulo.trim() !== '' && !titulo.includes('Nome do Arquivo')) {
                             biblioteca.push({
                                 titulo: titulo,
-                                turma: row.c[1]?.v || '',         // Coluna B
-                                link: row.c[2]?.v || '',          // Coluna C
-                                descricao: row.c[3]?.v || '',     // Coluna D
-                                categoria: row.c[4]?.v || '',     // Coluna E
-                                emoji: row.c[5]?.v || '📄'        // Coluna F
+                                turma: row.c[1]?.v || '',
+                                link: row.c[2]?.v || '',
+                                descricao: row.c[3]?.v || '',
+                                categoria: row.c[4]?.v || '',
+                                emoji: row.c[5]?.v || '📄'
                             });
                         }
                     });
-                    console.log(`✅ RECURSOS carregados: ${biblioteca.length} itens`);
+                    console.log(`✅ RECURSOS: ${biblioteca.length} itens`);
                 } catch (erro) {
-                    console.warn('⚠️ Erro ao carregar RECURSOS:', erro);
+                    console.warn('⚠️ RECURSOS não carregou:', erro.message);
                 }
                 
-                console.log('✅ TOTAL:', todosAlunos.length, 'alunos e', biblioteca.length, 'recursos');
-                console.log('📊 TURMA 1:', todosAlunos.filter(a => a.turma.includes('TURMA 1')).length);
-                console.log('📊 TURMA 2:', todosAlunos.filter(a => a.turma.includes('TURMA 2')).length);
-                
+                console.log(`✅ TOTAL: ${todosAlunos.length} alunos, ${biblioteca.length} recursos`);
                 return true;
             } catch (erro) {
-                console.error('❌ Erro geral ao carregar dados:', erro);
-                alert('⚠️ Erro ao carregar dados da planilha!\n\nVerifique se:\n1. A planilha está pública\n2. Os GIDs das abas estão corretos\n3. Você tem acesso à planilha');
+                console.error('❌ Erro geral:', erro);
                 return false;
             }
         }
 
         // ==================== FUNÇÃO ARQUÉTIPO (NOVA!) ====================
         function renderizarArquetipo() {
-            console.log('🎯 ========== INICIANDO RENDERIZAÇÃO DE ARQUÉTIPO ==========');
-            console.log('📋 Dados do aluno:', alunoData);
+            console.log('🎯 ========== RENDERIZANDO ARQUÉTIPO ==========');
+            console.log('📋 Aluno:', alunoData.nome);
+            console.log('📋 Turma:', alunoData.turma);
             
             const arquetipoSection = document.getElementById('arquetipoSection');
             if (!arquetipoSection) {
-                console.error('❌ Seção de arquétipo não encontrada no HTML (id="arquetipoSection")');
+                console.error('❌ Seção de arquétipo NÃO encontrada no HTML (id="arquetipoSection")');
                 return;
             }
-            console.log('✅ Seção de arquétipo encontrada no HTML');
+            console.log('✅ Seção HTML encontrada');
 
             const arquetipoNome = alunoData.arquetipo;
-            console.log('📋 Arquétipo do aluno (da planilha):', arquetipoNome);
+            console.log('📋 Arquétipo da planilha (coluna L):', `"${arquetipoNome}"`);
 
             // Se não tem arquétipo ou é "Pendente", esconde a seção
             if (!arquetipoNome || arquetipoNome === 'Pendente' || arquetipoNome.trim() === '') {
-                console.log('⚠️ Aluno não tem arquétipo definido - escondendo seção');
+                console.log('⚠️ Aluno não tem arquétipo definido na coluna L');
+                console.log('💡 Para exibir arquétipo, preencha a coluna L da planilha com um destes:');
+                console.log('   ', Object.keys(ARQUETIPOS_DATA).join(', '));
                 arquetipoSection.style.display = 'none';
                 return;
             }
 
             // Busca dados do arquétipo
             const arquetipo = ARQUETIPOS_DATA[arquetipoNome];
-            console.log('🔍 Buscando dados para arquétipo:', arquetipoNome);
-            console.log('📦 Dados encontrados:', arquetipo);
             
             if (!arquetipo) {
-                console.error('❌ Arquétipo não encontrado nos dados:', arquetipoNome);
+                console.error('❌ Arquétipo NÃO encontrado:', `"${arquetipoNome}"`);
                 console.log('💡 Arquétipos disponíveis:', Object.keys(ARQUETIPOS_DATA));
+                console.log('⚠️ Verifique se o nome na coluna L está EXATO (com acentos e maiúsculas)');
                 arquetipoSection.style.display = 'none';
                 return;
             }
 
             console.log('✅ Dados do arquétipo encontrados!');
+            console.log('   Emoji:', arquetipo.emoji);
+            console.log('   Cor:', arquetipo.cor);
 
             // Aplica a cor personalizada
             const card = arquetipoSection.querySelector('.arquetipo-card');
             const nome = arquetipoSection.querySelector('.arquetipo-nome');
-            if (card) {
-                card.style.borderColor = arquetipo.cor;
-                console.log('✅ Cor do card aplicada:', arquetipo.cor);
-            }
-            if (nome) {
-                nome.style.textShadow = `0 0 20px ${arquetipo.cor}`;
-                console.log('✅ Sombra do nome aplicada');
-            }
+            if (card) card.style.borderColor = arquetipo.cor;
+            if (nome) nome.style.textShadow = `0 0 20px ${arquetipo.cor}`;
 
             // Preenche os dados
             arquetipoSection.querySelector('.arquetipo-emoji').textContent = arquetipo.emoji;
@@ -2188,11 +2110,10 @@
             const btnDownload = arquetipoSection.querySelector('.btn-download-arquetipo');
             btnDownload.href = arquetipo.link;
             btnDownload.target = '_blank';
-            console.log('✅ Link do PDF configurado:', arquetipo.link);
 
             // Mostra a seção
             arquetipoSection.style.display = 'block';
-            console.log('✅ ========== ARQUÉTIPO RENDERIZADO COM SUCESSO! ==========');
+            console.log('✅ ========== ARQUÉTIPO EXIBIDO COM SUCESSO! ==========');
         }
 
         // ==================== LOGIN ====================
@@ -2312,32 +2233,6 @@
                     </div>
                 </div>
 
-                <!-- SEÇÃO DE ANÁLISE INDIVIDUAL -->
-                <div class="analise-section">
-                    <div class="analise-header">
-                        <span class="analise-icon">📊</span>
-                        <h3 class="analise-title">Sua Análise de Progresso</h3>
-                    </div>
-                    <div class="analise-grid">
-                        <div class="analise-card">
-                            <div class="analise-number">${alunoData.formularios.filter(f => f.status === 'Preenchido').length}</div>
-                            <div class="analise-label">Formulários Concluídos</div>
-                        </div>
-                        <div class="analise-card">
-                            <div class="analise-number">${alunoData.formularios.filter(f => f.status === 'Pendente').length}</div>
-                            <div class="analise-label">Formulários Pendentes</div>
-                        </div>
-                        <div class="analise-card">
-                            <div class="analise-number">${progress}%</div>
-                            <div class="analise-label">Taxa de Conclusão</div>
-                        </div>
-                        <div class="analise-card">
-                            <div class="analise-number">${6 - alunoData.formularios.filter(f => f.status === 'Preenchido').length}</div>
-                            <div class="analise-label">Restam para Completar</div>
-                        </div>
-                    </div>
-                </div>
-
                 <!-- SEÇÃO DE ARQUÉTIPO -->
                 <div id="arquetipoSection" class="arquetipo-section" style="display: none;">
                     <div class="arquetipo-header">
@@ -2415,14 +2310,12 @@
         function renderizarBiblioteca() {
             const container = document.getElementById('bibliotecaContainer');
             
-            // Filtrar recursos por turma do aluno (ou recursos gerais sem turma específica)
+            // Filtrar recursos por turma do aluno
             const recursosFiltrados = biblioteca.filter(recurso => {
-                // Se o recurso não tem turma definida, mostra para todos
                 if (!recurso.turma || recurso.turma.trim() === '') {
-                    return true;
+                    return true; // Recursos sem turma aparecem para todos
                 }
-                // Se tem turma, mostra apenas se for a mesma do aluno
-                return recurso.turma === alunoData.turma;
+                return recurso.turma === alunoData.turma; // Só mostra da mesma turma
             });
             
             console.log(`📚 Biblioteca: ${biblioteca.length} total, ${recursosFiltrados.length} para ${alunoData.turma}`);
@@ -2449,9 +2342,8 @@
                                 </div>
                                 <p class="recurso-descricao">${recurso.descricao}</p>
                                 <span class="recurso-categoria">${recurso.categoria}</span>
-                                <a href="${recurso.link}" target="_blank" class="btn-acessar-recurso">
-                                    <span class="btn-icon">📄</span>
-                                    <span>Acessar Recurso</span>
+                                <a href="${recurso.link}" target="_blank" class="btn-download">
+                                    📥 Acessar Recurso
                                 </a>
                             </div>
                         `).join('')}

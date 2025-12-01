@@ -925,89 +925,152 @@
             opacity: 0.5;
         }
 
-        /* === SEÇÃO DE ARQUÉTIPO === */
+        /* === SEÇÃO DE PLATAFORMA DE AULAS === */
+        .plataforma-section {
+            background: linear-gradient(135deg, rgba(13, 202, 240, 0.15) 0%, rgba(11, 168, 204, 0.15) 100%);
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            border: 2px solid rgba(13, 202, 240, 0.3);
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .plataforma-section:hover {
+            transform: translateY(-3px);
+            border-color: rgba(13, 202, 240, 0.6);
+            box-shadow: 0 10px 30px rgba(13, 202, 240, 0.3);
+        }
+
+        .plataforma-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .plataforma-icon {
+            font-size: 2.5em;
+        }
+
+        .plataforma-title {
+            font-size: 1.6em;
+            font-weight: 700;
+            color: #0dcaf0;
+        }
+
+        .plataforma-descricao {
+            color: #b8b8b8;
+            font-size: 1em;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .btn-plataforma {
+            display: inline-block;
+            padding: 15px 40px;
+            background: linear-gradient(135deg, #0dcaf0 0%, #0ba8cc 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            box-shadow: 0 5px 20px rgba(13, 202, 240, 0.3);
+        }
+
+        .btn-plataforma:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(13, 202, 240, 0.5);
+        }
+
+        /* === SEÇÃO DE ARQUÉTIPO (COMPACTA) === */
         .arquetipo-section {
             background: rgba(45, 45, 68, 0.5);
-            padding: 30px;
+            padding: 20px;
             border-radius: 15px;
             margin-bottom: 30px;
             border: 1px solid rgba(255,255,255,0.1);
         }
 
         .arquetipo-section h3 {
-            font-size: 1.8em;
+            font-size: 1.4em;
             font-weight: 700;
             color: #0dcaf0;
-            margin-bottom: 25px;
+            margin-bottom: 15px;
             text-align: center;
         }
 
         .arquetipo-card {
             background: rgba(26, 26, 46, 0.5);
             border: 2px solid rgba(255,255,255,0.1);
-            border-radius: 15px;
-            padding: 30px;
+            border-radius: 12px;
+            padding: 20px;
             text-align: center;
             transition: all 0.3s;
         }
 
         .arquetipo-card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-3px);
             border-color: rgba(13, 202, 240, 0.5);
-            box-shadow: 0 10px 30px rgba(13, 202, 240, 0.2);
+            box-shadow: 0 8px 25px rgba(13, 202, 240, 0.2);
         }
 
         .arquetipo-emoji {
-            font-size: 4em;
-            margin-bottom: 15px;
+            font-size: 2.5em;
+            margin-bottom: 10px;
         }
 
         .arquetipo-nome {
-            font-size: 2em;
+            font-size: 1.4em;
             font-weight: 700;
             color: #ffffff;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
             text-transform: uppercase;
-            letter-spacing: 2px;
+            letter-spacing: 1px;
         }
 
         .arquetipo-frase {
-            font-size: 1.2em;
+            font-size: 1em;
             color: #0dcaf0;
             font-style: italic;
-            margin-bottom: 25px;
-            line-height: 1.6;
+            margin-bottom: 15px;
+            line-height: 1.5;
         }
 
         .arquetipo-detalhes {
             text-align: left;
-            margin-bottom: 25px;
+            margin-bottom: 15px;
         }
 
         .arquetipo-item {
             background: rgba(255, 255, 255, 0.03);
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 12px;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 8px;
             border-left: 3px solid #0dcaf0;
         }
 
         .arquetipo-item strong {
             display: block;
             color: #0dcaf0;
-            font-size: 1.1em;
-            margin-bottom: 8px;
+            font-size: 0.95em;
+            margin-bottom: 5px;
         }
 
         .arquetipo-item p {
             color: #e4e4e4;
-            line-height: 1.6;
+            line-height: 1.5;
             margin: 0;
+            font-size: 0.9em;
         }
 
         .btn-download-arquetipo {
             width: 100%;
-            padding: 15px;
+            padding: 12px;
             background: linear-gradient(135deg, #0dcaf0 0%, #0ba8cc 100%);
             color: white;
             border: none;
@@ -1018,28 +1081,28 @@
             text-decoration: none;
             display: inline-block;
             text-align: center;
-            font-size: 1.1em;
+            font-size: 1em;
         }
 
         .btn-download-arquetipo:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(13, 202, 240, 0.4);
+            box-shadow: 0 8px 25px rgba(13, 202, 240, 0.4);
         }
 
         /* === SEÇÃO DE AGENDAMENTO === */
         .agendamento-section {
             background: rgba(45, 45, 68, 0.5);
-            padding: 30px;
+            padding: 25px;
             border-radius: 15px;
             margin-bottom: 30px;
             border: 1px solid rgba(255,255,255,0.1);
         }
 
         .agendamento-section h4 {
-            font-size: 1.6em;
+            font-size: 1.4em;
             font-weight: 700;
             color: #0dcaf0;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             text-align: center;
         }
 
@@ -1608,7 +1671,7 @@
                 </div>
             </div>
 
-            <!-- SEÇÃO DE ARQUÉTIPO -->
+            <!-- SEÇÃO DE ARQUÉTIPO (COMPACTA) -->
             <div id="arquetipoSection" class="arquetipo-section hidden">
                 <h3>🌟 SEU ARQUÉTIPO</h3>
                 <div class="arquetipo-card">
@@ -1635,6 +1698,21 @@
                         📥 Baixar PDF do Arquétipo
                     </a>
                 </div>
+            </div>
+
+            <!-- SEÇÃO DE PLATAFORMA DE AULAS -->
+            <div class="plataforma-section">
+                <div class="plataforma-header">
+                    <span class="plataforma-icon">🎓</span>
+                    <h3 class="plataforma-title">ACESSE AS AULAS</h3>
+                </div>
+                <p class="plataforma-descricao">
+                    Clique aqui para acessar todo o conteúdo do programa<br>
+                    Mentor de Líderes
+                </p>
+                <a href="https://aluno.omentordelideres.com.br/login" target="_blank" rel="noopener noreferrer" class="btn-plataforma">
+                    ▶️ ACESSAR PLATAFORMA →
+                </a>
             </div>
 
             <!-- SEÇÃO DE AGENDAMENTO -->
@@ -1750,7 +1828,7 @@
                 desafio: 'Desenvolver discernimento sem perder a essência positiva.',
                 missao: 'Trazer esperança e renovação através da autenticidade.',
                 cor: '#87CEEB',
-                linkPDF: 'https://drive.google.com/file/d/1BHVakykvtbOIJ_1hNamKu1XQmyNUJ90m/view?usp=drive_link'
+                linkPDF: 'https://drive.google.com/file/d/1-EXEMPLO-INOCENTE/view'
             },
             'mago': {
                 emoji: '🔮',
@@ -1760,7 +1838,7 @@
                 desafio: 'Usar o poder com responsabilidade e ética.',
                 missao: 'Criar mudanças significativas e duradouras no mundo.',
                 cor: '#9370DB',
-                linkPDF: 'https://drive.google.com/file/d/11qydMB9fQwtK_NwUqqiRBmWHo-l9OLs6/view?usp=drive_link'
+                linkPDF: 'https://drive.google.com/file/d/1-EXEMPLO-MAGO/view'
             },
             'prestativo': {
                 emoji: '🤲',
@@ -1770,7 +1848,7 @@
                 desafio: 'Equilibrar o cuidado com outros sem se esquecer de si mesmo.',
                 missao: 'Fazer a diferença através do serviço compassivo.',
                 cor: '#FF69B4',
-                linkPDF: 'https://drive.google.com/file/d/12eJnI8QQZWJNxDaUdtDodXX2OeoQin9I/view?usp=drive_link'
+                linkPDF: 'https://drive.google.com/file/d/1-EXEMPLO-PRESTATIVO/view'
             },
             'sábio': {
                 emoji: '📖',
@@ -1780,7 +1858,7 @@
                 desafio: 'Transformar conhecimento em ação prática.',
                 missao: 'Iluminar caminhos através da sabedoria e do ensino.',
                 cor: '#4169E1',
-                linkPDF: 'https://drive.google.com/file/d/1KFYCzWI1Su3Uu-_n43zh9Zpxz-Pf-l2n/view?usp=drive_link'
+                linkPDF: 'https://drive.google.com/file/d/1-EXEMPLO-SABIO/view'
             },
             'amante': {
                 emoji: '❤️',
@@ -1790,7 +1868,7 @@
                 desafio: 'Manter equilíbrio entre paixão e razão.',
                 missao: 'Criar experiências memoráveis e relacionamentos significativos.',
                 cor: '#DC143C',
-                linkPDF: 'https://drive.google.com/file/d/1ZVpoxfLe7FmdCbGPbkU5I6Aem0pedD0C/view?usp=drive_link'
+                linkPDF: 'https://drive.google.com/file/d/1-EXEMPLO-AMANTE/view'
             },
             'bobo da corte': {
                 emoji: '🤹',
@@ -1800,7 +1878,7 @@
                 desafio: 'Ser levado a sério quando necessário.',
                 missao: 'Lembrar as pessoas de viver o momento presente com alegria.',
                 cor: '#FFD700',
-                linkPDF: 'https://drive.google.com/file/d/1rICMnizREBE18SXj8UlptJ5oG9_4EtjX/view?usp=drive_link'
+                linkPDF: 'https://drive.google.com/file/d/1-EXEMPLO-BOBO/view'
             },
             'criador': {
                 emoji: '🎨',
@@ -1810,7 +1888,7 @@
                 desafio: 'Completar projetos e não se perder no perfeccionismo.',
                 missao: 'Dar forma a algo novo e significativo no mundo.',
                 cor: '#FF8C00',
-                linkPDF: 'https://drive.google.com/file/d/1cN14uvBAA6bDEwBz13r68EZiP7ZrTxcK/view?usp=drive_link'
+                linkPDF: 'https://drive.google.com/file/d/1-EXEMPLO-CRIADOR/view'
             },
             'explorador': {
                 emoji: '🧭',
@@ -1820,7 +1898,7 @@
                 desafio: 'Criar raízes sem perder a essência de liberdade.',
                 missao: 'Descobrir novos horizontes e inspirar outros a explorar.',
                 cor: '#228B22',
-                linkPDF: 'https://drive.google.com/file/d/1lyUCBfEFdpU3d-b4H9OA_TBkw34KqxFI/view?usp=drive_link'
+                linkPDF: 'https://drive.google.com/file/d/1-EXEMPLO-EXPLORADOR/view'
             },
             'fora-da-lei': {
                 emoji: '⚡',
@@ -1830,7 +1908,7 @@
                 desafio: 'Canalizar a rebeldia de forma construtiva.',
                 missao: 'Romper padrões limitantes e inspirar transformação.',
                 cor: '#8B0000',
-                linkPDF: 'https://drive.google.com/file/d/1S7cSds2EBhYv9Z89keky4OZhoFwgOJ8N/view?usp=drive_link'
+                linkPDF: 'https://drive.google.com/file/d/1-EXEMPLO-FORA-DA-LEI/view'
             },
             'governante': {
                 emoji: '👑',
@@ -1840,7 +1918,7 @@
                 desafio: 'Liderar com empatia sem perder a autoridade.',
                 missao: 'Criar sistemas e estruturas que beneficiem a todos.',
                 cor: '#4B0082',
-                linkPDF: 'https://drive.google.com/file/d/1UyqIw8B6Y7c7KC4F39jPyua9YxCsPLS9/view?usp=drive_link'
+                linkPDF: 'https://drive.google.com/file/d/1-EXEMPLO-GOVERNANTE/view'
             },
             'herói': {
                 emoji: '⚔️',
@@ -1850,7 +1928,7 @@
                 desafio: 'Equilibrar a busca por realizações com o cuidado pessoal.',
                 missao: 'Demonstrar força através de atos de coragem e liderança.',
                 cor: '#B22222',
-                linkPDF: 'https://drive.google.com/file/d/1EQmKb9fpHicpe1NAAlUVBCmyNQ4NxAop/view?usp=drive_link'
+                linkPDF: 'https://drive.google.com/file/d/1-EXEMPLO-HEROI/view'
             },
             'homem comum': {
                 emoji: '🤝',
@@ -1860,7 +1938,7 @@
                 desafio: 'Reconhecer e valorizar suas próprias qualidades únicas.',
                 missao: 'Mostrar que grandeza está na simplicidade e na humanidade.',
                 cor: '#8B4513',
-                linkPDF: 'https://drive.google.com/file/d/1kTvylHOYpzbTu41GnvQisHcQbTk4Xv5A/view?usp=drive_link'
+                linkPDF: 'https://drive.google.com/file/d/1-EXEMPLO-HOMEM-COMUM/view'
             }
         };
 
@@ -2297,8 +2375,8 @@
             document.getElementById('progressFill').style.width = `${percentual}%`;
             document.getElementById('progressText').textContent = `${preenchidos}/${total}`;
 
-            renderizarArquetipo(); // 🌟 NOVA FUNÇÃO
-            renderizarAgendamento(); // 📅 NOVA FUNÇÃO
+            renderizarArquetipo(); // 🌟 ARQUÉTIPOS
+            renderizarAgendamento(); // 📅 AGENDAMENTO
             renderizarBiblioteca();
             renderizarFormularios();
         }

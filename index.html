@@ -1424,45 +1424,39 @@
 
 .arquetipo-section {
     background: rgba(45, 45, 68, 0.5);
-    padding: 20px;
-    border-radius: 15px;
-    margin-bottom: 25px;
+    padding: 15px;
+    border-radius: 12px;
+    margin-bottom: 20px;
     border: 1px solid rgba(255,255,255,0.1);
 }
 
 .arquetipo-header {
     display: flex;
     align-items: center;
-    gap: 12px;
-    margin-bottom: 18px;
-    padding-bottom: 12px;
+    gap: 10px;
+    margin-bottom: 12px;
+    padding-bottom: 10px;
     border-bottom: 2px solid rgba(13, 202, 240, 0.3);
 }
 
 .arquetipo-icon-header {
-    font-size: 1.8em;
-    animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.1); }
+    font-size: 1.4em;
 }
 
 .arquetipo-title-main {
-    font-size: 1.4em;
+    font-size: 1.1em;
     font-weight: 700;
     color: #0dcaf0;
     margin: 0;
     text-transform: uppercase;
-    letter-spacing: 1px;
+    letter-spacing: 0.5px;
 }
 
 .arquetipo-card {
     background: linear-gradient(135deg, rgba(26, 26, 46, 0.8) 0%, rgba(26, 26, 46, 0.4) 100%);
     border: 2px solid rgba(13, 202, 240, 0.3);
-    border-radius: 15px;
-    padding: 25px;
+    border-radius: 12px;
+    padding: 15px;
     transition: all 0.3s;
     position: relative;
     overflow: hidden;
@@ -1491,70 +1485,64 @@
 }
 
 .arquetipo-emoji {
-    font-size: 3.5em;
-    margin-bottom: 12px;
-    animation: float 3s ease-in-out infinite;
-}
-
-@keyframes float {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-8px); }
+    font-size: 2.5em;
+    margin-bottom: 8px;
 }
 
 .arquetipo-nome {
-    font-size: 1.6em;
+    font-size: 1.2em;
     font-weight: 900;
     color: #ffffff;
-    margin-bottom: 12px;
+    margin-bottom: 8px;
     text-transform: uppercase;
-    letter-spacing: 1.5px;
-    text-shadow: 0 0 15px rgba(13, 202, 240, 0.5);
+    letter-spacing: 1px;
+    text-shadow: 0 0 10px rgba(13, 202, 240, 0.5);
 }
 
 .arquetipo-frase {
-    font-size: 1em;
+    font-size: 0.9em;
     font-style: italic;
     color: #0dcaf0;
-    margin-bottom: 20px;
-    line-height: 1.5;
+    margin-bottom: 15px;
+    line-height: 1.4;
     font-weight: 500;
 }
 
 .arquetipo-detalhes {
     display: grid;
-    gap: 15px;
-    margin-bottom: 20px;
+    gap: 10px;
+    margin-bottom: 15px;
     text-align: left;
 }
 
 .arquetipo-item {
     background: rgba(45, 45, 68, 0.6);
-    padding: 15px;
-    border-radius: 12px;
+    padding: 10px;
+    border-radius: 8px;
     border-left: 3px solid #0dcaf0;
     transition: all 0.3s;
 }
 
 .arquetipo-item:hover {
     background: rgba(45, 45, 68, 0.8);
-    transform: translateX(5px);
+    transform: translateX(3px);
     border-left-color: #ffffff;
 }
 
 .arquetipo-label {
     display: block;
-    font-size: 0.85em;
+    font-size: 0.8em;
     font-weight: 700;
     color: #0dcaf0;
-    margin-bottom: 8px;
+    margin-bottom: 5px;
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }
 
 .arquetipo-texto {
-    font-size: 0.95em;
+    font-size: 0.85em;
     color: #e4e4e4;
-    line-height: 1.5;
+    line-height: 1.4;
     margin: 0;
 }
 
@@ -1562,27 +1550,27 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 10px;
+    gap: 8px;
     background: linear-gradient(135deg, #0dcaf0 0%, #0ba8cc 100%);
     color: white;
-    padding: 12px 25px;
-    border-radius: 10px;
-    font-size: 0.95em;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 0.9em;
     font-weight: 700;
     text-decoration: none;
     transition: all 0.3s;
     border: 2px solid transparent;
-    box-shadow: 0 4px 15px rgba(13, 202, 240, 0.3);
+    box-shadow: 0 3px 12px rgba(13, 202, 240, 0.3);
 }
 
 .btn-download-arquetipo:hover {
-    transform: translateY(-2px) scale(1.03);
-    box-shadow: 0 8px 25px rgba(13, 202, 240, 0.5);
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 6px 20px rgba(13, 202, 240, 0.5);
     border-color: rgba(255, 255, 255, 0.3);
 }
 
 .btn-download-arquetipo .btn-icon {
-    font-size: 1.2em;
+    font-size: 1.1em;
 }
 
 /* Responsivo */
@@ -2381,7 +2369,6 @@
                                         <h4 class="recurso-title">${recurso.titulo}</h4>
                                     </div>
                                 </div>
-                                <p class="recurso-descricao">${recurso.descricao}</p>
                                 <a href="${recurso.link}" target="_blank" class="btn-download">
                                     📥 Acessar Recurso
                                 </a>

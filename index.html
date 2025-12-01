@@ -635,6 +635,271 @@
             box-sizing: border-box;
         }
 
+        /* ==================== NOVOS ESTILOS MASTER ==================== */
+        
+        /* SEÇÃO 1: Estatísticas por Formulário */
+        .formularios-stats-section {
+            background: rgba(45, 45, 68, 0.5);
+            padding: 25px;
+            border-radius: 15px;
+            margin: 25px 0;
+        }
+
+        .form-stat-card {
+            background: rgba(26, 26, 46, 0.6);
+            border: 1px solid rgba(13, 202, 240, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+
+        .form-stat-title {
+            color: #ffffff;
+            font-size: 1.1em;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .form-stat-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .form-stat-turma {
+            background: rgba(45, 45, 68, 0.6);
+            padding: 15px;
+            border-radius: 10px;
+        }
+
+        .form-stat-label {
+            color: #0dcaf0;
+            font-size: 0.85em;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .form-stat-value {
+            color: #ffffff;
+            font-size: 1.5em;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .form-stat-percent {
+            color: #0dcaf0;
+            font-size: 1.2em;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .form-stat-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .form-stat-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #0dcaf0 0%, #0ba8cc 100%);
+            transition: width 0.5s ease;
+        }
+
+        /* SEÇÃO 2: Detalhamento por Formulário */
+        .formularios-detalhes-section {
+            background: rgba(45, 45, 68, 0.5);
+            padding: 25px;
+            border-radius: 15px;
+            margin: 25px 0;
+        }
+
+        .form-detail-card {
+            background: rgba(26, 26, 46, 0.6);
+            border: 1px solid rgba(13, 202, 240, 0.2);
+            border-radius: 12px;
+            margin-bottom: 15px;
+            overflow: hidden;
+        }
+
+        .form-detail-header {
+            padding: 18px 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.3s;
+        }
+
+        .form-detail-header:hover {
+            background: rgba(13, 202, 240, 0.1);
+        }
+
+        .form-detail-header h4 {
+            color: #ffffff;
+            font-size: 1.1em;
+            margin: 0;
+        }
+
+        .form-detail-header .expand-icon {
+            color: #0dcaf0;
+            transition: transform 0.3s;
+        }
+
+        .form-detail-card.expanded .expand-icon {
+            transform: rotate(180deg);
+        }
+
+        .form-detail-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .form-detail-card.expanded .form-detail-content {
+            max-height: 2000px;
+        }
+
+        .form-detail-turmas {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .form-detail-turma {
+            background: rgba(45, 45, 68, 0.6);
+            padding: 15px;
+            border-radius: 10px;
+        }
+
+        .turma-title {
+            color: #0dcaf0;
+            font-size: 1em;
+            margin: 0 0 15px 0;
+            font-weight: 700;
+        }
+
+        .form-detail-section {
+            margin-bottom: 15px;
+        }
+
+        .section-title-small {
+            color: #ffffff;
+            font-size: 0.9em;
+            margin: 0 0 10px 0;
+            font-weight: 600;
+        }
+
+        .alunos-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .aluno-chip {
+            background: rgba(13, 202, 240, 0.2);
+            color: #0dcaf0;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.85em;
+            border: 1px solid rgba(13, 202, 240, 0.3);
+        }
+
+        .aluno-chip.pendente {
+            background: rgba(255, 193, 7, 0.2);
+            color: #ffc107;
+            border-color: rgba(255, 193, 7, 0.3);
+        }
+
+        .empty-text {
+            color: #888;
+            font-size: 0.9em;
+            font-style: italic;
+        }
+
+        /* SEÇÃO 3: Distribuição de Arquétipos */
+        .arquetipos-stats-section {
+            background: rgba(45, 45, 68, 0.5);
+            padding: 25px;
+            border-radius: 15px;
+            margin: 25px 0;
+        }
+
+        .arquetipos-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .arquetipo-turma-card {
+            background: rgba(26, 26, 46, 0.6);
+            border: 1px solid rgba(13, 202, 240, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .arquetipo-turma-title {
+            color: #0dcaf0;
+            font-size: 1.1em;
+            margin: 0 0 20px 0;
+            font-weight: 700;
+        }
+
+        .arquetipos-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .arquetipo-item-stat {
+            background: rgba(45, 45, 68, 0.6);
+            padding: 12px;
+            border-radius: 8px;
+        }
+
+        .arquetipo-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .arquetipo-nome-stat {
+            color: #ffffff;
+            font-size: 0.95em;
+            font-weight: 600;
+        }
+
+        .arquetipo-count {
+            color: #0dcaf0;
+            font-size: 0.9em;
+            font-weight: 600;
+        }
+
+        .arquetipo-bar {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .arquetipo-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #0dcaf0 0%, #0ba8cc 100%);
+            transition: width 0.5s ease;
+        }
+
+        @media (max-width: 900px) {
+            .form-stat-grid,
+            .form-detail-turmas,
+            .arquetipos-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
         @media (max-width: 900px) {
             .turmas-comparison {
                 grid-template-columns: 1fr;
@@ -2620,6 +2885,24 @@
                     ${renderizarInsights(stats)}
                 </div>
 
+                <!-- NOVA SEÇÃO 1: Estatísticas por Formulário -->
+                <div class="formularios-stats-section">
+                    <h2 class="section-title">📋 Estatísticas por Formulário</h2>
+                    ${renderizarEstatisticasFormularios()}
+                </div>
+
+                <!-- NOVA SEÇÃO 2: Detalhamento por Formulário -->
+                <div class="formularios-detalhes-section">
+                    <h2 class="section-title">📝 Detalhamento por Formulário</h2>
+                    ${renderizarDetalhamentFormularios()}
+                </div>
+
+                <!-- NOVA SEÇÃO 3: Distribuição de Arquétipos -->
+                <div class="arquetipos-stats-section">
+                    <h2 class="section-title">🌟 Distribuição de Arquétipos</h2>
+                    ${renderizarDistribuicaoArquetipos()}
+                </div>
+
                 <div class="tabs">
                     <div class="tab active" data-tab="turma1">TURMA 1 (${stats.turma1})</div>
                     <div class="tab" data-tab="turma2">TURMA 2 (${stats.turma2})</div>
@@ -2840,6 +3123,216 @@
                     </div>
                 `;
             }).join('');
+        }
+
+        // ==================== FUNÇÕES NOVAS DO MASTER ====================
+        
+        // FUNÇÃO 1: Estatísticas por Formulário
+        function renderizarEstatisticasFormularios() {
+            const nomesFormularios = [
+                'Anamnese Geral + Visão de Futuro',
+                'Jornada do Herói',
+                'Escritor Best Seller',
+                'Influenciador Digital',
+                'Palestrante Poderoso',
+                'Mentor High Ticket'
+            ];
+
+            return nomesFormularios.map((nomeForm, index) => {
+                const turma1 = todosAlunos.filter(a => a.turma === 'TURMA 1');
+                const turma2 = todosAlunos.filter(a => a.turma === 'TURMA 2');
+
+                const t1Preenchidos = turma1.filter(a => a.formularios[index].status === 'Preenchido').length;
+                const t2Preenchidos = turma2.filter(a => a.formularios[index].status === 'Preenchido').length;
+
+                const t1Percent = Math.round((t1Preenchidos / turma1.length) * 100);
+                const t2Percent = Math.round((t2Preenchidos / turma2.length) * 100);
+
+                return `
+                    <div class="form-stat-card">
+                        <h4 class="form-stat-title">${nomeForm}</h4>
+                        <div class="form-stat-grid">
+                            <div class="form-stat-turma">
+                                <div class="form-stat-label">TURMA 1</div>
+                                <div class="form-stat-value">${t1Preenchidos}/${turma1.length}</div>
+                                <div class="form-stat-percent">${t1Percent}%</div>
+                                <div class="form-stat-bar">
+                                    <div class="form-stat-fill" style="width: ${t1Percent}%"></div>
+                                </div>
+                            </div>
+                            <div class="form-stat-turma">
+                                <div class="form-stat-label">TURMA 2</div>
+                                <div class="form-stat-value">${t2Preenchidos}/${turma2.length}</div>
+                                <div class="form-stat-percent">${t2Percent}%</div>
+                                <div class="form-stat-bar">
+                                    <div class="form-stat-fill" style="width: ${t2Percent}%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // FUNÇÃO 2: Detalhamento por Formulário
+        function renderizarDetalhamentFormularios() {
+            const nomesFormularios = [
+                'Anamnese Geral + Visão de Futuro',
+                'Jornada do Herói',
+                'Escritor Best Seller',
+                'Influenciador Digital',
+                'Palestrante Poderoso',
+                'Mentor High Ticket'
+            ];
+
+            return nomesFormularios.map((nomeForm, index) => {
+                const turma1 = todosAlunos.filter(a => a.turma === 'TURMA 1');
+                const turma2 = todosAlunos.filter(a => a.turma === 'TURMA 2');
+
+                const t1Preenchidos = turma1.filter(a => a.formularios[index].status === 'Preenchido');
+                const t1Pendentes = turma1.filter(a => a.formularios[index].status === 'Pendente');
+
+                const t2Preenchidos = turma2.filter(a => a.formularios[index].status === 'Preenchido');
+                const t2Pendentes = turma2.filter(a => a.formularios[index].status === 'Pendente');
+
+                return `
+                    <div class="form-detail-card">
+                        <div class="form-detail-header" onclick="toggleFormDetail(this)">
+                            <h4>📝 ${nomeForm}</h4>
+                            <span class="expand-icon">▼</span>
+                        </div>
+                        <div class="form-detail-content">
+                            <div class="form-detail-turmas">
+                                <!-- TURMA 1 -->
+                                <div class="form-detail-turma">
+                                    <h5 class="turma-title">TURMA 1</h5>
+                                    <div class="form-detail-section">
+                                        <p class="section-title-small">✅ Preenchidos (${t1Preenchidos.length})</p>
+                                        <div class="alunos-chips">
+                                            ${t1Preenchidos.length > 0 
+                                                ? t1Preenchidos.map(a => `
+                                                    <span class="aluno-chip">${a.nomePreferido || a.nome}</span>
+                                                `).join('')
+                                                : '<span class="empty-text">Nenhum aluno preencheu</span>'
+                                            }
+                                        </div>
+                                    </div>
+                                    <div class="form-detail-section">
+                                        <p class="section-title-small">⏳ Pendentes (${t1Pendentes.length})</p>
+                                        <div class="alunos-chips">
+                                            ${t1Pendentes.length > 0
+                                                ? t1Pendentes.map(a => `
+                                                    <span class="aluno-chip pendente">${a.nomePreferido || a.nome}</span>
+                                                `).join('')
+                                                : '<span class="empty-text">Todos preencheram! 🎉</span>'
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- TURMA 2 -->
+                                <div class="form-detail-turma">
+                                    <h5 class="turma-title">TURMA 2</h5>
+                                    <div class="form-detail-section">
+                                        <p class="section-title-small">✅ Preenchidos (${t2Preenchidos.length})</p>
+                                        <div class="alunos-chips">
+                                            ${t2Preenchidos.length > 0
+                                                ? t2Preenchidos.map(a => `
+                                                    <span class="aluno-chip">${a.nomePreferido || a.nome}</span>
+                                                `).join('')
+                                                : '<span class="empty-text">Nenhum aluno preencheu</span>'
+                                            }
+                                        </div>
+                                    </div>
+                                    <div class="form-detail-section">
+                                        <p class="section-title-small">⏳ Pendentes (${t2Pendentes.length})</p>
+                                        <div class="alunos-chips">
+                                            ${t2Pendentes.length > 0
+                                                ? t2Pendentes.map(a => `
+                                                    <span class="aluno-chip pendente">${a.nomePreferido || a.nome}</span>
+                                                `).join('')
+                                                : '<span class="empty-text">Todos preencheram! 🎉</span>'
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // FUNÇÃO 3: Distribuição de Arquétipos
+        function renderizarDistribuicaoArquetipos() {
+            const turma1 = todosAlunos.filter(a => a.turma === 'TURMA 1');
+            const turma2 = todosAlunos.filter(a => a.turma === 'TURMA 2');
+
+            function contarArquetipos(alunos) {
+                const contagem = {};
+                alunos.forEach(aluno => {
+                    const arq = aluno.arquetipo && aluno.arquetipo.trim() !== '' && aluno.arquetipo !== 'Pendente' 
+                        ? aluno.arquetipo 
+                        : 'Sem arquétipo';
+                    contagem[arq] = (contagem[arq] || 0) + 1;
+                });
+                return Object.entries(contagem).sort((a, b) => b[1] - a[1]);
+            }
+
+            const arquetiposT1 = contarArquetipos(turma1);
+            const arquetiposT2 = contarArquetipos(turma2);
+
+            return `
+                <div class="arquetipos-grid">
+                    <!-- TURMA 1 -->
+                    <div class="arquetipo-turma-card">
+                        <h4 class="arquetipo-turma-title">TURMA 1 (${turma1.length} alunos)</h4>
+                        <div class="arquetipos-list">
+                            ${arquetiposT1.map(([arq, count]) => {
+                                const percent = Math.round((count / turma1.length) * 100);
+                                return `
+                                    <div class="arquetipo-item-stat">
+                                        <div class="arquetipo-item-header">
+                                            <span class="arquetipo-nome-stat">${arq}</span>
+                                            <span class="arquetipo-count">${count} (${percent}%)</span>
+                                        </div>
+                                        <div class="arquetipo-bar">
+                                            <div class="arquetipo-fill" style="width: ${percent}%"></div>
+                                        </div>
+                                    </div>
+                                `;
+                            }).join('')}
+                        </div>
+                    </div>
+
+                    <!-- TURMA 2 -->
+                    <div class="arquetipo-turma-card">
+                        <h4 class="arquetipo-turma-title">TURMA 2 (${turma2.length} alunos)</h4>
+                        <div class="arquetipos-list">
+                            ${arquetiposT2.map(([arq, count]) => {
+                                const percent = Math.round((count / turma2.length) * 100);
+                                return `
+                                    <div class="arquetipo-item-stat">
+                                        <div class="arquetipo-item-header">
+                                            <span class="arquetipo-nome-stat">${arq}</span>
+                                            <span class="arquetipo-count">${count} (${percent}%)</span>
+                                        </div>
+                                        <div class="arquetipo-bar">
+                                            <div class="arquetipo-fill" style="width: ${percent}%"></div>
+                                        </div>
+                                    </div>
+                                `;
+                            }).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Função para toggle dos detalhes de formulário
+        function toggleFormDetail(element) {
+            const card = element.parentElement;
+            card.classList.toggle('expanded');
         }
 
         function toggleAluno(element) {

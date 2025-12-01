@@ -805,6 +805,67 @@
             border-left: 5px solid #0dcaf0;
         }
 
+        /* Seção de Análise Individual */
+        .analise-section {
+            background: rgba(45, 45, 68, 0.5);
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .analise-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .analise-icon {
+            font-size: 2em;
+        }
+
+        .analise-title {
+            font-size: 1.4em;
+            font-weight: 700;
+            color: #ffffff;
+            margin: 0;
+        }
+
+        .analise-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .analise-card {
+            background: rgba(26, 26, 46, 0.6);
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+            border: 1px solid rgba(13, 202, 240, 0.2);
+            transition: all 0.3s;
+        }
+
+        .analise-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(13, 202, 240, 0.5);
+            box-shadow: 0 5px 20px rgba(13, 202, 240, 0.2);
+        }
+
+        .analise-number {
+            font-size: 3em;
+            font-weight: 700;
+            color: #0dcaf0;
+            margin-bottom: 10px;
+        }
+
+        .analise-label {
+            font-size: 1em;
+            color: #b8b8b8;
+            font-weight: 500;
+        }
+
         /* Biblioteca de Recursos */
         .biblioteca-section {
             background: rgba(45, 45, 68, 0.5);
@@ -2058,40 +2119,51 @@
 
         // ==================== FUNÇÃO ARQUÉTIPO (NOVA!) ====================
         function renderizarArquetipo() {
-            console.log('🎯 Renderizando arquétipo...');
+            console.log('🎯 ========== INICIANDO RENDERIZAÇÃO DE ARQUÉTIPO ==========');
+            console.log('📋 Dados do aluno:', alunoData);
             
             const arquetipoSection = document.getElementById('arquetipoSection');
             if (!arquetipoSection) {
-                console.error('❌ Seção de arquétipo não encontrada no HTML');
+                console.error('❌ Seção de arquétipo não encontrada no HTML (id="arquetipoSection")');
                 return;
             }
+            console.log('✅ Seção de arquétipo encontrada no HTML');
 
             const arquetipoNome = alunoData.arquetipo;
-            console.log('📋 Arquétipo do aluno:', arquetipoNome);
+            console.log('📋 Arquétipo do aluno (da planilha):', arquetipoNome);
 
             // Se não tem arquétipo ou é "Pendente", esconde a seção
             if (!arquetipoNome || arquetipoNome === 'Pendente' || arquetipoNome.trim() === '') {
-                console.log('⚠️ Aluno não tem arquétipo definido');
+                console.log('⚠️ Aluno não tem arquétipo definido - escondendo seção');
                 arquetipoSection.style.display = 'none';
                 return;
             }
 
             // Busca dados do arquétipo
             const arquetipo = ARQUETIPOS_DATA[arquetipoNome];
+            console.log('🔍 Buscando dados para arquétipo:', arquetipoNome);
+            console.log('📦 Dados encontrados:', arquetipo);
             
             if (!arquetipo) {
-                console.error('❌ Arquétipo não encontrado:', arquetipoNome);
+                console.error('❌ Arquétipo não encontrado nos dados:', arquetipoNome);
+                console.log('💡 Arquétipos disponíveis:', Object.keys(ARQUETIPOS_DATA));
                 arquetipoSection.style.display = 'none';
                 return;
             }
 
-            console.log('✅ Dados do arquétipo encontrados:', arquetipo);
+            console.log('✅ Dados do arquétipo encontrados!');
 
             // Aplica a cor personalizada
             const card = arquetipoSection.querySelector('.arquetipo-card');
             const nome = arquetipoSection.querySelector('.arquetipo-nome');
-            if (card) card.style.borderColor = arquetipo.cor;
-            if (nome) nome.style.textShadow = `0 0 20px ${arquetipo.cor}`;
+            if (card) {
+                card.style.borderColor = arquetipo.cor;
+                console.log('✅ Cor do card aplicada:', arquetipo.cor);
+            }
+            if (nome) {
+                nome.style.textShadow = `0 0 20px ${arquetipo.cor}`;
+                console.log('✅ Sombra do nome aplicada');
+            }
 
             // Preenche os dados
             arquetipoSection.querySelector('.arquetipo-emoji').textContent = arquetipo.emoji;
@@ -2116,10 +2188,11 @@
             const btnDownload = arquetipoSection.querySelector('.btn-download-arquetipo');
             btnDownload.href = arquetipo.link;
             btnDownload.target = '_blank';
+            console.log('✅ Link do PDF configurado:', arquetipo.link);
 
             // Mostra a seção
             arquetipoSection.style.display = 'block';
-            console.log('✅ Arquétipo renderizado com sucesso!');
+            console.log('✅ ========== ARQUÉTIPO RENDERIZADO COM SUCESSO! ==========');
         }
 
         // ==================== LOGIN ====================
@@ -2239,6 +2312,32 @@
                     </div>
                 </div>
 
+                <!-- SEÇÃO DE ANÁLISE INDIVIDUAL -->
+                <div class="analise-section">
+                    <div class="analise-header">
+                        <span class="analise-icon">📊</span>
+                        <h3 class="analise-title">Sua Análise de Progresso</h3>
+                    </div>
+                    <div class="analise-grid">
+                        <div class="analise-card">
+                            <div class="analise-number">${alunoData.formularios.filter(f => f.status === 'Preenchido').length}</div>
+                            <div class="analise-label">Formulários Concluídos</div>
+                        </div>
+                        <div class="analise-card">
+                            <div class="analise-number">${alunoData.formularios.filter(f => f.status === 'Pendente').length}</div>
+                            <div class="analise-label">Formulários Pendentes</div>
+                        </div>
+                        <div class="analise-card">
+                            <div class="analise-number">${progress}%</div>
+                            <div class="analise-label">Taxa de Conclusão</div>
+                        </div>
+                        <div class="analise-card">
+                            <div class="analise-number">${6 - alunoData.formularios.filter(f => f.status === 'Preenchido').length}</div>
+                            <div class="analise-label">Restam para Completar</div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- SEÇÃO DE ARQUÉTIPO -->
                 <div id="arquetipoSection" class="arquetipo-section" style="display: none;">
                     <div class="arquetipo-header">
@@ -2316,7 +2415,19 @@
         function renderizarBiblioteca() {
             const container = document.getElementById('bibliotecaContainer');
             
-            if (biblioteca.length === 0) {
+            // Filtrar recursos por turma do aluno (ou recursos gerais sem turma específica)
+            const recursosFiltrados = biblioteca.filter(recurso => {
+                // Se o recurso não tem turma definida, mostra para todos
+                if (!recurso.turma || recurso.turma.trim() === '') {
+                    return true;
+                }
+                // Se tem turma, mostra apenas se for a mesma do aluno
+                return recurso.turma === alunoData.turma;
+            });
+            
+            console.log(`📚 Biblioteca: ${biblioteca.length} total, ${recursosFiltrados.length} para ${alunoData.turma}`);
+            
+            if (recursosFiltrados.length === 0) {
                 container.innerHTML = '';
                 return;
             }
@@ -2328,7 +2439,7 @@
                         <h3 class="biblioteca-title">Biblioteca de Recursos</h3>
                     </div>
                     <div class="recursos-grid">
-                        ${biblioteca.map(recurso => `
+                        ${recursosFiltrados.map(recurso => `
                             <div class="recurso-card">
                                 <div class="recurso-header">
                                     <span class="recurso-icon">${recurso.emoji}</span>
@@ -2338,6 +2449,16 @@
                                 </div>
                                 <p class="recurso-descricao">${recurso.descricao}</p>
                                 <span class="recurso-categoria">${recurso.categoria}</span>
+                                <a href="${recurso.link}" target="_blank" class="btn-acessar-recurso">
+                                    <span class="btn-icon">📄</span>
+                                    <span>Acessar Recurso</span>
+                                </a>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
                                 <a href="${recurso.link}" target="_blank" class="btn-download">
                                     📥 Acessar Recurso
                                 </a>

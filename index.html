@@ -1891,6 +1891,7 @@
         // ==================== CARREGAR DADOS ====================
         async function carregarDados() {
             try {
+                console.log('🔄 Iniciando carregamento da planilha...');
                 const response = await fetch(PLANILHA_URL);
                 const text = await response.text();
                 const json = JSON.parse(text.substring(47, text.length - 2));
@@ -1898,42 +1899,85 @@
                 todosAlunos = [];
                 biblioteca = [];
                 
+                console.log('📊 Total de linhas na planilha:', json.table.rows.length);
+                
                 json.table.rows.forEach((row, index) => {
+                    // Pula a primeira linha (header)
                     if (index === 0) return;
                     
-                    const tipo = row.c[0]?.v;
+                    // ESTRUTURA DA SUA PLANILHA:
+                    // A (0) = Nome
+                    // B (1) = E-MAIL
+                    // C (2) = TURMA
+                    // D (3) = FORMULARIO ANAMNESE GERAL + VISÃO DE FUTURO
+                    // E (4) = FORMULARIO JORNADA DO HERÓI
+                    // F (5) = FORMULARIO ESCRITOR BEST SELLER
+                    // G (6) = FORMULARIO INFLUENCIADOR DIGITAL
+                    // H (7) = FORMULARIO PALESTRANTE PODEROSO
+                    // I (8) = FORMULARIO MENTOR HIGH TICKET
+                    // J (9) = SENHA
+                    // K (10) = Nome Preferido
+                    // L (11) = Arquétipo
                     
-                    if (tipo === 'Aluno') {
-                        todosAlunos.push({
-                            nome: row.c[1]?.v || '',
-                            nomePreferido: row.c[2]?.v || '',
-                            email: row.c[3]?.v || '',
-                            senha: row.c[4]?.v || '',
-                            codigoRecuperacao: row.c[5]?.v || '',
-                            turma: row.c[6]?.v || '',
-                            primeiroAcesso: row.c[7]?.v || 'Sim',
-                            arquetipo: row.c[11]?.v || '',
-                            formularios: [
-                                { nome: 'Trajetória de Carreira', status: row.c[12]?.v || 'Pendente', link: row.c[13]?.v || '' },
-                                { nome: 'Roda da Vida e do Trabalho', status: row.c[14]?.v || 'Pendente', link: row.c[15]?.v || '' },
-                                { nome: 'Inventário de Personalidade', status: row.c[16]?.v || 'Pendente', link: row.c[17]?.v || '' },
-                                { nome: 'Análise Profunda', status: row.c[18]?.v || 'Pendente', link: row.c[19]?.v || '' },
-                                { nome: 'Portfólio de Liderança', status: row.c[20]?.v || 'Pendente', link: row.c[21]?.v || '' },
-                                { nome: 'Plano de Desenvolvimento', status: row.c[22]?.v || 'Pendente', link: row.c[23]?.v || '' }
-                            ]
-                        });
-                    } else if (tipo === 'Biblioteca') {
-                        biblioteca.push({
-                            titulo: row.c[1]?.v || '',
-                            descricao: row.c[2]?.v || '',
-                            categoria: row.c[3]?.v || '',
-                            link: row.c[4]?.v || '',
-                            emoji: row.c[5]?.v || '📄'
-                        });
+                    const nome = row.c[0]?.v; // Coluna A = Nome
+                    
+                    // Se não tem nome, ou é header, pula
+                    if (!nome || nome.trim() === '' || nome.includes('Nome') || nome.includes('FORMULARIO')) {
+                        return;
                     }
+                    
+                    console.log(`✅ Linha ${index + 1}: Carregando aluno - ${nome}`);
+                    
+                    // Mapeia os dados conforme SUA estrutura
+                    const aluno = {
+                        nome: row.c[0]?.v || '',                    // Coluna A
+                        email: row.c[1]?.v || '',                   // Coluna B (E-MAIL)
+                        turma: row.c[2]?.v || '',                   // Coluna C (TURMA)
+                        senha: row.c[9]?.v || '',                   // Coluna J (SENHA)
+                        nomePreferido: row.c[10]?.v || '',          // Coluna K (Nome Preferido)
+                        arquetipo: row.c[11]?.v || '',              // Coluna L (Arquétipo)
+                        codigoRecuperacao: '',                       // Não tem na planilha
+                        primeiroAcesso: 'Não',                      // Default
+                        formularios: [
+                            { 
+                                nome: 'Anamnese Geral + Visão de Futuro', 
+                                status: row.c[3]?.v || 'Pendente',  // Coluna D
+                                link: '' 
+                            },
+                            { 
+                                nome: 'Jornada do Herói', 
+                                status: row.c[4]?.v || 'Pendente',  // Coluna E
+                                link: '' 
+                            },
+                            { 
+                                nome: 'Escritor Best Seller', 
+                                status: row.c[5]?.v || 'Pendente',  // Coluna F
+                                link: '' 
+                            },
+                            { 
+                                nome: 'Influenciador Digital', 
+                                status: row.c[6]?.v || 'Pendente',  // Coluna G
+                                link: '' 
+                            },
+                            { 
+                                nome: 'Palestrante Poderoso', 
+                                status: row.c[7]?.v || 'Pendente',  // Coluna H
+                                link: '' 
+                            },
+                            { 
+                                nome: 'Mentor High Ticket', 
+                                status: row.c[8]?.v || 'Pendente',  // Coluna I
+                                link: '' 
+                            }
+                        ]
+                    };
+                    
+                    todosAlunos.push(aluno);
                 });
                 
-                console.log('✅ Dados carregados:', todosAlunos.length, 'alunos e', biblioteca.length, 'recursos');
+                console.log('✅ Total de alunos carregados:', todosAlunos.length);
+                console.log('📋 Lista de emails:', todosAlunos.map(a => a.email).join(', '));
+                
                 return true;
             } catch (erro) {
                 console.error('❌ Erro ao carregar dados:', erro);
@@ -2009,37 +2053,77 @@
 
         // ==================== LOGIN ====================
         async function verificarAluno(email, senha) {
-            const carregou = await carregarDados();
-            if (!carregou) return null;
+            console.log('🔍 ===== TENTATIVA DE LOGIN =====');
+            console.log('📧 Email:', email);
+            console.log('🔑 Senha (comprimento):', senha.length, 'caracteres');
             
+            const carregou = await carregarDados();
+            if (!carregou) {
+                console.error('❌ Falha ao carregar dados da planilha');
+                return null;
+            }
+            
+            console.log('📊 Total de alunos na base:', todosAlunos.length);
+            
+            // Verifica se é o master
             if (email === 'master@febracis.com.br' && senha === 'Master2024!') {
+                console.log('👑 Login como MASTER aprovado');
                 return { tipo: 'master' };
             }
             
-            const aluno = todosAlunos.find(a => a.email.toLowerCase() === email.toLowerCase());
+            // Procura o aluno pelo email
+            console.log('🔍 Procurando aluno com email:', email);
+            const aluno = todosAlunos.find(a => 
+                a.email && a.email.toLowerCase().trim() === email.toLowerCase().trim()
+            );
             
-            if (!aluno) return null;
-            if (aluno.senha !== senha) return null;
+            if (!aluno) {
+                console.error('❌ EMAIL NÃO ENCONTRADO:', email);
+                console.log('📋 Emails disponíveis na planilha:');
+                todosAlunos.forEach((a, i) => {
+                    console.log(`   ${i + 1}. ${a.email} (${a.nome})`);
+                });
+                return null;
+            }
             
-            const emailAluno = aluno.email;
-            const turma = aluno.turma;
+            console.log('✅ ALUNO ENCONTRADO!');
+            console.log('   👤 Nome:', aluno.nome);
+            console.log('   📧 Email:', aluno.email);
+            console.log('   🏫 Turma:', aluno.turma);
+            console.log('   🎭 Arquétipo:', aluno.arquetipo || '(não definido)');
+            
+            // Verifica a senha
+            if (!aluno.senha || aluno.senha.trim() === '') {
+                console.error('❌ ALUNO NÃO TEM SENHA CADASTRADA!');
+                console.error('   Verifique a coluna J (SENHA) na planilha para este aluno');
+                return null;
+            }
+            
+            console.log('🔑 Comparando senhas...');
+            console.log('   Senha na planilha:', aluno.senha);
+            console.log('   Senha digitada:', senha);
+            
+            if (aluno.senha.trim() !== senha.trim()) {
+                console.error('❌ SENHA INCORRETA!');
+                console.error('   Esperado:', `"${aluno.senha.trim()}"`);
+                console.error('   Recebido:', `"${senha.trim()}"`);
+                console.error('   Comprimento esperado:', aluno.senha.trim().length);
+                console.error('   Comprimento recebido:', senha.trim().length);
+                return null;
+            }
+            
+            console.log('✅ SENHA CORRETA!');
+            console.log('✅ ===== LOGIN APROVADO =====');
             
             return {
                 tipo: 'aluno',
                 nome: aluno.nome,
-                nomePreferido: aluno.nomePreferido,
-                email: emailAluno,
-                turma: turma,
-                arquetipo: aluno.arquetipo || '',  // ← CORREÇÃO 1 APLICADA!
-                formularios: [
-                    { nome: 'Trajetória de Carreira', status: aluno.formularios[0].status, link: aluno.formularios[0].link },
-                    { nome: 'Roda da Vida e do Trabalho', status: aluno.formularios[1].status, link: aluno.formularios[1].link },
-                    { nome: 'Inventário de Personalidade', status: aluno.formularios[2].status, link: aluno.formularios[2].link },
-                    { nome: 'Análise Profunda', status: aluno.formularios[3].status, link: aluno.formularios[3].link },
-                    { nome: 'Portfólio de Liderança', status: aluno.formularios[4].status, link: aluno.formularios[4].link },
-                    { nome: 'Plano de Desenvolvimento', status: aluno.formularios[5].status, link: aluno.formularios[5].link }
-                ],
-                primeiroAcesso: aluno.primeiroAcesso === 'Sim'
+                nomePreferido: aluno.nomePreferido || aluno.nome.split(' ')[0],
+                email: aluno.email,
+                turma: aluno.turma,
+                arquetipo: aluno.arquetipo || '',
+                formularios: aluno.formularios,
+                primeiroAcesso: false
             };
         }
 
@@ -2087,18 +2171,20 @@
             const nomeExibicao = alunoData.nomePreferido || alunoData.nome.split(' ')[0];
             
             const linksPlataforma = {
-                'TURMA 1': 'https://drive.google.com/drive/folders/1IU2yt38HVwVdcYHY8I2FgQ1yETU7PQy_',
-                'TURMA 2': 'https://drive.google.com/drive/folders/1G-Y7gMZZyI9M3sTTmPPCdUXqIKUfn4Zy'
+                'TURMA 1': 'https://aluno.omentordelideres.com.br/login',
+                'TURMA 2': 'https://aluno.omentordelideres.com.br/login'
             };
             
             const calendarios = {
                 'TURMA 1': [
-                    { nome: 'Igor Vidor', link: 'https://calendly.com/igor-vidor/mentoria-individualizada-do-programa-mentor-de-lideres' },
-                    { nome: 'Vinicius de Freitas', link: 'https://calendly.com/vinicius-mentorespro/mentoria-individualizada-do-programa-mentor-de-lideres' }
+                    { nome: 'Influenciador Digital - Leonardo', link: 'https://calendly.com/leonardomuniz-febracis/suporte-influenciador-digital?month=2025-11' },
+                    { nome: 'Escritor Best Seller - Luana', link: 'https://calendly.com/luanarocha-febracis/suporte_escritor?month=2025-11' },
+                    { nome: 'Palestra/Mentoria - Michelle', link: 'https://calendly.com/michellecastro-febracis/30min?month=2025-12' }
                 ],
                 'TURMA 2': [
-                    { nome: 'Murilo Dias', link: 'https://calendly.com/murilo-feb/mentoria-individualizada-do-programa-mentor-de-lideres' },
-                    { nome: 'Raoni Rosa', link: 'https://calendly.com/raoni-feb/mentoria-individualizada-do-programa-mentor-de-lideres' }
+                    { nome: 'Influenciador Digital - Leonardo', link: 'https://calendar.app.google/aY65WhmjohSAqn3R6' },
+                    { nome: 'Escritor Best Seller - Luana', link: 'https://calendar.app.google/bdA65V5Fy4JKmiAK6' },
+                    { nome: 'Palestra/Mentoria - Michelle', link: 'https://calendar.app.google/1egzPjhvsj2VRc5W9' }
                 ]
             };
             

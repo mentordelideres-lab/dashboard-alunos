@@ -834,6 +834,77 @@
             color: #0dcaf0;
         }
 
+        /* Botão Carregar Mais */
+        .btn-carregar-mais {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, rgba(13, 202, 240, 0.2) 0%, rgba(11, 168, 204, 0.2) 100%);
+            color: #0dcaf0;
+            border: 2px solid rgba(13, 202, 240, 0.3);
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.95em;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-carregar-mais:hover {
+            background: linear-gradient(135deg, rgba(13, 202, 240, 0.3) 0%, rgba(11, 168, 204, 0.3) 100%);
+            border-color: rgba(13, 202, 240, 0.6);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(13, 202, 240, 0.3);
+        }
+
+        /* Animação fade-in para novos recursos */
+        @keyframes fadeInRecurso {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .recurso-card.novo {
+            animation: fadeInRecurso 0.5s ease-out;
+        }
+
+        .btn-carregar-mais {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, rgba(13, 202, 240, 0.2) 0%, rgba(11, 168, 204, 0.2) 100%);
+            border: 2px solid rgba(13, 202, 240, 0.4);
+            border-radius: 10px;
+            color: #0dcaf0;
+            font-weight: 600;
+            font-size: 0.95em;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-carregar-mais:hover {
+            background: linear-gradient(135deg, rgba(13, 202, 240, 0.3) 0%, rgba(11, 168, 204, 0.3) 100%);
+            border-color: rgba(13, 202, 240, 0.6);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(13, 202, 240, 0.3);
+        }
+
+        .btn-carregar-mais.hidden {
+            display: none;
+        }
+
         .recursos-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -847,6 +918,18 @@
             padding: 20px;
             transition: all 0.3s;
             cursor: pointer;
+            animation: fadeInUp 0.5s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .recurso-card:hover {
@@ -1752,6 +1835,9 @@
                     <h2 class="biblioteca-title">Biblioteca de Recursos</h2>
                 </div>
                 <div id="recursosContainer" class="recursos-grid"></div>
+                <button id="btnCarregarMais" class="btn-carregar-mais hidden" onclick="carregarMaisRecursos()">
+                    <span id="btnCarregarMaisTexto">⬇️ Carregar Mais Recursos</span>
+                </button>
             </div>
 
             <h3 class="section-title">📝 Seus Formulários</h3>
@@ -1830,6 +1916,11 @@
         let recursosData = [];
         let allStudentsData = { turma1: [], turma2: [] };
         let primeiroAcessoEmail = null;
+
+        // === CONTROLE DE PAGINAÇÃO DA BIBLIOTECA ===
+        let recursosFiltradosGlobal = [];
+        let recursosExibidos = 0;
+        const RECURSOS_POR_PAGINA = 3;
 
         const FORMULARIOS = [
             { nome: 'Formulário Anamnese Geral + Visão de Futuro', coluna: 'D' },
@@ -2406,26 +2497,60 @@
         function renderizarBiblioteca() {
             const section = document.getElementById('bibliotecaSection');
             const container = document.getElementById('recursosContainer');
+            const btnCarregarMais = document.getElementById('btnCarregarMais');
 
             // Filtrar recursos pela turma do aluno
-            const recursosFiltrados = filtrarRecursosPorTurma(recursosData, alunoData.turma);
+            recursosFiltradosGlobal = filtrarRecursosPorTurma(recursosData, alunoData.turma);
 
-            if (recursosFiltrados.length === 0) {
+            if (recursosFiltradosGlobal.length === 0) {
                 section.classList.add('hidden');
                 return;
             }
 
             section.classList.remove('hidden');
             container.innerHTML = '';
+            recursosExibidos = 0;
 
-            recursosFiltrados.forEach(recurso => {
+            // Mostrar apenas os primeiros recursos
+            exibirProximosRecursos();
+
+            // Controlar visibilidade do botão "Carregar Mais"
+            if (recursosFiltradosGlobal.length > RECURSOS_POR_PAGINA) {
+                btnCarregarMais.classList.remove('hidden');
+                atualizarTextoCarregarMais();
+            } else {
+                btnCarregarMais.classList.add('hidden');
+            }
+        }
+
+        function atualizarTextoCarregarMais() {
+            const btnTexto = document.getElementById('btnCarregarMaisTexto');
+            const restantes = recursosFiltradosGlobal.length - recursosExibidos;
+            
+            if (restantes > 0) {
+                const proximos = Math.min(RECURSOS_POR_PAGINA, restantes);
+                btnTexto.innerHTML = `⬇️ Carregar Mais ${proximos} Recurso${proximos > 1 ? 's' : ''} (${restantes} restante${restantes > 1 ? 's' : ''})`;
+            }
+        }
+
+        function exibirProximosRecursos() {
+            const container = document.getElementById('recursosContainer');
+            const inicio = recursosExibidos;
+            const fim = Math.min(recursosExibidos + RECURSOS_POR_PAGINA, recursosFiltradosGlobal.length);
+
+            for (let i = inicio; i < fim; i++) {
+                const recurso = recursosFiltradosGlobal[i];
                 const card = document.createElement('div');
                 card.className = 'recurso-card';
+                
+                // Adicionar classe 'novo' apenas para cards carregados após o inicial
+                if (recursosExibidos > 0) {
+                    card.classList.add('novo');
+                }
                 
                 // Garantir que o link está correto
                 let linkFinal = recurso.link;
                 if (linkFinal && linkFinal !== '#') {
-                    // Remover parâmetros desnecessários e garantir que abre corretamente
                     linkFinal = linkFinal.replace('/edit?usp=sharing', '/view?usp=sharing');
                     linkFinal = linkFinal.replace('/edit', '/view');
                 }
@@ -2444,7 +2569,54 @@
                     </a>
                 `;
                 container.appendChild(card);
-            });
+                
+                // Remover classe 'novo' após animação
+                setTimeout(() => {
+                    card.classList.remove('novo');
+                }, 500);
+            }
+
+            recursosExibidos = fim;
+        }
+
+        function carregarMaisRecursos() {
+            const btnCarregarMais = document.getElementById('btnCarregarMais');
+            const btnTexto = document.getElementById('btnCarregarMaisTexto');
+            
+            // Animação de loading
+            btnTexto.innerHTML = '⏳ Carregando...';
+            btnCarregarMais.style.opacity = '0.6';
+            btnCarregarMais.style.cursor = 'wait';
+            
+            // Simular pequeno delay para efeito visual
+            setTimeout(() => {
+                // Exibir próximos recursos
+                exibirProximosRecursos();
+
+                // Restaurar botão
+                btnCarregarMais.style.opacity = '1';
+                btnCarregarMais.style.cursor = 'pointer';
+
+                // Se todos os recursos foram exibidos, esconder o botão
+                if (recursosExibidos >= recursosFiltradosGlobal.length) {
+                    btnCarregarMais.classList.add('hidden');
+                } else {
+                    // Atualizar texto com contagem
+                    atualizarTextoCarregarMais();
+                }
+
+                // Scroll suave até o primeiro novo recurso
+                setTimeout(() => {
+                    const container = document.getElementById('recursosContainer');
+                    const cards = container.querySelectorAll('.recurso-card');
+                    if (cards.length > 0) {
+                        const primeiroNovoCard = cards[recursosExibidos - RECURSOS_POR_PAGINA];
+                        if (primeiroNovoCard) {
+                            primeiroNovoCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        }
+                    }
+                }, 100);
+            }, 300);
         }
 
         function filtrarRecursosPorTurma(rows, turma) {

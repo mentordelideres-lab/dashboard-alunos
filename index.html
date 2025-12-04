@@ -2640,7 +2640,7 @@
                     'CAPITULO 7 E 8 EM PRODUCAO': { texto: 'Capítulos 7-8 em Produção', percentual: 70, emoji: '🟡', badge: 'status-andamento', classe: 'andamento' },
                     'CAPITULO 7 E 8 ENTREGUES': { texto: 'Capítulos 7-8 Entregues', percentual: 80, emoji: '🟡', badge: 'status-andamento', classe: 'andamento' },
                     'CAPITULO 9 E 10 EM PRODUCAO': { texto: 'Capítulos 9-10 em Produção', percentual: 90, emoji: '🟡', badge: 'status-andamento', classe: 'andamento' },
-                    'CAPITULO 10 FINALIZADO': { texto: 'Livro Finalizado', percentual: 100, emoji: '✅', badge: 'status-concluido', classe: 'completo' }
+                    'CAPITULO 10 FINALIZADO': { texto: 'Todos os Capítulos Entregues', percentual: 100, emoji: '✅', badge: 'status-concluido', classe: 'completo' }
                 };
 
                 return mapeamentoLivro[statusUpper] || { texto: status, percentual: 0, emoji: '⚪', badge: 'status-nao-iniciado', classe: '' };
@@ -2649,6 +2649,7 @@
             // Mapeamento padrão para outros pilares
             const mapeamentoPadrao = {
                 'ENTREGUE': { texto: 'Entregue', percentual: 100, emoji: '✅', badge: 'status-concluido', classe: 'completo' },
+                'REALIZADO': { texto: 'Realizado', percentual: 100, emoji: '✅', badge: 'status-concluido', classe: 'completo' },
                 'EM ANDAMENTO': { texto: 'Em Andamento', percentual: 50, emoji: '🟡', badge: 'status-andamento', classe: 'andamento' },
                 'NAO INICIADO': { texto: 'Não Iniciado', percentual: 0, emoji: '⚪', badge: 'status-nao-iniciado', classe: '' }
             };

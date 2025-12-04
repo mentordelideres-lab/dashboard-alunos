@@ -3042,22 +3042,44 @@
                 }
                 // Verificar se está AGENDADO (coluna AE tem data)
                 else if (dataPodcast && dataPodcast.toString().trim() !== '') {
-                    // Podcast está agendado
                     const dataFormatada = formatarDataPodcast(dataPodcast);
+                    const dataPodcastObj = converterParaDate(dataPodcast);
+                    const hoje = new Date();
+                    hoje.setHours(0, 0, 0, 0); // Zerar horas para comparar só a data
                     
-                    podcastHTML = `
-                        <div class="podcast-status">
-                            <span class="podcast-badge podcast-agendado-data">
-                                📅 Podcast Agendado
-                            </span>
-                        </div>
-                        <div class="podcast-data">
-                            📅 <strong>Data da gravação:</strong> ${dataFormatada}
-                        </div>
-                        <div class="podcast-info">
-                            🎬 Seu podcast "O Mentor" está agendado! Prepare-se para compartilhar sua história.
-                        </div>
-                    `;
+                    // Se a data já passou, considerar como REALIZADO
+                    if (dataPodcastObj && dataPodcastObj < hoje) {
+                        console.log('📅 Data no passado - Podcast REALIZADO');
+                        podcastHTML = `
+                            <div class="podcast-status">
+                                <span class="podcast-badge podcast-agendado">
+                                    ✅ Podcast Realizado
+                                </span>
+                            </div>
+                            <div class="podcast-data">
+                                📅 <strong>Gravado em:</strong> ${dataFormatada}
+                            </div>
+                            <div class="podcast-info">
+                                🎉 Parabéns! Você já participou do podcast "O Mentor". Sua história já está inspirando outras pessoas!
+                            </div>
+                        `;
+                    } else {
+                        // Data futura - Podcast está AGENDADO
+                        console.log('📅 Data futura - Podcast AGENDADO');
+                        podcastHTML = `
+                            <div class="podcast-status">
+                                <span class="podcast-badge podcast-agendado-data">
+                                    📅 Podcast Agendado
+                                </span>
+                            </div>
+                            <div class="podcast-data">
+                                📅 <strong>Data da gravação:</strong> ${dataFormatada}
+                            </div>
+                            <div class="podcast-info">
+                                🎬 Seu podcast "O Mentor" está agendado! Prepare-se para compartilhar sua história.
+                            </div>
+                        `;
+                    }
                 } 
                 // Caso contrário: PENDENTE
                 else {
@@ -3148,6 +3170,48 @@
             }
             
             return 'Data a confirmar';
+        }
+
+        // Converter data para objeto Date (para comparação)
+        function converterParaDate(data) {
+            if (!data) return null;
+            
+            // Se vier como objeto do Google Sheets com propriedade 'v'
+            if (typeof data === 'object' && data !== null) {
+                if (data.v !== undefined) {
+                    data = data.v;
+                }
+                // Se já for um objeto Date
+                else if (data instanceof Date) {
+                    return data;
+                }
+            }
+            
+            // Se for número (serial date do Google Sheets)
+            if (typeof data === 'number') {
+                const date = new Date((data - 25569) * 86400 * 1000);
+                return date;
+            }
+            
+            // Se for string
+            if (typeof data === 'string') {
+                const trimmed = data.trim();
+                
+                // Se está no formato DD/MM/YYYY (brasileiro)
+                if (/^\d{2}\/\d{2}\/\d{4}$/.test(trimmed)) {
+                    const partes = trimmed.split('/');
+                    // Mês é 0-indexed em JavaScript
+                    return new Date(parseInt(partes[2]), parseInt(partes[1]) - 1, parseInt(partes[0]));
+                }
+                
+                // Tentar parsear diretamente
+                const dataObj = new Date(trimmed);
+                if (!isNaN(dataObj.getTime())) {
+                    return dataObj;
+                }
+            }
+            
+            return null;
         }
 
         function mostrarDashboard() {

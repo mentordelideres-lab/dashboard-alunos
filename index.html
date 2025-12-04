@@ -1110,12 +1110,20 @@
             .pilares-lista {
                 gap: 12px;
             }
+            
+            .pilar-entregavel {
+                font-size: 0.8em;
+            }
         }
 
         /* Responsivo: Em mobile volta para 1 coluna */
         @media (max-width: 600px) {
             .pilares-lista {
                 grid-template-columns: 1fr;
+            }
+            
+            .pilar-entregavel {
+                font-size: 0.85em;
             }
         }
 
@@ -1150,7 +1158,22 @@
             font-size: 1em;
             font-weight: 700;
             color: #ffffff;
-            margin-bottom: 5px;
+            margin-bottom: 3px;
+        }
+
+        .pilar-entregavel {
+            font-size: 0.85em;
+            color: #0dcaf0;
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .pilar-entregavel::before {
+            content: "📋";
+            font-size: 0.9em;
         }
 
         .pilar-status {
@@ -2876,6 +2899,7 @@
                     {
                         icone: '📱',
                         nome: 'Influenciador Digital',
+                        entregavel: 'Plano de Ação',
                         mentor: 'com Leonardo',
                         status: pilaresData.influenciador,
                         isPilarLivro: false
@@ -2883,6 +2907,7 @@
                     {
                         icone: '📚',
                         nome: 'Escritor Best Seller',
+                        entregavel: 'Capítulos do Livro',
                         mentor: 'com Luana',
                         status: pilaresData.escritor,
                         isPilarLivro: true
@@ -2890,6 +2915,7 @@
                     {
                         icone: '🎤',
                         nome: 'Palestrante Poderoso',
+                        entregavel: 'Entrega da Palestra',
                         mentor: 'com Michelle',
                         status: pilaresData.palestrante,
                         isPilarLivro: false
@@ -2897,6 +2923,7 @@
                     {
                         icone: '💼',
                         nome: 'Mentor High Ticket',
+                        entregavel: 'Entrega da Mentoria',
                         mentor: 'com Michelle',
                         status: pilaresData.mentorHighTicket,
                         isPilarLivro: false
@@ -2913,6 +2940,7 @@
                             <div class="pilar-icon">${pilar.icone}</div>
                             <div class="pilar-content">
                                 <div class="pilar-nome">${pilar.nome}</div>
+                                <div class="pilar-entregavel">${pilar.entregavel}</div>
                                 <div class="pilar-status">
                                     <span class="pilar-badge ${statusInfo.badge}">
                                         ${statusInfo.emoji} ${statusInfo.texto}

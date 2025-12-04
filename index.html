@@ -1293,6 +1293,12 @@
             border: 1px solid #51cf66;
         }
 
+        .podcast-agendado-data {
+            background: rgba(13, 202, 240, 0.3);
+            color: #0dcaf0;
+            border: 1px solid #0dcaf0;
+        }
+
         .podcast-pendente {
             background: rgba(255, 193, 7, 0.3);
             color: #ffc107;
@@ -3008,29 +3014,46 @@
                 const agendado = pilaresData.podcastAgendado?.toUpperCase().trim();
                 const dataPodcast = pilaresData.podcastData;
                 
-                console.log('📊 Status do podcast:', agendado);
-                console.log('📅 Data do podcast:', dataPodcast);
+                console.log('📊 Status do podcast (AD):', agendado);
+                console.log('📅 Data do podcast (AE):', dataPodcast);
                 
                 let podcastHTML = '';
                 
+                // Verificar se já foi REALIZADO (coluna AD = SIM)
                 if (agendado === 'SIM') {
-                    // Podcast já agendado
-                    const dataFormatada = dataPodcast ? formatarDataPodcast(dataPodcast) : 'Data a confirmar';
-                    
+                    // Podcast já foi realizado
                     podcastHTML = `
                         <div class="podcast-status">
                             <span class="podcast-badge podcast-agendado">
-                                ✅ Podcast Agendado
+                                ✅ Podcast Realizado
+                            </span>
+                        </div>
+                        <div class="podcast-info">
+                            🎉 Parabéns! Você já participou do podcast "O Mentor". Sua história já está inspirando outras pessoas!
+                        </div>
+                    `;
+                }
+                // Verificar se está AGENDADO (coluna AE tem data)
+                else if (dataPodcast && dataPodcast.toString().trim() !== '') {
+                    // Podcast está agendado
+                    const dataFormatada = formatarDataPodcast(dataPodcast);
+                    
+                    podcastHTML = `
+                        <div class="podcast-status">
+                            <span class="podcast-badge podcast-agendado-data">
+                                📅 Podcast Agendado
                             </span>
                         </div>
                         <div class="podcast-data">
-                            📅 <strong>Data:</strong> ${dataFormatada}
+                            📅 <strong>Data da gravação:</strong> ${dataFormatada}
                         </div>
                         <div class="podcast-info">
-                            🎉 Parabéns! Sua participação no podcast "O Mentor" já está agendada. Em breve você receberá mais informações sobre a gravação.
+                            🎬 Seu podcast "O Mentor" está agendado! Prepare-se para compartilhar sua história.
                         </div>
                     `;
-                } else {
+                } 
+                // Caso contrário: PENDENTE
+                else {
                     // Podcast ainda não agendado
                     podcastHTML = `
                         <div class="podcast-status">

@@ -1082,6 +1082,126 @@
             border: 1px solid rgba(255,255,255,0.1);
         }
 
+        /* === SEÇÃO DE PILARES === */
+        .pilares-section {
+            background: rgba(45, 45, 68, 0.5);
+            padding: 18px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .pilares-section h3 {
+            font-size: 1.2em;
+            font-weight: 700;
+            color: #0dcaf0;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .pilares-lista {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .pilar-item {
+            background: rgba(26, 26, 46, 0.5);
+            border: 2px solid rgba(255,255,255,0.1);
+            border-radius: 10px;
+            padding: 15px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .pilar-item:hover {
+            transform: translateY(-2px);
+            border-color: rgba(13, 202, 240, 0.3);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .pilar-icon {
+            font-size: 2em;
+            min-width: 50px;
+            text-align: center;
+        }
+
+        .pilar-content {
+            flex: 1;
+        }
+
+        .pilar-nome {
+            font-size: 1.05em;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 5px;
+        }
+
+        .pilar-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9em;
+            color: #e4e4e4;
+        }
+
+        .pilar-badge {
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.85em;
+        }
+
+        .status-concluido {
+            background: rgba(40, 167, 69, 0.3);
+            color: #51cf66;
+            border: 1px solid #51cf66;
+        }
+
+        .status-andamento {
+            background: rgba(255, 193, 7, 0.3);
+            color: #ffc107;
+            border: 1px solid #ffc107;
+        }
+
+        .status-nao-iniciado {
+            background: rgba(108, 117, 125, 0.3);
+            color: #b8b8b8;
+            border: 1px solid #6c757d;
+        }
+
+        .pilar-progresso {
+            width: 100%;
+            height: 8px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 8px;
+        }
+
+        .pilar-progresso-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #0dcaf0 0%, #0ba8cc 100%);
+            transition: width 0.5s ease;
+            border-radius: 4px;
+        }
+
+        .pilar-progresso-fill.completo {
+            background: linear-gradient(90deg, #51cf66 0%, #40c057 100%);
+        }
+
+        .pilar-progresso-fill.andamento {
+            background: linear-gradient(90deg, #ffc107 0%, #ffb300 100%);
+        }
+
+        .pilar-detalhes {
+            font-size: 0.8em;
+            color: #b8b8b8;
+            margin-top: 5px;
+        }
+
         .arquetipo-section h3 {
             font-size: 1.2em;
             font-weight: 700;
@@ -1776,6 +1896,14 @@
                 </div>
             </div>
 
+            <!-- SEÇÃO DE PILARES -->
+            <div id="pilaresSection" class="pilares-section hidden">
+                <h3>🎯 SEUS PILARES</h3>
+                <div class="pilares-lista" id="pilaresLista">
+                    <!-- Pilares serão inseridos aqui via JavaScript -->
+                </div>
+            </div>
+
             <!-- SEÇÃO DE ARQUÉTIPO (COMPACTA) -->
             <div id="arquetipoSection" class="arquetipo-section hidden">
                 <h3>🌟 SEU ARQUÉTIPO</h3>
@@ -1910,6 +2038,16 @@
 
         const MASTER_EMAIL = 'mentordelideres@gmail.com';
         const MASTER_PASSWORD = 'master2024';
+        
+        // === PLANILHAS DE PILARES ===
+        const PILARES_TURMA1_ID = '1n1LulOgowy1Evk4-S0k7ReTgM7chqnQy-UCAW0CfZCA';
+        const PILARES_TURMA2_ID = '1cymSq22sqKNg3g7KvTlxlCjhtf4uZ_YimP297ro0Iv0';
+        const PILARES_GID = '1942550026'; // GID da aba
+        
+        function getPilaresURL(turma) {
+            const sheetId = turma === 'TURMA 1' ? PILARES_TURMA1_ID : PILARES_TURMA2_ID;
+            return `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&gid=${PILARES_GID}`;
+        }
 
         let alunoData = null;
         let configData = null;
@@ -2458,6 +2596,171 @@
             section.classList.remove('hidden');
         }
 
+        // === MAPEAMENTO DE STATUS DOS PILARES ===
+        function mapearStatusPilar(status, isPilarLivro = false) {
+            if (!status || status.trim() === '') {
+                return {
+                    texto: 'Não Iniciado',
+                    badge: 'status-nao-iniciado',
+                    emoji: '⚪',
+                    percentual: 0,
+                    classe: ''
+                };
+            }
+
+            const statusUpper = status.toUpperCase().trim();
+
+            // Mapeamento especial para Escritor Best Seller (capítulos do livro)
+            if (isPilarLivro) {
+                const mapeamentoLivro = {
+                    'NAO INICIADO': { texto: 'Não Iniciado', percentual: 0, emoji: '⚪', badge: 'status-nao-iniciado', classe: '' },
+                    'CAPITULO 1 E 2 EM ANDAMENTO': { texto: 'Capítulos 1-2 em Andamento', percentual: 10, emoji: '🟡', badge: 'status-andamento', classe: 'andamento' },
+                    'CAPITULO 1 E 2 ENTREGUES': { texto: 'Capítulos 1-2 Entregues', percentual: 20, emoji: '🟡', badge: 'status-andamento', classe: 'andamento' },
+                    'CAPITULO 3 E 4 EM PRODUCAO': { texto: 'Capítulos 3-4 em Produção', percentual: 30, emoji: '🟡', badge: 'status-andamento', classe: 'andamento' },
+                    'CAPITULO 3 E 4 ENTREGUES': { texto: 'Capítulos 3-4 Entregues', percentual: 40, emoji: '🟡', badge: 'status-andamento', classe: 'andamento' },
+                    'CAPITULO 5 E 6 EM PRODUCAO': { texto: 'Capítulos 5-6 em Produção', percentual: 50, emoji: '🟡', badge: 'status-andamento', classe: 'andamento' },
+                    'CAPITULO 5 E 6 ENTREGUES': { texto: 'Capítulos 5-6 Entregues', percentual: 60, emoji: '🟡', badge: 'status-andamento', classe: 'andamento' },
+                    'CAPITULO 7 E 8 EM PRODUCAO': { texto: 'Capítulos 7-8 em Produção', percentual: 70, emoji: '🟡', badge: 'status-andamento', classe: 'andamento' },
+                    'CAPITULO 7 E 8 ENTREGUES': { texto: 'Capítulos 7-8 Entregues', percentual: 80, emoji: '🟡', badge: 'status-andamento', classe: 'andamento' },
+                    'CAPITULO 9 E 10 EM PRODUCAO': { texto: 'Capítulos 9-10 em Produção', percentual: 90, emoji: '🟡', badge: 'status-andamento', classe: 'andamento' },
+                    'CAPITULO 10 FINALIZADO': { texto: 'Livro Finalizado', percentual: 100, emoji: '✅', badge: 'status-concluido', classe: 'completo' }
+                };
+
+                return mapeamentoLivro[statusUpper] || { texto: status, percentual: 0, emoji: '⚪', badge: 'status-nao-iniciado', classe: '' };
+            }
+
+            // Mapeamento padrão para outros pilares
+            const mapeamentoPadrao = {
+                'ENTREGUE': { texto: 'Entregue', percentual: 100, emoji: '✅', badge: 'status-concluido', classe: 'completo' },
+                'EM ANDAMENTO': { texto: 'Em Andamento', percentual: 50, emoji: '🟡', badge: 'status-andamento', classe: 'andamento' },
+                'NAO INICIADO': { texto: 'Não Iniciado', percentual: 0, emoji: '⚪', badge: 'status-nao-iniciado', classe: '' }
+            };
+
+            return mapeamentoPadrao[statusUpper] || { texto: status, percentual: 0, emoji: '⚪', badge: 'status-nao-iniciado', classe: '' };
+        }
+
+        // === BUSCAR DADOS DOS PILARES ===
+        async function buscarPilaresAluno(email, turma) {
+            try {
+                const url = getPilaresURL(turma);
+                console.log('🔍 Buscando pilares em:', url);
+                
+                const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const text = await response.text();
+                const jsonText = text.substring(text.indexOf('{')).slice(0, -2);
+                const json = JSON.parse(jsonText);
+                const rows = json.table.rows;
+                
+                // Procurar aluno pelo email (coluna AF = índice 31)
+                for (let i = 1; i < rows.length; i++) {
+                    const row = rows[i];
+                    if (!row.c || !row.c[31]) continue; // Coluna AF (email)
+                    
+                    const emailPlanilha = row.c[31].v ? row.c[31].v.toLowerCase().trim() : '';
+                    
+                    if (emailPlanilha === email.toLowerCase().trim()) {
+                        console.log('✅ Aluno encontrado na planilha de pilares!');
+                        
+                        return {
+                            influenciador: row.c[7]?.v || '', // Coluna H
+                            palestrante: row.c[8]?.v || '',   // Coluna I
+                            escritor: row.c[9]?.v || '',      // Coluna J
+                            mentorHighTicket: row.c[25]?.v || '' // Coluna Z (índice 25)
+                        };
+                    }
+                }
+                
+                console.log('⚠️ Aluno não encontrado na planilha de pilares');
+                return null;
+                
+            } catch (error) {
+                console.error('❌ Erro ao buscar pilares:', error);
+                return null;
+            }
+        }
+
+        // === RENDERIZAR PILARES ===
+        async function renderizarPilares() {
+            const section = document.getElementById('pilaresSection');
+            const lista = document.getElementById('pilaresLista');
+            
+            console.log('🎯 Renderizando pilares...');
+            
+            // Buscar dados dos pilares
+            const pilaresData = await buscarPilaresAluno(alunoData.email, alunoData.turma);
+            
+            if (!pilaresData) {
+                console.log('❌ Pilares não disponíveis');
+                section.classList.add('hidden');
+                return;
+            }
+            
+            // Definir os 4 pilares
+            const pilares = [
+                {
+                    icone: '📱',
+                    nome: 'Influenciador Digital',
+                    mentor: 'com Leonardo',
+                    status: pilaresData.influenciador,
+                    isPilarLivro: false
+                },
+                {
+                    icone: '📚',
+                    nome: 'Escritor Best Seller',
+                    mentor: 'com Luana',
+                    status: pilaresData.escritor,
+                    isPilarLivro: true
+                },
+                {
+                    icone: '🎤',
+                    nome: 'Palestrante Poderoso',
+                    mentor: 'com Michelle',
+                    status: pilaresData.palestrante,
+                    isPilarLivro: false
+                },
+                {
+                    icone: '💼',
+                    nome: 'Mentor High Ticket',
+                    mentor: 'com Michelle',
+                    status: pilaresData.mentorHighTicket,
+                    isPilarLivro: false
+                }
+            ];
+            
+            // Renderizar cada pilar
+            lista.innerHTML = '';
+            pilares.forEach(pilar => {
+                const statusInfo = mapearStatusPilar(pilar.status, pilar.isPilarLivro);
+                
+                const pilarHTML = `
+                    <div class="pilar-item">
+                        <div class="pilar-icon">${pilar.icone}</div>
+                        <div class="pilar-content">
+                            <div class="pilar-nome">${pilar.nome}</div>
+                            <div class="pilar-status">
+                                <span class="pilar-badge ${statusInfo.badge}">
+                                    ${statusInfo.emoji} ${statusInfo.texto}
+                                </span>
+                                <span class="pilar-detalhes">${pilar.mentor}</span>
+                            </div>
+                            <div class="pilar-progresso">
+                                <div class="pilar-progresso-fill ${statusInfo.classe}" style="width: ${statusInfo.percentual}%"></div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                lista.innerHTML += pilarHTML;
+            });
+            
+            console.log('✅ Pilares renderizados com sucesso!');
+            section.classList.remove('hidden');
+        }
+
         // === RENDERIZAR AGENDAMENTO ===
         function renderizarAgendamento() {
             const container = document.getElementById('mentoresContainer');
@@ -2488,6 +2791,7 @@
             document.getElementById('progressFill').style.width = `${percentual}%`;
             document.getElementById('progressText').textContent = `${preenchidos}/${total}`;
 
+            renderizarPilares(); // 🎯 PILARES
             renderizarArquetipo(); // 🌟 ARQUÉTIPOS
             renderizarAgendamento(); // 📅 AGENDAMENTO
             renderizarBiblioteca();

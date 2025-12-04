@@ -2643,7 +2643,9 @@
         async function buscarPilaresAluno(email, turma) {
             try {
                 const url = getPilaresURL(turma);
-                console.log('🔍 Buscando pilares em:', url);
+                console.log('🔍 Buscando pilares...');
+                console.log('   URL:', url);
+                console.log('   Procurando email:', email);
                 
                 const response = await fetch(url);
                 if (!response.ok) {
@@ -2655,26 +2657,56 @@
                 const json = JSON.parse(jsonText);
                 const rows = json.table.rows;
                 
+                console.log(`📊 Total de linhas na planilha: ${rows.length}`);
+                
+                // Debug: Mostrar cabeçalhos (primeira linha)
+                if (rows.length > 0 && rows[0].c) {
+                    console.log('📋 Verificando estrutura da planilha...');
+                    console.log('   Coluna H (índice 7):', rows[0].c[7]?.v);
+                    console.log('   Coluna I (índice 8):', rows[0].c[8]?.v);
+                    console.log('   Coluna J (índice 9):', rows[0].c[9]?.v);
+                    console.log('   Coluna Z (índice 25):', rows[0].c[25]?.v);
+                    console.log('   Coluna AF (índice 31):', rows[0].c[31]?.v);
+                }
+                
                 // Procurar aluno pelo email (coluna AF = índice 31)
                 for (let i = 1; i < rows.length; i++) {
                     const row = rows[i];
-                    if (!row.c || !row.c[31]) continue; // Coluna AF (email)
+                    if (!row.c) continue;
                     
-                    const emailPlanilha = row.c[31].v ? row.c[31].v.toLowerCase().trim() : '';
+                    const emailPlanilha = row.c[31]?.v ? row.c[31].v.toLowerCase().trim() : '';
+                    
+                    // Debug para primeiras 3 linhas
+                    if (i <= 3) {
+                        console.log(`   Linha ${i}: Email na planilha = "${emailPlanilha}"`);
+                    }
                     
                     if (emailPlanilha === email.toLowerCase().trim()) {
-                        console.log('✅ Aluno encontrado na planilha de pilares!');
+                        console.log(`✅ ALUNO ENCONTRADO na linha ${i}!`);
+                        console.log('   Nome:', row.c[0]?.v);
+                        console.log('   Email:', emailPlanilha);
                         
-                        return {
+                        const dados = {
                             influenciador: row.c[7]?.v || '', // Coluna H
                             palestrante: row.c[8]?.v || '',   // Coluna I
                             escritor: row.c[9]?.v || '',      // Coluna J
                             mentorHighTicket: row.c[25]?.v || '' // Coluna Z (índice 25)
                         };
+                        
+                        console.log('📊 Status dos pilares:');
+                        console.log('   Influenciador (H):', dados.influenciador);
+                        console.log('   Palestrante (I):', dados.palestrante);
+                        console.log('   Escritor (J):', dados.escritor);
+                        console.log('   Mentor HT (Z):', dados.mentorHighTicket);
+                        
+                        return dados;
                     }
                 }
                 
-                console.log('⚠️ Aluno não encontrado na planilha de pilares');
+                console.log('⚠️ ALUNO NÃO ENCONTRADO na planilha de pilares');
+                console.log('   Email procurado:', email);
+                console.log('   Turma:', turma);
+                console.log('   ⚠️ VERIFIQUE: A coluna AF foi preenchida com os emails?');
                 return null;
                 
             } catch (error) {
@@ -2688,77 +2720,88 @@
             const section = document.getElementById('pilaresSection');
             const lista = document.getElementById('pilaresLista');
             
-            console.log('🎯 Renderizando pilares...');
+            console.log('🎯 === INICIANDO RENDERIZAÇÃO DE PILARES ===');
+            console.log('Email do aluno:', alunoData.email);
+            console.log('Turma do aluno:', alunoData.turma);
             
-            // Buscar dados dos pilares
-            const pilaresData = await buscarPilaresAluno(alunoData.email, alunoData.turma);
-            
-            if (!pilaresData) {
-                console.log('❌ Pilares não disponíveis');
-                section.classList.add('hidden');
-                return;
-            }
-            
-            // Definir os 4 pilares
-            const pilares = [
-                {
-                    icone: '📱',
-                    nome: 'Influenciador Digital',
-                    mentor: 'com Leonardo',
-                    status: pilaresData.influenciador,
-                    isPilarLivro: false
-                },
-                {
-                    icone: '📚',
-                    nome: 'Escritor Best Seller',
-                    mentor: 'com Luana',
-                    status: pilaresData.escritor,
-                    isPilarLivro: true
-                },
-                {
-                    icone: '🎤',
-                    nome: 'Palestrante Poderoso',
-                    mentor: 'com Michelle',
-                    status: pilaresData.palestrante,
-                    isPilarLivro: false
-                },
-                {
-                    icone: '💼',
-                    nome: 'Mentor High Ticket',
-                    mentor: 'com Michelle',
-                    status: pilaresData.mentorHighTicket,
-                    isPilarLivro: false
-                }
-            ];
-            
-            // Renderizar cada pilar
-            lista.innerHTML = '';
-            pilares.forEach(pilar => {
-                const statusInfo = mapearStatusPilar(pilar.status, pilar.isPilarLivro);
+            try {
+                // Buscar dados dos pilares
+                const pilaresData = await buscarPilaresAluno(alunoData.email, alunoData.turma);
                 
-                const pilarHTML = `
-                    <div class="pilar-item">
-                        <div class="pilar-icon">${pilar.icone}</div>
-                        <div class="pilar-content">
-                            <div class="pilar-nome">${pilar.nome}</div>
-                            <div class="pilar-status">
-                                <span class="pilar-badge ${statusInfo.badge}">
-                                    ${statusInfo.emoji} ${statusInfo.texto}
-                                </span>
-                                <span class="pilar-detalhes">${pilar.mentor}</span>
-                            </div>
-                            <div class="pilar-progresso">
-                                <div class="pilar-progresso-fill ${statusInfo.classe}" style="width: ${statusInfo.percentual}%"></div>
+                if (!pilaresData) {
+                    console.log('❌ Pilares não disponíveis - aluno não encontrado na planilha');
+                    console.log('⚠️ IMPORTANTE: Verifique se o email foi adicionado na coluna AF da planilha!');
+                    section.classList.add('hidden');
+                    return;
+                }
+                
+                console.log('✅ Dados dos pilares encontrados:', pilaresData);
+                
+                // Definir os 4 pilares
+                const pilares = [
+                    {
+                        icone: '📱',
+                        nome: 'Influenciador Digital',
+                        mentor: 'com Leonardo',
+                        status: pilaresData.influenciador,
+                        isPilarLivro: false
+                    },
+                    {
+                        icone: '📚',
+                        nome: 'Escritor Best Seller',
+                        mentor: 'com Luana',
+                        status: pilaresData.escritor,
+                        isPilarLivro: true
+                    },
+                    {
+                        icone: '🎤',
+                        nome: 'Palestrante Poderoso',
+                        mentor: 'com Michelle',
+                        status: pilaresData.palestrante,
+                        isPilarLivro: false
+                    },
+                    {
+                        icone: '💼',
+                        nome: 'Mentor High Ticket',
+                        mentor: 'com Michelle',
+                        status: pilaresData.mentorHighTicket,
+                        isPilarLivro: false
+                    }
+                ];
+                
+                // Renderizar cada pilar
+                lista.innerHTML = '';
+                pilares.forEach(pilar => {
+                    const statusInfo = mapearStatusPilar(pilar.status, pilar.isPilarLivro);
+                    
+                    const pilarHTML = `
+                        <div class="pilar-item">
+                            <div class="pilar-icon">${pilar.icone}</div>
+                            <div class="pilar-content">
+                                <div class="pilar-nome">${pilar.nome}</div>
+                                <div class="pilar-status">
+                                    <span class="pilar-badge ${statusInfo.badge}">
+                                        ${statusInfo.emoji} ${statusInfo.texto}
+                                    </span>
+                                    <span class="pilar-detalhes">${pilar.mentor}</span>
+                                </div>
+                                <div class="pilar-progresso">
+                                    <div class="pilar-progresso-fill ${statusInfo.classe}" style="width: ${statusInfo.percentual}%"></div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                `;
+                    `;
+                    
+                    lista.innerHTML += pilarHTML;
+                });
                 
-                lista.innerHTML += pilarHTML;
-            });
-            
-            console.log('✅ Pilares renderizados com sucesso!');
-            section.classList.remove('hidden');
+                console.log('✅ Pilares renderizados com sucesso!');
+                section.classList.remove('hidden');
+                
+            } catch (error) {
+                console.error('❌ Erro ao renderizar pilares:', error);
+                section.classList.add('hidden');
+            }
         }
 
         // === RENDERIZAR AGENDAMENTO ===

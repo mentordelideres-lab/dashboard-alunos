@@ -1218,6 +1218,107 @@
             margin-top: 5px;
         }
 
+        /* === SEÇÃO DE PODCAST === */
+        .podcast-section {
+            background: rgba(45, 45, 68, 0.5);
+            padding: 18px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .podcast-section h3 {
+            font-size: 1.2em;
+            font-weight: 700;
+            color: #0dcaf0;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .podcast-card {
+            background: rgba(26, 26, 46, 0.5);
+            border: 2px solid rgba(255,255,255,0.1);
+            border-radius: 10px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .podcast-status {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .podcast-badge {
+            padding: 6px 14px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.9em;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .podcast-agendado {
+            background: rgba(40, 167, 69, 0.3);
+            color: #51cf66;
+            border: 1px solid #51cf66;
+        }
+
+        .podcast-pendente {
+            background: rgba(255, 193, 7, 0.3);
+            color: #ffc107;
+            border: 1px solid #ffc107;
+        }
+
+        .podcast-data {
+            font-size: 0.95em;
+            color: #e4e4e4;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .podcast-info {
+            font-size: 0.9em;
+            color: #b8b8b8;
+            line-height: 1.5;
+        }
+
+        .btn-agendar-podcast {
+            background: linear-gradient(135deg, #0dcaf0 0%, #0ba8cc 100%);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.95em;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            text-decoration: none;
+            width: fit-content;
+        }
+
+        .btn-agendar-podcast:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(13, 202, 240, 0.4);
+        }
+
+        @media (max-width: 600px) {
+            .btn-agendar-podcast {
+                width: 100%;
+            }
+        }
+
         .arquetipo-section h3 {
             font-size: 1.2em;
             font-weight: 700;
@@ -1905,6 +2006,14 @@
                 <h3>🎯 SEUS PILARES</h3>
                 <div class="pilares-lista" id="pilaresLista">
                     <!-- Pilares serão inseridos aqui via JavaScript -->
+                </div>
+            </div>
+
+            <!-- SEÇÃO DE PODCAST (APENAS TURMA 1) -->
+            <div id="podcastSection" class="podcast-section hidden">
+                <h3>🎙️ Podcast "O Mentor"</h3>
+                <div class="podcast-card" id="podcastCard">
+                    <!-- Conteúdo será inserido via JavaScript -->
                 </div>
             </div>
 
@@ -2684,6 +2793,8 @@
                     console.log('   Coluna I (índice 8):', rows[0].c[8]?.v);
                     console.log('   Coluna J (índice 9):', rows[0].c[9]?.v);
                     console.log('   Coluna Z (índice 25):', rows[0].c[25]?.v);
+                    console.log('   Coluna AD (índice 29):', rows[0].c[29]?.v);
+                    console.log('   Coluna AE (índice 30):', rows[0].c[30]?.v);
                     console.log('   Coluna AF (índice 31):', rows[0].c[31]?.v);
                 }
                 
@@ -2708,7 +2819,9 @@
                             influenciador: row.c[7]?.v || '', // Coluna H
                             palestrante: row.c[8]?.v || '',   // Coluna I
                             escritor: row.c[9]?.v || '',      // Coluna J
-                            mentorHighTicket: row.c[25]?.v || '' // Coluna Z (índice 25)
+                            mentorHighTicket: row.c[25]?.v || '', // Coluna Z (índice 25)
+                            podcastAgendado: row.c[29]?.v || '', // Coluna AD (índice 29)
+                            podcastData: row.c[30]?.v || ''      // Coluna AE (índice 30)
                         };
                         
                         console.log('📊 Status dos pilares:');
@@ -2716,6 +2829,9 @@
                         console.log('   Palestrante (I):', dados.palestrante);
                         console.log('   Escritor (J):', dados.escritor);
                         console.log('   Mentor HT (Z):', dados.mentorHighTicket);
+                        console.log('🎙️ Podcast:');
+                        console.log('   Agendado (AD):', dados.podcastAgendado);
+                        console.log('   Data (AE):', dados.podcastData);
                         
                         return dados;
                     }
@@ -2837,6 +2953,112 @@
             `).join('');
         }
 
+        // === RENDERIZAR PODCAST (APENAS TURMA 1) ===
+        async function renderizarPodcast() {
+            const section = document.getElementById('podcastSection');
+            const card = document.getElementById('podcastCard');
+            
+            console.log('🎙️ === RENDERIZANDO PODCAST ===');
+            
+            // Apenas para TURMA 1
+            if (alunoData.turma !== 'TURMA 1') {
+                console.log('⚠️ Podcast disponível apenas para TURMA 1');
+                section.classList.add('hidden');
+                return;
+            }
+            
+            try {
+                // Buscar dados dos pilares (que incluem dados do podcast)
+                const pilaresData = await buscarPilaresAluno(alunoData.email, alunoData.turma);
+                
+                if (!pilaresData) {
+                    console.log('❌ Dados do podcast não disponíveis');
+                    section.classList.add('hidden');
+                    return;
+                }
+                
+                const agendado = pilaresData.podcastAgendado?.toUpperCase().trim();
+                const dataPodcast = pilaresData.podcastData;
+                
+                console.log('📊 Status do podcast:', agendado);
+                console.log('📅 Data do podcast:', dataPodcast);
+                
+                let podcastHTML = '';
+                
+                if (agendado === 'SIM') {
+                    // Podcast já agendado
+                    const dataFormatada = dataPodcast ? formatarDataPodcast(dataPodcast) : 'Data a confirmar';
+                    
+                    podcastHTML = `
+                        <div class="podcast-status">
+                            <span class="podcast-badge podcast-agendado">
+                                ✅ Podcast Agendado
+                            </span>
+                        </div>
+                        <div class="podcast-data">
+                            📅 <strong>Data:</strong> ${dataFormatada}
+                        </div>
+                        <div class="podcast-info">
+                            🎉 Parabéns! Sua participação no podcast "O Mentor" já está agendada. Em breve você receberá mais informações sobre a gravação.
+                        </div>
+                    `;
+                } else {
+                    // Podcast ainda não agendado
+                    podcastHTML = `
+                        <div class="podcast-status">
+                            <span class="podcast-badge podcast-pendente">
+                                ⏳ Agendamento Pendente
+                            </span>
+                        </div>
+                        <div class="podcast-info">
+                            📢 Participe do podcast "O Mentor"! Compartilhe sua história e inspire outras pessoas.
+                        </div>
+                        <a href="https://go.febracis.com/l/lp-podcast/" target="_blank" rel="noopener noreferrer" class="btn-agendar-podcast">
+                            🎙️ Agendar Minha Participação
+                        </a>
+                    `;
+                }
+                
+                card.innerHTML = podcastHTML;
+                section.classList.remove('hidden');
+                console.log('✅ Seção de podcast renderizada!');
+                
+            } catch (error) {
+                console.error('❌ Erro ao renderizar podcast:', error);
+                section.classList.add('hidden');
+            }
+        }
+
+        // Formatar data do podcast
+        function formatarDataPodcast(data) {
+            if (!data) return 'Data a confirmar';
+            
+            // Se vier no formato Date do Google Sheets
+            if (typeof data === 'object' && data.v) {
+                data = data.v;
+            }
+            
+            // Se for string, tentar parsear
+            if (typeof data === 'string') {
+                const partes = data.split('/');
+                if (partes.length === 3) {
+                    return `${partes[0]}/${partes[1]}/${partes[2]}`;
+                }
+                return data;
+            }
+            
+            // Se for Date do Google (número)
+            if (typeof data === 'number') {
+                const date = new Date((data - 25569) * 86400 * 1000);
+                const dia = String(date.getDate()).padStart(2, '0');
+                const mes = String(date.getMonth() + 1).padStart(2, '0');
+                const ano = date.getFullYear();
+                return `${dia}/${mes}/${ano}`;
+            }
+            
+            return data.toString();
+        }
+
         function mostrarDashboard() {
             mostrarTela('dashboardScreen');
 
@@ -2853,6 +3075,7 @@
             document.getElementById('progressText').textContent = `${preenchidos}/${total}`;
 
             renderizarPilares(); // 🎯 PILARES
+            renderizarPodcast(); // 🎙️ PODCAST (apenas TURMA 1)
             renderizarArquetipo(); // 🌟 ARQUÉTIPOS
             renderizarAgendamento(); // 📅 AGENDAMENTO
             renderizarBiblioteca();

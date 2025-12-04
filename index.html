@@ -1268,6 +1268,8 @@
             display: flex;
             flex-direction: column;
             gap: 12px;
+            align-items: center;
+            text-align: center;
         }
 
         .podcast-status {
@@ -1275,6 +1277,7 @@
             align-items: center;
             gap: 12px;
             flex-wrap: wrap;
+            justify-content: center;
         }
 
         .podcast-badge {
@@ -1311,12 +1314,14 @@
             display: flex;
             align-items: center;
             gap: 6px;
+            justify-content: center;
         }
 
         .podcast-info {
             font-size: 0.9em;
             color: #b8b8b8;
             line-height: 1.5;
+            text-align: center;
         }
 
         .btn-agendar-podcast {
@@ -1335,6 +1340,7 @@
             gap: 8px;
             text-decoration: none;
             width: fit-content;
+            margin: 0 auto;
         }
 
         .btn-agendar-podcast:hover {
@@ -1345,6 +1351,7 @@
         @media (max-width: 600px) {
             .btn-agendar-podcast {
                 width: 100%;
+                max-width: 300px;
             }
         }
 
@@ -3080,34 +3087,67 @@
             }
         }
 
-        // Formatar data do podcast
+        // Formatar data do podcast - FORMATO BRASILEIRO (DD/MM/YYYY)
         function formatarDataPodcast(data) {
             if (!data) return 'Data a confirmar';
             
-            // Se vier no formato Date do Google Sheets
-            if (typeof data === 'object' && data.v) {
-                data = data.v;
-            }
+            console.log('📅 Formatando data:', data, 'Tipo:', typeof data);
             
-            // Se for string, tentar parsear
-            if (typeof data === 'string') {
-                const partes = data.split('/');
-                if (partes.length === 3) {
-                    return `${partes[0]}/${partes[1]}/${partes[2]}`;
+            // Se vier como objeto do Google Sheets com propriedade 'v'
+            if (typeof data === 'object' && data !== null) {
+                if (data.v !== undefined) {
+                    data = data.v;
                 }
-                return data;
+                // Se for um objeto Date
+                else if (data instanceof Date) {
+                    const dia = String(data.getDate()).padStart(2, '0');
+                    const mes = String(data.getMonth() + 1).padStart(2, '0');
+                    const ano = data.getFullYear();
+                    return `${dia}/${mes}/${ano}`;
+                }
             }
             
-            // Se for Date do Google (número)
+            // Se for string no formato DD/MM/YYYY (já está correto)
+            if (typeof data === 'string') {
+                const trimmed = data.trim();
+                
+                // Se já está no formato brasileiro DD/MM/YYYY
+                if (/^\d{2}\/\d{2}\/\d{4}$/.test(trimmed)) {
+                    return trimmed;
+                }
+                
+                // Se está no formato MM/DD/YYYY (americano)
+                if (/^\d{2}\/\d{2}\/\d{4}$/.test(trimmed)) {
+                    const partes = trimmed.split('/');
+                    return `${partes[1]}/${partes[0]}/${partes[2]}`;
+                }
+                
+                // Tentar parsear como data
+                const dataObj = new Date(trimmed);
+                if (!isNaN(dataObj.getTime())) {
+                    const dia = String(dataObj.getDate()).padStart(2, '0');
+                    const mes = String(dataObj.getMonth() + 1).padStart(2, '0');
+                    const ano = dataObj.getFullYear();
+                    return `${dia}/${mes}/${ano}`;
+                }
+                
+                return trimmed; // Retornar como está se não conseguir formatar
+            }
+            
+            // Se for número (serial date do Google Sheets)
+            // Google Sheets usa 25569 como offset (diferença entre 1900 e 1970)
             if (typeof data === 'number') {
+                // Converter serial date do Google Sheets para JavaScript Date
                 const date = new Date((data - 25569) * 86400 * 1000);
-                const dia = String(date.getDate()).padStart(2, '0');
-                const mes = String(date.getMonth() + 1).padStart(2, '0');
-                const ano = date.getFullYear();
-                return `${dia}/${mes}/${ano}`;
+                const dia = String(date.getUTCDate()).padStart(2, '0');
+                const mes = String(date.getUTCMonth() + 1).padStart(2, '0');
+                const ano = date.getUTCFullYear();
+                const resultado = `${dia}/${mes}/${ano}`;
+                console.log('📅 Data formatada:', resultado);
+                return resultado;
             }
             
-            return data.toString();
+            return 'Data a confirmar';
         }
 
         function mostrarDashboard() {

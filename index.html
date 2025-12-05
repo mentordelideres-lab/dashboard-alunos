@@ -3232,7 +3232,21 @@
                 grid.innerHTML = '';
                 imersoes.forEach(imersao => {
                     const dataCell = alunoRow.c[imersao.coluna];
-                    const dataImersao = dataCell && dataCell.v ? dataCell.v : null;
+                    
+                    // DEBUG: Mostrar TUDO sobre a célula
+                    console.log('🔍 === DEBUG IMERSÃO: ' + imersao.titulo + ' ===');
+                    console.log('📊 Célula completa:', dataCell);
+                    
+                    if (dataCell) {
+                        console.log('  - v (value):', dataCell.v);
+                        console.log('  - f (formatted):', dataCell.f);
+                        console.log('  - tipo de v:', typeof dataCell.v);
+                    }
+                    
+                    const dataImersao = dataCell && dataCell.f ? dataCell.f : (dataCell && dataCell.v ? dataCell.v : null);
+                    
+                    console.log('📅 Data escolhida para exibir:', dataImersao);
+                    console.log('🔍 ==================');
                     
                     let statusHTML = '';
                     

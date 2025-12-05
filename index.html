@@ -1127,6 +1127,83 @@
             }
         }
 
+        /* ============================================
+           BOTÃO FLUTUANTE DE SUPORTE
+           ============================================ */
+        .btn-suporte-flutuante {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2em;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4);
+            transition: all 0.3s ease;
+            z-index: 9999;
+            text-decoration: none;
+            animation: pulsoSuave 2s infinite;
+        }
+
+        .btn-suporte-flutuante:hover {
+            transform: translateY(-5px) scale(1.1);
+            box-shadow: 0 8px 30px rgba(37, 211, 102, 0.6);
+            animation: none;
+        }
+
+        .btn-suporte-flutuante::before {
+            content: '💬';
+        }
+
+        .btn-suporte-flutuante .tooltip-suporte {
+            position: absolute;
+            right: 75px;
+            background: rgba(26, 26, 46, 0.95);
+            color: white;
+            padding: 12px 16px;
+            border-radius: 10px;
+            font-size: 0.4em;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            border: 1px solid rgba(37, 211, 102, 0.3);
+        }
+
+        .btn-suporte-flutuante:hover .tooltip-suporte {
+            opacity: 1;
+        }
+
+        @keyframes pulsoSuave {
+            0%, 100% {
+                box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4);
+            }
+            50% {
+                box-shadow: 0 4px 25px rgba(37, 211, 102, 0.6);
+            }
+        }
+
+        /* Responsivo mobile */
+        @media (max-width: 600px) {
+            .btn-suporte-flutuante {
+                bottom: 20px;
+                right: 20px;
+                width: 55px;
+                height: 55px;
+                font-size: 1.8em;
+            }
+
+            .btn-suporte-flutuante .tooltip-suporte {
+                display: none;
+            }
+        }
+
         .pilar-item {
             background: rgba(26, 26, 46, 0.5);
             border: 2px solid rgba(255,255,255,0.1);
@@ -2191,6 +2268,11 @@
             <div id="masterContent"></div>
         </div>
     </div>
+
+    <!-- BOTÃO FLUTUANTE DE SUPORTE -->
+    <a href="https://febra.site/cs" target="_blank" rel="noopener noreferrer" class="btn-suporte-flutuante" aria-label="Falar com Suporte">
+        <span class="tooltip-suporte">Precisa de ajuda?<br>Fale com nosso Sucesso do Cliente</span>
+    </a>
 
     <script>
         // Configuração

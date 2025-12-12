@@ -2602,7 +2602,7 @@
         </div>
 
         <!-- Modal de Edição de Nome -->
-        <div id="modalEditarNome" class="modal-overlay" onclick="fecharModalEditarNome(event)">
+        <div id="modalEditarNome" class="modal-overlay hidden" onclick="fecharModalEditarNome(event)">
             <div class="modal-content" onclick="event.stopPropagation()">
                 <div class="modal-header">
                     <h2 class="modal-title">✏️ Editar Nome</h2>
@@ -4086,11 +4086,10 @@
             renderizarBiblioteca();
             renderizarFormularios();
 
-            // TODO: Descomentar depois de testar
             // Abrir modal de pendências após carregar tudo (delay de 1 segundo)
-            // setTimeout(() => {
-            //     mostrarModalPendencias();
-            // }, 1000);
+            setTimeout(() => {
+                mostrarModalPendencias();
+            }, 1000);
         }
 
         function renderizarBiblioteca() {

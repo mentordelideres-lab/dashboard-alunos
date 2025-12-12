@@ -1520,6 +1520,13 @@
             background: rgba(255, 255, 255, 0.05);
             border-radius: 8px;
             border-left: 3px solid #ffc107;
+            transition: all 0.3s ease;
+        }
+
+        .pendencia-item[style*="cursor: pointer"]:hover {
+            background: rgba(13, 202, 240, 0.15);
+            border-left-color: #0dcaf0;
+            transform: translateX(5px);
         }
 
         .pendencia-item.concluido {
@@ -4060,7 +4067,10 @@
             if (alunoData.formularios) {
                 alunoData.formularios.forEach((status, index) => {
                     if (status !== 'Preenchido') {
-                        pendencias.formularios.push(`Formulário ${index + 1}`);
+                        pendencias.formularios.push({
+                            numero: index + 1,
+                            texto: `Formulário ${index + 1}`
+                        });
                     }
                 });
             }
@@ -4125,9 +4135,10 @@
                             </div>
                             <div class="pendencias-lista">
                                 ${pendencias.formularios.map(form => `
-                                    <div class="pendencia-item">
+                                    <div class="pendencia-item" style="cursor: pointer;" onclick="irParaFormulario(${form.numero})">
                                         <span class="pendencia-check">❌</span>
-                                        <span class="pendencia-texto">${form}</span>
+                                        <span class="pendencia-texto">${form.texto}</span>
+                                        <span style="margin-left: auto; color: #0dcaf0;">→</span>
                                     </div>
                                 `).join('')}
                             </div>
@@ -4144,9 +4155,10 @@
                             </div>
                             <div class="pendencias-lista">
                                 ${pendencias.pilares.map(pilar => `
-                                    <div class="pendencia-item">
+                                    <div class="pendencia-item" style="cursor: pointer;" onclick="irParaSecao('pilaresSection')">
                                         <span class="pendencia-check">❌</span>
                                         <span class="pendencia-texto">${pilar}</span>
+                                        <span style="margin-left: auto; color: #0dcaf0;">→</span>
                                     </div>
                                 `).join('')}
                             </div>
@@ -4163,9 +4175,10 @@
                             </div>
                             <div class="pendencias-lista">
                                 ${pendencias.imersoes.map(imersao => `
-                                    <div class="pendencia-item">
+                                    <div class="pendencia-item" style="cursor: pointer;" onclick="irParaSecao('imersoesSection')">
                                         <span class="pendencia-check">❌</span>
                                         <span class="pendencia-texto">${imersao}</span>
+                                        <span style="margin-left: auto; color: #0dcaf0;">→</span>
                                     </div>
                                 `).join('')}
                             </div>
@@ -4181,9 +4194,10 @@
                                 🎙️ Podcast "O Mentor"
                             </div>
                             <div class="pendencias-lista">
-                                <div class="pendencia-item">
+                                <div class="pendencia-item" style="cursor: pointer;" onclick="irParaSecao('podcastSection')">
                                     <span class="pendencia-check">❌</span>
                                     <span class="pendencia-texto">${pendencias.podcast}</span>
+                                    <span style="margin-left: auto; color: #0dcaf0;">→</span>
                                 </div>
                             </div>
                         </div>
@@ -4260,6 +4274,48 @@
             if (modal) {
                 modal.classList.add('hidden');
             }
+        }
+
+        // Navegar para uma seção a partir das pendências
+        function irParaSecao(secaoId) {
+            // Fechar o modal primeiro
+            fecharModalPendencias();
+            
+            // Aguardar um pouco para o modal fechar
+            setTimeout(() => {
+                scrollParaSecao(secaoId);
+            }, 300);
+        }
+
+        // Navegar para um formulário específico
+        function irParaFormulario(numeroFormulario) {
+            // Fechar o modal
+            fecharModalPendencias();
+            
+            // Aguardar um pouco para o modal fechar
+            setTimeout(() => {
+                const secao = document.getElementById('formulariosSection');
+                if (secao && !secao.classList.contains('hidden')) {
+                    // Scroll até a seção de formulários
+                    secao.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    
+                    // Destacar o formulário específico
+                    setTimeout(() => {
+                        const formularioCard = document.querySelector(`[data-form="${numeroFormulario}"]`);
+                        if (formularioCard) {
+                            // Adicionar destaque temporário
+                            formularioCard.style.border = '2px solid #0dcaf0';
+                            formularioCard.style.boxShadow = '0 0 20px rgba(13, 202, 240, 0.5)';
+                            
+                            // Remover destaque após 3 segundos
+                            setTimeout(() => {
+                                formularioCard.style.border = '';
+                                formularioCard.style.boxShadow = '';
+                            }, 3000);
+                        }
+                    }, 800);
+                }
+            }, 300);
         }
 
         function mostrarDashboard() {
@@ -5010,9 +5066,11 @@
                 const status = alunoData.formularios[index];
                 const isPendente = status !== 'Preenchido';
                 const link = linksFormularios[index];
+                const numeroFormulario = index + 1;
 
                 const card = document.createElement('div');
                 card.className = 'formulario-card';
+                card.setAttribute('data-form', numeroFormulario);
                 card.innerHTML = `
                     <div class="formulario-header">
                         <div class="formulario-title">${form.nome}</div>

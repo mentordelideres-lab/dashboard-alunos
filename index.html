@@ -1204,6 +1204,258 @@
             }
         }
 
+        /* ============================================
+           MENU DE NAVEGAÇÃO RÁPIDA
+           ============================================ */
+        .menu-navegacao {
+            background: rgba(26, 26, 46, 0.95);
+            border-bottom: 2px solid rgba(13, 202, 240, 0.3);
+            padding: 12px 20px;
+            margin-bottom: 20px;
+            border-radius: 12px;
+            position: sticky;
+            top: 0;
+            z-index: 999;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        .menu-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .menu-item {
+            background: rgba(13, 202, 240, 0.1);
+            color: #0dcaf0;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 0.9em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(13, 202, 240, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .menu-item:hover {
+            background: rgba(13, 202, 240, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(13, 202, 240, 0.3);
+        }
+
+        .menu-item.active {
+            background: linear-gradient(135deg, #0dcaf0 0%, #0ba8cc 100%);
+            color: white;
+            border-color: #0dcaf0;
+        }
+
+        @media (max-width: 600px) {
+            .menu-navegacao {
+                padding: 10px;
+            }
+
+            .menu-items {
+                gap: 6px;
+            }
+
+            .menu-item {
+                font-size: 0.8em;
+                padding: 6px 12px;
+            }
+        }
+
+        /* ============================================
+           MODAL DE PENDÊNCIAS
+           ============================================ */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-overlay.hidden {
+            display: none;
+        }
+
+        .modal-container {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            border: 2px solid rgba(13, 202, 240, 0.4);
+            border-radius: 15px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            animation: slideDown 0.4s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, rgba(13, 202, 240, 0.2) 0%, rgba(11, 168, 204, 0.2) 100%);
+            padding: 20px;
+            border-bottom: 2px solid rgba(13, 202, 240, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .modal-titulo {
+            font-size: 1.5em;
+            font-weight: 700;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .pendencias-count {
+            background: rgba(255, 193, 7, 0.3);
+            color: #ffc107;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            border: 1px solid #ffc107;
+        }
+
+        .modal-close {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.3em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .modal-close:hover {
+            background: rgba(255, 0, 0, 0.3);
+            border-color: #ff4444;
+            transform: rotate(90deg);
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .pendencias-grupo {
+            margin-bottom: 20px;
+        }
+
+        .pendencias-grupo-titulo {
+            font-size: 1.1em;
+            font-weight: 700;
+            color: #0dcaf0;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .pendencias-lista {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-left: 25px;
+        }
+
+        .pendencia-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            border-left: 3px solid #ffc107;
+        }
+
+        .pendencia-item.concluido {
+            border-left-color: #51cf66;
+            opacity: 0.6;
+        }
+
+        .pendencia-check {
+            font-size: 1.2em;
+        }
+
+        .pendencia-texto {
+            flex: 1;
+            color: #e4e4e4;
+            font-size: 0.9em;
+        }
+
+        .modal-footer {
+            padding: 20px;
+            border-top: 2px solid rgba(13, 202, 240, 0.3);
+            display: flex;
+            justify-content: center;
+        }
+
+        .btn-modal {
+            background: linear-gradient(135deg, #0dcaf0 0%, #0ba8cc 100%);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+
+        .btn-modal:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(13, 202, 240, 0.4);
+        }
+
+        .mensagem-sucesso {
+            text-align: center;
+            padding: 30px;
+        }
+
+        .mensagem-sucesso-icone {
+            font-size: 4em;
+            margin-bottom: 15px;
+        }
+
+        .mensagem-sucesso-texto {
+            font-size: 1.3em;
+            font-weight: 700;
+            color: #51cf66;
+            margin-bottom: 10px;
+        }
+
+        .mensagem-sucesso-sub {
+            color: #b8b8b8;
+            font-size: 0.95em;
+        }
+
         .pilar-item {
             background: rgba(26, 26, 46, 0.5);
             border: 2px solid rgba(255,255,255,0.1);
@@ -2217,6 +2469,33 @@
                 </div>
             </div>
 
+            <!-- MENU DE NAVEGAÇÃO RÁPIDA -->
+            <nav class="menu-navegacao">
+                <div class="menu-items">
+                    <div class="menu-item" onclick="scrollParaSecao('pilaresSection')">
+                        🎯 Pilares
+                    </div>
+                    <div class="menu-item" onclick="scrollParaSecao('imersoesSection')">
+                        📚 Imersões
+                    </div>
+                    <div class="menu-item" onclick="scrollParaSecao('podcastSection')">
+                        🎙️ Podcast
+                    </div>
+                    <div class="menu-item" onclick="scrollParaSecao('arquetipoSection')">
+                        🌟 Arquétipo
+                    </div>
+                    <div class="menu-item" onclick="scrollParaSecao('agendamentoSection')">
+                        📅 Agendamento
+                    </div>
+                    <div class="menu-item" onclick="scrollParaSecao('bibliotecaSection')">
+                        📚 Biblioteca
+                    </div>
+                    <div class="menu-item" onclick="scrollParaSecao('formulariosSection')">
+                        📝 Formulários
+                    </div>
+                </div>
+            </nav>
+
             <!-- SEÇÃO DE PILARES -->
             <div id="pilaresSection" class="pilares-section hidden">
                 <h3>🎯 SEUS PILARES</h3>
@@ -2384,6 +2663,27 @@
     <a href="https://febra.site/cs" target="_blank" rel="noopener noreferrer" class="btn-suporte-flutuante" aria-label="Falar com Suporte">
         <span class="tooltip-suporte">Precisa de ajuda?<br>Fale com nosso Sucesso do Cliente</span>
     </a>
+
+    <!-- MODAL DE PENDÊNCIAS -->
+    <div id="modalPendencias" class="modal-overlay hidden">
+        <div class="modal-container">
+            <div class="modal-header">
+                <div class="modal-titulo">
+                    ⚠️ Suas Pendências
+                    <span id="pendenciasCount" class="pendencias-count">0</span>
+                </div>
+                <button class="modal-close" onclick="fecharModalPendencias()">×</button>
+            </div>
+            <div class="modal-body" id="modalPendenciasBody">
+                <!-- Conteúdo será inserido via JavaScript -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn-modal" onclick="fecharModalPendencias()">
+                    Fechar e ir para o painel
+                </button>
+            </div>
+        </div>
+    </div>
 
     <script>
         // Configuração
@@ -3582,6 +3882,180 @@
             return null;
         }
 
+        // === NAVEGAÇÃO RÁPIDA ===
+        function scrollParaSecao(secaoId) {
+            const secao = document.getElementById(secaoId);
+            if (secao && !secao.classList.contains('hidden')) {
+                secao.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                
+                // Destacar item do menu temporariamente
+                document.querySelectorAll('.menu-item').forEach(item => {
+                    item.classList.remove('active');
+                });
+                event.target.classList.add('active');
+                setTimeout(() => {
+                    event.target.classList.remove('active');
+                }, 2000);
+            }
+        }
+
+        // === MODAL DE PENDÊNCIAS ===
+        function calcularPendencias() {
+            const pendencias = {
+                formularios: [],
+                pilares: [],
+                imersoes: [],
+                podcast: null,
+                total: 0
+            };
+
+            // 1. FORMULÁRIOS
+            if (alunoData.formularios) {
+                alunoData.formularios.forEach((status, index) => {
+                    if (status !== 'Preenchido') {
+                        pendencias.formularios.push(`Formulário ${index + 1}`);
+                    }
+                });
+            }
+
+            // 2. PILARES (vamos considerar "NAO INICIADO" como pendência)
+            // Nota: Isso será preenchido após carregar os dados dos pilares
+            
+            // 3. IMERSÕES (sem data = pendência)
+            // Nota: Isso será preenchido após carregar os dados das imersões
+
+            // 4. PODCAST (TURMA 1 apenas)
+            if (alunoData.turma === 'TURMA 1' && alunoData.podcast && alunoData.podcast !== 'SIM') {
+                if (!alunoData.podcastData) {
+                    pendencias.podcast = 'Agendar participação no podcast';
+                }
+            }
+
+            pendencias.total = 
+                pendencias.formularios.length + 
+                pendencias.pilares.length + 
+                pendencias.imersoes.length + 
+                (pendencias.podcast ? 1 : 0);
+
+            return pendencias;
+        }
+
+        function mostrarModalPendencias() {
+            const pendencias = calcularPendencias();
+            const modal = document.getElementById('modalPendencias');
+            const body = document.getElementById('modalPendenciasBody');
+            const count = document.getElementById('pendenciasCount');
+
+            console.log('📊 Pendências calculadas:', pendencias);
+
+            if (pendencias.total === 0) {
+                // TUDO CONCLUÍDO!
+                body.innerHTML = `
+                    <div class="mensagem-sucesso">
+                        <div class="mensagem-sucesso-icone">🎉</div>
+                        <div class="mensagem-sucesso-texto">Parabéns!</div>
+                        <div class="mensagem-sucesso-sub">Você está em dia com todas as suas atividades!</div>
+                    </div>
+                `;
+                count.textContent = '0';
+            } else {
+                count.textContent = pendencias.total;
+
+                let html = '';
+
+                // FORMULÁRIOS
+                if (pendencias.formularios.length > 0) {
+                    html += `
+                        <div class="pendencias-grupo">
+                            <div class="pendencias-grupo-titulo">
+                                📝 Formulários (${alunoData.formularios.filter(f => f === 'Preenchido').length}/${alunoData.formularios.length} preenchidos)
+                            </div>
+                            <div class="pendencias-lista">
+                                ${pendencias.formularios.map(form => `
+                                    <div class="pendencia-item">
+                                        <span class="pendencia-check">❌</span>
+                                        <span class="pendencia-texto">${form}</span>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                }
+
+                // PILARES
+                if (pendencias.pilares.length > 0) {
+                    html += `
+                        <div class="pendencias-grupo">
+                            <div class="pendencias-grupo-titulo">
+                                🎯 Pilares
+                            </div>
+                            <div class="pendencias-lista">
+                                ${pendencias.pilares.map(pilar => `
+                                    <div class="pendencia-item">
+                                        <span class="pendencia-check">❌</span>
+                                        <span class="pendencia-texto">${pilar}</span>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                }
+
+                // IMERSÕES
+                if (pendencias.imersoes.length > 0) {
+                    html += `
+                        <div class="pendencias-grupo">
+                            <div class="pendencias-grupo-titulo">
+                                📚 Imersões Presenciais
+                            </div>
+                            <div class="pendencias-lista">
+                                ${pendencias.imersoes.map(imersao => `
+                                    <div class="pendencia-item">
+                                        <span class="pendencia-check">❌</span>
+                                        <span class="pendencia-texto">${imersao}</span>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                }
+
+                // PODCAST
+                if (pendencias.podcast) {
+                    html += `
+                        <div class="pendencias-grupo">
+                            <div class="pendencias-grupo-titulo">
+                                🎙️ Podcast "O Mentor"
+                            </div>
+                            <div class="pendencias-lista">
+                                <div class="pendencia-item">
+                                    <span class="pendencia-check">❌</span>
+                                    <span class="pendencia-texto">${pendencias.podcast}</span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                body.innerHTML = html;
+            }
+
+            modal.classList.remove('hidden');
+        }
+
+        function fecharModalPendencias() {
+            const modal = document.getElementById('modalPendencias');
+            modal.classList.add('hidden');
+        }
+
+        // Fechar modal ao clicar fora
+        document.addEventListener('click', function(e) {
+            const modal = document.getElementById('modalPendencias');
+            if (e.target === modal) {
+                fecharModalPendencias();
+            }
+        });
+
         function mostrarDashboard() {
             mostrarTela('dashboardScreen');
 
@@ -3604,6 +4078,11 @@
             renderizarAgendamento(); // 📅 AGENDAMENTO
             renderizarBiblioteca();
             renderizarFormularios();
+
+            // Abrir modal de pendências após carregar tudo (delay de 1 segundo)
+            setTimeout(() => {
+                mostrarModalPendencias();
+            }, 1000);
         }
 
         function renderizarBiblioteca() {

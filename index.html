@@ -2630,11 +2630,14 @@
                     <div class="menu-item" onclick="scrollParaSecao('imersoesSection')">
                         📚 Imersões
                     </div>
-                    <div class="menu-item" onclick="scrollParaSecao('podcastSection')">
+                    <div class="menu-item" id="menuPodcast" onclick="scrollParaSecao('podcastSection')">
                         🎙️ Podcast
                     </div>
                     <div class="menu-item" onclick="scrollParaSecao('arquetipoSection')">
                         🌟 Arquétipo
+                    </div>
+                    <div class="menu-item" onclick="window.open('https://aluno.omentordelideres.com.br/login', '_blank')">
+                        🎓 Plataforma de Aulas
                     </div>
                     <div class="menu-item" onclick="scrollParaSecao('agendamentoSection')">
                         📅 Agendamento
@@ -4332,6 +4335,12 @@
             document.getElementById('progressPercentage').textContent = `${percentual}%`;
             document.getElementById('progressFill').style.width = `${percentual}%`;
             document.getElementById('progressText').textContent = `${preenchidos}/${total}`;
+
+            // Ocultar menu de podcast para TURMA 2
+            const menuPodcast = document.getElementById('menuPodcast');
+            if (alunoData.turma !== 'TURMA 1') {
+                menuPodcast.style.display = 'none';
+            }
 
             renderizarPilares(); // 🎯 PILARES
             renderizarImersoes(); // 📚 IMERSÕES PRESENCIAIS

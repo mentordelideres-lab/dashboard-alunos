@@ -2665,7 +2665,7 @@
     </a>
 
     <!-- MODAL DE PENDÊNCIAS -->
-    <div id="modalPendencias" class="modal-overlay hidden">
+    <div id="modalPendencias" class="modal-overlay hidden" onclick="if(event.target === this) fecharModalPendencias()">
         <div class="modal-container">
             <div class="modal-header">
                 <div class="modal-titulo">
@@ -2686,6 +2686,8 @@
     </div>
 
     <script>
+        console.log('✅ Dashboard script iniciado');
+        
         // Configuração
         const SHEET_ID = '1OjxHwWh6kWaNgQrCPP57GB_FMs4LVFH3Orbve3ciylQ';
         const SHEETS_BASE_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=`;
@@ -3941,12 +3943,18 @@
         }
 
         function mostrarModalPendencias() {
-            const pendencias = calcularPendencias();
-            const modal = document.getElementById('modalPendencias');
-            const body = document.getElementById('modalPendenciasBody');
-            const count = document.getElementById('pendenciasCount');
+            try {
+                const pendencias = calcularPendencias();
+                const modal = document.getElementById('modalPendencias');
+                const body = document.getElementById('modalPendenciasBody');
+                const count = document.getElementById('pendenciasCount');
 
-            console.log('📊 Pendências calculadas:', pendencias);
+                if (!modal || !body || !count) {
+                    console.warn('⚠️ Elementos do modal não encontrados');
+                    return;
+                }
+
+                console.log('📊 Pendências calculadas:', pendencias);
 
             if (pendencias.total === 0) {
                 // TUDO CONCLUÍDO!
@@ -4041,20 +4049,19 @@
             }
 
             modal.classList.remove('hidden');
+            
+            } catch (error) {
+                console.error('❌ Erro ao mostrar modal de pendências:', error);
+                // Não quebra o dashboard se o modal falhar
+            }
         }
 
         function fecharModalPendencias() {
             const modal = document.getElementById('modalPendencias');
-            modal.classList.add('hidden');
-        }
-
-        // Fechar modal ao clicar fora
-        document.addEventListener('click', function(e) {
-            const modal = document.getElementById('modalPendencias');
-            if (e.target === modal) {
-                fecharModalPendencias();
+            if (modal) {
+                modal.classList.add('hidden');
             }
-        });
+        }
 
         function mostrarDashboard() {
             mostrarTela('dashboardScreen');
@@ -4079,10 +4086,11 @@
             renderizarBiblioteca();
             renderizarFormularios();
 
+            // TODO: Descomentar depois de testar
             // Abrir modal de pendências após carregar tudo (delay de 1 segundo)
-            setTimeout(() => {
-                mostrarModalPendencias();
-            }, 1000);
+            // setTimeout(() => {
+            //     mostrarModalPendencias();
+            // }, 1000);
         }
 
         function renderizarBiblioteca() {

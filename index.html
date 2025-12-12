@@ -1269,6 +1269,133 @@
         }
 
         /* ============================================
+           BANNER DE PENDÊNCIAS FIXO
+           ============================================ */
+        .banner-pendencias {
+            background: linear-gradient(135deg, rgba(255, 193, 7, 0.2) 0%, rgba(255, 152, 0, 0.2) 100%);
+            border: 2px solid rgba(255, 193, 7, 0.5);
+            border-radius: 10px;
+            padding: 12px 20px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .banner-pendencias.sem-pendencias {
+            background: linear-gradient(135deg, rgba(40, 167, 69, 0.2) 0%, rgba(34, 139, 34, 0.2) 100%);
+            border-color: rgba(40, 167, 69, 0.5);
+        }
+
+        .banner-pendencias-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex: 1;
+        }
+
+        .banner-pendencias-icone {
+            font-size: 1.8em;
+        }
+
+        .banner-pendencias-texto {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .banner-pendencias-titulo {
+            font-size: 1.1em;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .banner-pendencias-subtitulo {
+            font-size: 0.85em;
+            color: #b8b8b8;
+        }
+
+        .banner-pendencias-count {
+            background: rgba(255, 193, 7, 0.3);
+            color: #ffc107;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 1.1em;
+            font-weight: 700;
+            border: 2px solid #ffc107;
+            min-width: 50px;
+            text-align: center;
+        }
+
+        .banner-pendencias.sem-pendencias .banner-pendencias-count {
+            background: rgba(40, 167, 69, 0.3);
+            color: #51cf66;
+            border-color: #51cf66;
+        }
+
+        .btn-ver-pendencias {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 0.9em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .btn-ver-pendencias:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .banner-pendencias-lista {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            flex: 1;
+        }
+
+        .banner-pendencia-item {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-size: 0.85em;
+            color: #e4e4e4;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        @media (max-width: 768px) {
+            .banner-pendencias {
+                flex-direction: column;
+                align-items: stretch;
+                padding: 15px;
+            }
+
+            .banner-pendencias-info {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .banner-pendencias-lista {
+                flex-direction: column;
+            }
+
+            .btn-ver-pendencias {
+                width: 100%;
+                text-align: center;
+            }
+        }
+
+        /* ============================================
            MODAL DE PENDÊNCIAS
            ============================================ */
         .modal-overlay {
@@ -2469,6 +2596,24 @@
                 </div>
             </div>
 
+            <!-- BANNER DE PENDÊNCIAS -->
+            <div id="bannerPendencias" class="banner-pendencias" style="display: none;">
+                <div class="banner-pendencias-info">
+                    <div class="banner-pendencias-icone">⚠️</div>
+                    <div class="banner-pendencias-texto">
+                        <div class="banner-pendencias-titulo" id="bannerTitulo">Você tem pendências</div>
+                        <div class="banner-pendencias-subtitulo" id="bannerSubtitulo">Complete suas atividades para avançar</div>
+                    </div>
+                </div>
+                <div class="banner-pendencias-lista" id="bannerLista">
+                    <!-- Pendências resumidas serão inseridas aqui -->
+                </div>
+                <div class="banner-pendencias-count" id="bannerCount">0</div>
+                <button class="btn-ver-pendencias" onclick="mostrarModalPendencias()">
+                    Ver detalhes
+                </button>
+            </div>
+
             <!-- MENU DE NAVEGAÇÃO RÁPIDA -->
             <nav class="menu-navegacao">
                 <div class="menu-items">
@@ -2585,7 +2730,7 @@
             </div>
 
             <!-- PROGRESSO DE FORMULÁRIOS -->
-            <div class="progress-section">
+            <div id="formulariosSection" class="progress-section">
                 <div class="progress-header">
                     <h3>📊 Seu Progresso nos Formulários</h3>
                     <span class="progress-percentage" id="progressPercentage">0%</span>
@@ -4056,6 +4201,60 @@
             }
         }
 
+        function atualizarBannerPendencias() {
+            try {
+                const pendencias = calcularPendencias();
+                const banner = document.getElementById('bannerPendencias');
+                const titulo = document.getElementById('bannerTitulo');
+                const subtitulo = document.getElementById('bannerSubtitulo');
+                const count = document.getElementById('bannerCount');
+                const lista = document.getElementById('bannerLista');
+
+                if (!banner) return;
+
+                if (pendencias.total === 0) {
+                    // SEM PENDÊNCIAS
+                    banner.classList.add('sem-pendencias');
+                    banner.querySelector('.banner-pendencias-icone').textContent = '🎉';
+                    titulo.textContent = 'Parabéns!';
+                    subtitulo.textContent = 'Você está em dia com todas as atividades';
+                    count.textContent = '0';
+                    lista.innerHTML = '';
+                    banner.style.display = 'flex';
+                } else {
+                    // TEM PENDÊNCIAS
+                    banner.classList.remove('sem-pendencias');
+                    banner.querySelector('.banner-pendencias-icone').textContent = '⚠️';
+                    titulo.textContent = `Você tem ${pendencias.total} pendência${pendencias.total > 1 ? 's' : ''}`;
+                    subtitulo.textContent = 'Complete suas atividades para avançar';
+                    count.textContent = pendencias.total;
+
+                    // Montar lista resumida
+                    let resumo = [];
+                    if (pendencias.formularios.length > 0) {
+                        resumo.push(`📝 ${pendencias.formularios.length} formulário${pendencias.formularios.length > 1 ? 's' : ''}`);
+                    }
+                    if (pendencias.pilares.length > 0) {
+                        resumo.push(`🎯 ${pendencias.pilares.length} pilar${pendencias.pilares.length > 1 ? 'es' : ''}`);
+                    }
+                    if (pendencias.imersoes.length > 0) {
+                        resumo.push(`📚 ${pendencias.imersoes.length} imersão${pendencias.imersoes.length > 1 ? 'ões' : ''}`);
+                    }
+                    if (pendencias.podcast) {
+                        resumo.push('🎙️ Podcast');
+                    }
+
+                    lista.innerHTML = resumo.map(item => `
+                        <div class="banner-pendencia-item">${item}</div>
+                    `).join('');
+
+                    banner.style.display = 'flex';
+                }
+            } catch (error) {
+                console.error('❌ Erro ao atualizar banner:', error);
+            }
+        }
+
         function fecharModalPendencias() {
             const modal = document.getElementById('modalPendencias');
             if (modal) {
@@ -4088,7 +4287,8 @@
 
             // Abrir modal de pendências após carregar tudo (delay de 1 segundo)
             setTimeout(() => {
-                mostrarModalPendencias();
+                atualizarBannerPendencias();  // Atualiza banner fixo
+                mostrarModalPendencias();      // Abre modal
             }, 1000);
         }
 

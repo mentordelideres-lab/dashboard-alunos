@@ -3508,7 +3508,7 @@
                             escritor: row.c[9]?.v || '',      // Coluna J
                             mentorHighTicket: row.c[25]?.v || '', // Coluna Z (índice 25)
                             podcastAgendado: row.c[29]?.v || '', // Coluna AD (índice 29)
-                            podcastData: row.c[30]?.v || ''      // Coluna AE (índice 30)
+                            podcastData: row.c[30]?.f || row.c[30]?.v || ''  // Coluna AE (índice 30) - PRIORIZA .f (formatted)
                         };
                         
                         console.log('📊 Status dos pilares:');
@@ -3518,6 +3518,10 @@
                         console.log('   Mentor HT (Z):', dados.mentorHighTicket);
                         console.log('🎙️ Podcast:');
                         console.log('   Agendado (AD):', dados.podcastAgendado);
+                        console.log('   Data (AE) - COMPLETO:', row.c[30]);
+                        console.log('   Data (AE) - .v:', row.c[30]?.v);
+                        console.log('   Data (AE) - .f:', row.c[30]?.f);
+                        console.log('   Data escolhida:', dados.podcastData);
                         console.log('   Data (AE):', dados.podcastData);
                         
                         return dados;

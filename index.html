@@ -2870,7 +2870,10 @@
         // === CONTROLE DE PAGINAÇÃO DA BIBLIOTECA ===
         let recursosFiltradosGlobal = [];
         let recursosExibidos = 0;
-        const RECURSOS_POR_PAGINA = 3;
+        // Variáveis de controle da biblioteca
+        let recursosFiltradosGlobal = [];
+        let recursosExibidos = 0;
+        let primeiraCarregaBiblioteca = true; // Controla se é a primeira carga
 
         const FORMULARIOS = [
             { nome: 'Formulário Anamnese Geral + Visão de Futuro', coluna: 'D' },
@@ -4375,12 +4378,14 @@
             section.classList.remove('hidden');
             container.innerHTML = '';
             recursosExibidos = 0;
+            primeiraCarregaBiblioteca = true; // Reset para primeira carga
 
-            // Mostrar apenas os primeiros recursos
+            // Mostrar apenas os primeiros recursos (metade)
             exibirProximosRecursos();
 
             // Controlar visibilidade do botão "Carregar Mais"
-            if (recursosFiltradosGlobal.length > RECURSOS_POR_PAGINA) {
+            const metade = Math.ceil(recursosFiltradosGlobal.length / 2);
+            if (recursosFiltradosGlobal.length > metade) {
                 btnCarregarMais.classList.remove('hidden');
                 atualizarTextoCarregarMais();
             } else {
@@ -4393,15 +4398,26 @@
             const restantes = recursosFiltradosGlobal.length - recursosExibidos;
             
             if (restantes > 0) {
-                const proximos = Math.min(RECURSOS_POR_PAGINA, restantes);
-                btnTexto.innerHTML = `⬇️ Carregar Mais ${proximos} Recurso${proximos > 1 ? 's' : ''} (${restantes} restante${restantes > 1 ? 's' : ''})`;
+                btnTexto.innerHTML = `⬇️ Carregar Mais ${restantes} Recurso${restantes > 1 ? 's' : ''} (${restantes} restante${restantes > 1 ? 's' : ''})`;
             }
         }
 
         function exibirProximosRecursos() {
             const container = document.getElementById('recursosContainer');
             const inicio = recursosExibidos;
-            const fim = Math.min(recursosExibidos + RECURSOS_POR_PAGINA, recursosFiltradosGlobal.length);
+            
+            // Calcular quantos recursos mostrar
+            let quantosMostrar;
+            if (primeiraCarregaBiblioteca) {
+                // Primeira carga: mostrar metade (arredondado para cima)
+                quantosMostrar = Math.ceil(recursosFiltradosGlobal.length / 2);
+                primeiraCarregaBiblioteca = false;
+            } else {
+                // Segunda carga: mostrar o resto
+                quantosMostrar = recursosFiltradosGlobal.length - recursosExibidos;
+            }
+            
+            const fim = Math.min(recursosExibidos + quantosMostrar, recursosFiltradosGlobal.length);
 
             for (let i = inicio; i < fim; i++) {
                 const recurso = recursosFiltradosGlobal[i];
@@ -4448,6 +4464,9 @@
             const btnCarregarMais = document.getElementById('btnCarregarMais');
             const btnTexto = document.getElementById('btnCarregarMaisTexto');
             
+            // Salvar posição atual antes de carregar mais
+            const recursosAntesDeCarregar = recursosExibidos;
+            
             // Animação de loading
             btnTexto.innerHTML = '⏳ Carregando...';
             btnCarregarMais.style.opacity = '0.6';
@@ -4474,8 +4493,8 @@
                 setTimeout(() => {
                     const container = document.getElementById('recursosContainer');
                     const cards = container.querySelectorAll('.recurso-card');
-                    if (cards.length > 0) {
-                        const primeiroNovoCard = cards[recursosExibidos - RECURSOS_POR_PAGINA];
+                    if (cards.length > 0 && recursosAntesDeCarregar < cards.length) {
+                        const primeiroNovoCard = cards[recursosAntesDeCarregar];
                         if (primeiroNovoCard) {
                             primeiroNovoCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
                         }

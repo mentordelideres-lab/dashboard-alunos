@@ -351,8 +351,6 @@
             border: 2px solid rgba(13, 202, 240, 0.4);
             border-radius: 10px;
             padding: 10px;
-            padding-top: 100px;
-            margin-top: -90px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
             overflow: visible;
             width: 240px;
@@ -546,6 +544,52 @@
             margin: 12px 0;
             border: none;
             border-top: 2px solid rgba(0, 217, 255, 0.4);
+        }
+
+        /* === POSICIONAMENTO INTELIGENTE DO TOOLTIP === */
+        
+        /* Tooltip em cima (padrão) - já está definido acima */
+        .calendario-tooltip.tooltip-cima {
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            margin-bottom: 12px;
+            margin-top: 0;
+            margin-left: 0;
+            margin-right: 0;
+        }
+
+        .calendario-dia-com-aula:hover .calendario-tooltip.tooltip-cima {
+            transform: translateX(-50%) translateY(-8px);
+        }
+
+        /* Tooltip embaixo (para primeiras linhas) */
+        .calendario-tooltip.tooltip-embaixo {
+            bottom: auto;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            margin-bottom: 0;
+            margin-top: 12px;
+        }
+
+        .calendario-dia-com-aula:hover .calendario-tooltip.tooltip-embaixo {
+            transform: translateX(-50%) translateY(8px);
+        }
+
+        /* Tooltip à esquerda (para últimas colunas) */
+        .calendario-tooltip.tooltip-esquerda {
+            bottom: auto;
+            top: 50%;
+            left: auto;
+            right: 100%;
+            transform: translateY(-50%);
+            margin-bottom: 0;
+            margin-right: 12px;
+        }
+
+        .calendario-dia-com-aula:hover .calendario-tooltip.tooltip-esquerda {
+            transform: translateY(-50%) translateX(-8px);
         }
 
         .calendario-dia-com-aula::after {
@@ -4760,9 +4804,26 @@
                 if (aulasPorDia[dia]) {
                     diaEl.classList.add('calendario-dia-com-aula');
                     
+                    // Calcular posição do dia no grid (0-6 = coluna, linha)
+                    const posicaoNoGrid = (diaSemanaInicio + dia - 1);
+                    const coluna = posicaoNoGrid % 7; // 0 = domingo, 6 = sábado
+                    const linha = Math.floor(posicaoNoGrid / 7); // 0 = primeira linha
+                    
                     // Criar tooltip para hover
                     const tooltip = document.createElement('div');
                     tooltip.className = 'calendario-tooltip';
+                    
+                    // Adicionar classe baseada na posição para posicionamento inteligente
+                    if (linha < 2) {
+                        // Primeiras 2 linhas: tooltip embaixo
+                        tooltip.classList.add('tooltip-embaixo');
+                    } else if (coluna >= 5) {
+                        // Últimas 2 colunas: tooltip à esquerda
+                        tooltip.classList.add('tooltip-esquerda');
+                    } else {
+                        // Caso padrão: tooltip em cima
+                        tooltip.classList.add('tooltip-cima');
+                    }
                     
                     aulasPorDia[dia].forEach((aula, index) => {
                         const diasSemana = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];

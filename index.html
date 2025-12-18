@@ -230,23 +230,10 @@
             padding: 18px 20px;
             border-radius: 12px;
             margin-bottom: 20px;
-            display: grid;
-            grid-template-columns: 1fr auto;
-            gap: 20px;
-            align-items: start;
-            box-shadow: 0 6px 25px rgba(13, 202, 240, 0.3);
-        }
-
-        .header-left {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            gap: 20px;
-        }
-
-        .header-right {
-            display: flex;
-            align-items: center;
+            box-shadow: 0 6px 25px rgba(13, 202, 240, 0.3);
         }
 
         .dashboard-header h2 {
@@ -335,14 +322,31 @@
         }
 
         /* ============================================
-           MINI CALENDÁRIO NO HEADER
+           SEÇÃO DE CALENDÁRIO DE AULAS
            ============================================ */
+        .calendario-section {
+            background: rgba(45, 45, 68, 0.5);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .calendario-section-titulo {
+            font-size: 1.2em;
+            font-weight: 700;
+            color: #0dcaf0;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
         .mini-calendario {
-            background: rgba(255, 255, 255, 0.15);
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: rgba(26, 26, 46, 0.5);
+            border: 1px solid rgba(13, 202, 240, 0.3);
             border-radius: 10px;
-            padding: 12px;
-            min-width: 280px;
+            padding: 15px;
+            max-width: 450px;
+            margin: 0 auto;
         }
 
         .calendario-nav {
@@ -491,24 +495,6 @@
             color: #e4e4e4;
             font-size: 0.85em;
             line-height: 1.3;
-        }
-
-        /* Responsivo - Calendário em Mobile */
-        @media (max-width: 900px) {
-            .dashboard-header {
-                grid-template-columns: 1fr;
-            }
-
-            .header-left {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 10px;
-            }
-
-            .mini-calendario {
-                width: 100%;
-                min-width: unset;
-            }
         }
 
         /* Modal de Edição de Nome */
@@ -2289,6 +2275,41 @@
             font-size: 0.95em;
         }
 
+        /* Card especial para Luana */
+        .agendamento-info-card-mentor {
+            background: linear-gradient(135deg, rgba(26, 26, 46, 0.6) 0%, rgba(45, 45, 68, 0.6) 100%);
+            border: 2px solid rgba(255, 193, 7, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .mentor-nome {
+            font-weight: 700;
+            font-size: 1.05em;
+            color: #ffc107;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+
+        .agendamento-luana-texto {
+            color: #e4e4e4;
+            font-size: 0.9em;
+            line-height: 1.5;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+
+        .agendamento-luana-destaque {
+            background: rgba(255, 193, 7, 0.15);
+            border: 1px solid rgba(255, 193, 7, 0.4);
+            border-radius: 8px;
+            padding: 10px;
+            color: #ffc107;
+            font-weight: 600;
+            font-size: 0.9em;
+            text-align: center;
+        }
+
         /* === DISTRIBUIÇÃO DE ARQUÉTIPOS (MASTER) === */
         .arquetipos-stats-section {
             background: rgba(45, 45, 68, 0.5);
@@ -2818,32 +2839,15 @@
         <!-- Dashboard do Aluno -->
         <div id="dashboardScreen" class="dashboard-card hidden">
             <div class="dashboard-header">
-                <div class="header-left">
-                    <div>
-                        <h2 id="alunoNome">Carregando...</h2>
-                        <p id="alunoTurma">Turma</p>
-                    </div>
-                    <div class="aluno-header-actions">
-                        <button class="btn-edit-name" onclick="mostrarModalEditarNome()">
-                            ✏️ Editar Nome
-                        </button>
-                        <button class="logout-btn-aluno" onclick="logout()">Sair</button>
-                    </div>
+                <div>
+                    <h2 id="alunoNome">Carregando...</h2>
+                    <p id="alunoTurma">Turma</p>
                 </div>
-                <div class="header-right">
-                    <div id="miniCalendario" class="mini-calendario">
-                        <div class="calendario-nav">
-                            <button class="btn-calendario-nav" onclick="navegarMes(-1)">◀</button>
-                            <div class="calendario-mes-ano" id="calendarioMesAno">JANEIRO 2025</div>
-                            <button class="btn-calendario-nav" onclick="navegarMes(1)">▶</button>
-                        </div>
-                        <div class="calendario-dias-semana">
-                            <div>D</div><div>S</div><div>T</div><div>Q</div><div>Q</div><div>S</div><div>S</div>
-                        </div>
-                        <div class="calendario-dias" id="calendarioDias">
-                            <!-- Dias serão inseridos via JavaScript -->
-                        </div>
-                    </div>
+                <div class="aluno-header-actions">
+                    <button class="btn-edit-name" onclick="mostrarModalEditarNome()">
+                        ✏️ Editar Nome
+                    </button>
+                    <button class="logout-btn-aluno" onclick="logout()">Sair</button>
                 </div>
             </div>
 
@@ -2874,6 +2878,9 @@
                     <div class="menu-item" onclick="scrollParaSecao('imersoesSection')">
                         📚 Imersões
                     </div>
+                    <div class="menu-item" onclick="scrollParaSecao('calendarioSection')">
+                        📅 Calendário
+                    </div>
                     <div class="menu-item" id="menuPodcast" onclick="scrollParaSecao('podcastSection')">
                         🎙️ Podcast
                     </div>
@@ -2894,6 +2901,24 @@
                     </div>
                 </div>
             </nav>
+
+            <!-- SEÇÃO DE CALENDÁRIO DE AULAS -->
+            <div id="calendarioSection" class="calendario-section">
+                <h3 class="calendario-section-titulo">📅 Calendário de Aulas</h3>
+                <div id="miniCalendario" class="mini-calendario">
+                    <div class="calendario-nav">
+                        <button class="btn-calendario-nav" onclick="navegarMes(-1)">◀</button>
+                        <div class="calendario-mes-ano" id="calendarioMesAno">JANEIRO 2025</div>
+                        <button class="btn-calendario-nav" onclick="navegarMes(1)">▶</button>
+                    </div>
+                    <div class="calendario-dias-semana">
+                        <div>D</div><div>S</div><div>T</div><div>Q</div><div>Q</div><div>S</div><div>S</div>
+                    </div>
+                    <div class="calendario-dias" id="calendarioDias">
+                        <!-- Dias serão inseridos via JavaScript -->
+                    </div>
+                </div>
+            </div>
 
             <!-- SEÇÃO DE PILARES -->
             <div id="pilaresSection" class="pilares-section hidden">
@@ -4061,22 +4086,37 @@
         // === RENDERIZAR AGENDAMENTO ===
         function renderizarAgendamento() {
             const container = document.getElementById('mentoresContainer');
+            const mentoresTurma = calendarios[alunoData.turma] || [];
             
-            console.log('📅 Renderizando informações de agendamento para', alunoData.turma);
+            console.log('📅 Renderizando agendamento para', alunoData.turma);
+            console.log('Mentores:', mentoresTurma);
             
-            // Mensagem informativa sobre agendamento no grupo
-            container.innerHTML = `
-                <div class="agendamento-info-card">
-                    <div class="agendamento-icon">📱</div>
-                    <h3 class="agendamento-titulo">Agendamento com seu Mentor</h3>
-                    <p class="agendamento-texto">
-                        Os agendamentos de mentorias são realizados diretamente no <strong>grupo exclusivo</strong> que você possui com seu mentor.
-                    </p>
-                    <div class="agendamento-destaque">
-                        💬 Entre em contato com seu mentor pelo grupo para agendar sua próxima sessão!
-                    </div>
-                </div>
-            `;
+            // Renderizar cada mentor
+            container.innerHTML = mentoresTurma.map(mentor => {
+                // Se for Luana, mostrar card informativo
+                if (mentor.nome.includes('Luana')) {
+                    return `
+                        <div class="agendamento-info-card-mentor">
+                            <div class="mentor-nome">
+                                👤 ${mentor.nome}
+                            </div>
+                            <div class="agendamento-luana-texto">
+                                📱 Os agendamentos com a mentora Luana são realizados diretamente no <strong>grupo exclusivo</strong> que você possui com ela.
+                            </div>
+                            <div class="agendamento-luana-destaque">
+                                💬 Entre em contato pelo grupo para agendar!
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                // Outros mentores: botão normal com link
+                return `
+                    <a href="${mentor.link}" target="_blank" rel="noopener noreferrer" class="btn-mentor">
+                        👤 ${mentor.nome} →
+                    </a>
+                `;
+            }).join('');
         }
 
         // === RENDERIZAR PODCAST (APENAS TURMA 1) ===

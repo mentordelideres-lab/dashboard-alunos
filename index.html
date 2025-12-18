@@ -230,10 +230,23 @@
             padding: 18px 20px;
             border-radius: 12px;
             margin-bottom: 20px;
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 20px;
+            align-items: start;
+            box-shadow: 0 6px 25px rgba(13, 202, 240, 0.3);
+        }
+
+        .header-left {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 6px 25px rgba(13, 202, 240, 0.3);
+            gap: 20px;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
         }
 
         .dashboard-header h2 {
@@ -319,6 +332,183 @@
         .logout-btn-aluno:hover {
             background: rgba(255,255,255,0.2);
             border-color: rgba(255,255,255,0.4);
+        }
+
+        /* ============================================
+           MINI CALENDÁRIO NO HEADER
+           ============================================ */
+        .mini-calendario {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            padding: 12px;
+            min-width: 280px;
+        }
+
+        .calendario-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .btn-calendario-nav {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9em;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .btn-calendario-nav:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+
+        .btn-calendario-nav:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .calendario-mes-ano {
+            font-weight: 700;
+            font-size: 0.95em;
+            color: white;
+            text-align: center;
+            flex: 1;
+        }
+
+        .calendario-dias-semana {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 4px;
+            margin-bottom: 8px;
+        }
+
+        .calendario-dias-semana > div {
+            text-align: center;
+            font-size: 0.75em;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.8);
+            padding: 4px 0;
+        }
+
+        .calendario-dias {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 4px;
+        }
+
+        .calendario-dia {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85em;
+            border-radius: 6px;
+            cursor: default;
+            position: relative;
+            transition: all 0.3s;
+        }
+
+        .calendario-dia-numero {
+            color: white;
+            font-weight: 500;
+        }
+
+        .calendario-dia-vazio {
+            opacity: 0;
+        }
+
+        .calendario-dia-passado .calendario-dia-numero {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .calendario-dia-hoje {
+            background: rgba(255, 255, 255, 0.3);
+            font-weight: 700;
+        }
+
+        .calendario-dia-com-aula {
+            cursor: pointer;
+        }
+
+        .calendario-dia-com-aula::after {
+            content: '🔵';
+            position: absolute;
+            bottom: 2px;
+            right: 2px;
+            font-size: 0.6em;
+        }
+
+        .calendario-dia-com-aula:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: scale(1.1);
+        }
+
+        /* Tooltip do Calendário */
+        .calendario-tooltip {
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(26, 26, 46, 0.95);
+            border: 1px solid rgba(13, 202, 240, 0.5);
+            border-radius: 8px;
+            padding: 10px 12px;
+            min-width: 200px;
+            z-index: 10000;
+            margin-top: 5px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .calendario-dia-com-aula:hover .calendario-tooltip {
+            opacity: 1;
+        }
+
+        .tooltip-data {
+            font-weight: 700;
+            color: #0dcaf0;
+            margin-bottom: 5px;
+            font-size: 0.9em;
+        }
+
+        .tooltip-horario {
+            color: #ffc107;
+            margin-bottom: 5px;
+            font-size: 0.85em;
+        }
+
+        .tooltip-tema {
+            color: #e4e4e4;
+            font-size: 0.85em;
+            line-height: 1.3;
+        }
+
+        /* Responsivo - Calendário em Mobile */
+        @media (max-width: 900px) {
+            .dashboard-header {
+                grid-template-columns: 1fr;
+            }
+
+            .header-left {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .mini-calendario {
+                width: 100%;
+                min-width: unset;
+            }
         }
 
         /* Modal de Edição de Nome */
@@ -2062,6 +2252,43 @@
             box-shadow: 0 6px 20px rgba(13, 202, 240, 0.3);
         }
 
+        .agendamento-info-card {
+            background: linear-gradient(135deg, rgba(26, 26, 46, 0.8) 0%, rgba(45, 45, 68, 0.8) 100%);
+            border: 2px solid rgba(13, 202, 240, 0.3);
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .agendamento-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+
+        .agendamento-titulo {
+            font-size: 1.3em;
+            font-weight: 700;
+            color: #0dcaf0;
+            margin-bottom: 15px;
+        }
+
+        .agendamento-texto {
+            color: #e4e4e4;
+            font-size: 1em;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .agendamento-destaque {
+            background: rgba(13, 202, 240, 0.15);
+            border: 1px solid rgba(13, 202, 240, 0.4);
+            border-radius: 10px;
+            padding: 15px;
+            color: #0dcaf0;
+            font-weight: 600;
+            font-size: 0.95em;
+        }
+
         /* === DISTRIBUIÇÃO DE ARQUÉTIPOS (MASTER) === */
         .arquetipos-stats-section {
             background: rgba(45, 45, 68, 0.5);
@@ -2591,15 +2818,32 @@
         <!-- Dashboard do Aluno -->
         <div id="dashboardScreen" class="dashboard-card hidden">
             <div class="dashboard-header">
-                <div>
-                    <h2 id="alunoNome">Carregando...</h2>
-                    <p id="alunoTurma">Turma</p>
+                <div class="header-left">
+                    <div>
+                        <h2 id="alunoNome">Carregando...</h2>
+                        <p id="alunoTurma">Turma</p>
+                    </div>
+                    <div class="aluno-header-actions">
+                        <button class="btn-edit-name" onclick="mostrarModalEditarNome()">
+                            ✏️ Editar Nome
+                        </button>
+                        <button class="logout-btn-aluno" onclick="logout()">Sair</button>
+                    </div>
                 </div>
-                <div class="aluno-header-actions">
-                    <button class="btn-edit-name" onclick="mostrarModalEditarNome()">
-                        ✏️ Editar Nome
-                    </button>
-                    <button class="logout-btn-aluno" onclick="logout()">Sair</button>
+                <div class="header-right">
+                    <div id="miniCalendario" class="mini-calendario">
+                        <div class="calendario-nav">
+                            <button class="btn-calendario-nav" onclick="navegarMes(-1)">◀</button>
+                            <div class="calendario-mes-ano" id="calendarioMesAno">JANEIRO 2025</div>
+                            <button class="btn-calendario-nav" onclick="navegarMes(1)">▶</button>
+                        </div>
+                        <div class="calendario-dias-semana">
+                            <div>D</div><div>S</div><div>T</div><div>Q</div><div>Q</div><div>S</div><div>S</div>
+                        </div>
+                        <div class="calendario-dias" id="calendarioDias">
+                            <!-- Dias serão inseridos via JavaScript -->
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -2872,6 +3116,11 @@
         let recursosFiltradosGlobal = [];
         let recursosExibidos = 0;
         let primeiraCarregaBiblioteca = true; // Controla se é a primeira carga
+
+        // === CONTROLE DO MINI CALENDÁRIO ===
+        let calendarioAulas = []; // Armazena as aulas do calendário
+        let calendarioMesAtual = new Date(); // Mês sendo exibido no calendário
+        const calendarioLimiteMaximo = new Date(2026, 5, 30); // Junho 2026
 
         const FORMULARIOS = [
             { nome: 'Formulário Anamnese Geral + Visão de Futuro', coluna: 'D' },
@@ -3812,16 +4061,22 @@
         // === RENDERIZAR AGENDAMENTO ===
         function renderizarAgendamento() {
             const container = document.getElementById('mentoresContainer');
-            const mentoresTurma = calendarios[alunoData.turma] || [];
             
-            console.log('📅 Renderizando agendamento para', alunoData.turma);
-            console.log('Mentores:', mentoresTurma);
+            console.log('📅 Renderizando informações de agendamento para', alunoData.turma);
             
-            container.innerHTML = mentoresTurma.map(mentor => `
-                <a href="${mentor.link}" target="_blank" rel="noopener noreferrer" class="btn-mentor">
-                    👤 ${mentor.nome} →
-                </a>
-            `).join('');
+            // Mensagem informativa sobre agendamento no grupo
+            container.innerHTML = `
+                <div class="agendamento-info-card">
+                    <div class="agendamento-icon">📱</div>
+                    <h3 class="agendamento-titulo">Agendamento com seu Mentor</h3>
+                    <p class="agendamento-texto">
+                        Os agendamentos de mentorias são realizados diretamente no <strong>grupo exclusivo</strong> que você possui com seu mentor.
+                    </p>
+                    <div class="agendamento-destaque">
+                        💬 Entre em contato com seu mentor pelo grupo para agendar sua próxima sessão!
+                    </div>
+                </div>
+            `;
         }
 
         // === RENDERIZAR PODCAST (APENAS TURMA 1) ===
@@ -4059,6 +4314,240 @@
                     event.target.classList.remove('active');
                 }, 2000);
             }
+        }
+
+        // ============================================
+        // === MINI CALENDÁRIO DE AULAS ===
+        // ============================================
+
+        // Carregar dados do calendário
+        async function carregarCalendarioAulas() {
+            if (!alunoData || !alunoData.turma) return;
+
+            const abaCalendario = alunoData.turma === 'TURMA 1' ? 'CALENDARIO T1' : 'CALENDARIO T2';
+            const url = `${SHEETS_BASE_URL}${encodeURIComponent(abaCalendario)}`;
+
+            console.log(`📅 Carregando calendário: ${abaCalendario}`);
+
+            try {
+                const response = await fetch(url);
+                const text = await response.text();
+                const json = JSON.parse(text.substring(47).slice(0, -2));
+                
+                if (!json.table || !json.table.rows) {
+                    console.log('⚠️ Aba de calendário não encontrada ou vazia');
+                    calendarioAulas = [];
+                    return;
+                }
+
+                const rows = json.table.rows;
+                calendarioAulas = [];
+
+                // Processar cada linha (pular cabeçalho)
+                for (let i = 1; i < rows.length; i++) {
+                    const row = rows[i];
+                    if (!row.c) continue;
+
+                    const dataCell = row.c[0]; // Coluna A - Data
+                    const horario = row.c[1]?.v || ''; // Coluna B - Horário
+                    const tema = row.c[2]?.v || ''; // Coluna C - Entrega/Tema
+
+                    if (!dataCell) continue;
+
+                    // Obter data formatada
+                    const dataStr = dataCell.f || dataCell.v || '';
+                    if (!dataStr) continue;
+
+                    // Parsear data (formato DD/MM/YYYY)
+                    const dataObj = parseDataBrasileira(dataStr);
+                    if (!dataObj) continue;
+
+                    calendarioAulas.push({
+                        data: dataObj,
+                        dataStr: dataStr,
+                        horario: horario,
+                        tema: tema
+                    });
+                }
+
+                console.log(`✅ ${calendarioAulas.length} aulas carregadas`);
+                renderizarCalendario();
+
+            } catch (error) {
+                console.error('❌ Erro ao carregar calendário:', error);
+                calendarioAulas = [];
+            }
+        }
+
+        // Função auxiliar para parsear data brasileira
+        function parseDataBrasileira(dataStr) {
+            // Remover espaços
+            dataStr = dataStr.trim();
+            
+            // Formato DD/MM/YYYY
+            const match = dataStr.match(/(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+            if (match) {
+                const dia = parseInt(match[1]);
+                const mes = parseInt(match[2]) - 1; // Mês começa em 0
+                const ano = parseInt(match[3]);
+                return new Date(ano, mes, dia);
+            }
+            
+            return null;
+        }
+
+        // Renderizar calendário
+        function renderizarCalendario() {
+            const mesAnoEl = document.getElementById('calendarioMesAno');
+            const diasEl = document.getElementById('calendarioDias');
+            
+            if (!mesAnoEl || !diasEl) return;
+
+            // Formatar mês e ano
+            const meses = ['JANEIRO', 'FEVEREIRO', 'MARÇO', 'ABRIL', 'MAIO', 'JUNHO', 
+                          'JULHO', 'AGOSTO', 'SETEMBRO', 'OUTUBRO', 'NOVEMBRO', 'DEZEMBRO'];
+            const mesNome = meses[calendarioMesAtual.getMonth()];
+            const ano = calendarioMesAtual.getFullYear();
+            mesAnoEl.textContent = `${mesNome} ${ano}`;
+
+            // Obter primeiro e último dia do mês
+            const primeiroDia = new Date(calendarioMesAtual.getFullYear(), calendarioMesAtual.getMonth(), 1);
+            const ultimoDia = new Date(calendarioMesAtual.getFullYear(), calendarioMesAtual.getMonth() + 1, 0);
+            const diasNoMes = ultimoDia.getDate();
+            const diaSemanaInicio = primeiroDia.getDay(); // 0 = domingo
+
+            // Criar array de aulas deste mês
+            const aulasDoMes = calendarioAulas.filter(aula => {
+                return aula.data.getFullYear() === calendarioMesAtual.getFullYear() &&
+                       aula.data.getMonth() === calendarioMesAtual.getMonth();
+            });
+
+            // Criar mapa de aulas por dia
+            const aulasPorDia = {};
+            aulasDoMes.forEach(aula => {
+                const dia = aula.data.getDate();
+                if (!aulasPorDia[dia]) {
+                    aulasPorDia[dia] = [];
+                }
+                aulasPorDia[dia].push(aula);
+            });
+
+            // Limpar dias
+            diasEl.innerHTML = '';
+
+            // Adicionar dias vazios antes do início do mês
+            for (let i = 0; i < diaSemanaInicio; i++) {
+                const diaVazio = document.createElement('div');
+                diaVazio.className = 'calendario-dia calendario-dia-vazio';
+                diasEl.appendChild(diaVazio);
+            }
+
+            // Data de hoje
+            const hoje = new Date();
+            hoje.setHours(0, 0, 0, 0);
+
+            // Adicionar dias do mês
+            for (let dia = 1; dia <= diasNoMes; dia++) {
+                const diaEl = document.createElement('div');
+                diaEl.className = 'calendario-dia';
+                
+                const dataDia = new Date(calendarioMesAtual.getFullYear(), calendarioMesAtual.getMonth(), dia);
+                dataDia.setHours(0, 0, 0, 0);
+
+                // Verificar se é hoje
+                if (dataDia.getTime() === hoje.getTime()) {
+                    diaEl.classList.add('calendario-dia-hoje');
+                }
+
+                // Verificar se é passado
+                if (dataDia < hoje) {
+                    diaEl.classList.add('calendario-dia-passado');
+                }
+
+                // Verificar se tem aula
+                if (aulasPorDia[dia]) {
+                    diaEl.classList.add('calendario-dia-com-aula');
+                    
+                    // Criar tooltip
+                    const tooltip = document.createElement('div');
+                    tooltip.className = 'calendario-tooltip';
+                    
+                    aulasPorDia[dia].forEach((aula, index) => {
+                        const diaSemana = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'][aula.data.getDay()];
+                        
+                        if (index > 0) tooltip.innerHTML += '<hr style="margin: 8px 0; border-color: rgba(255,255,255,0.2);">';
+                        
+                        tooltip.innerHTML += `
+                            <div class="tooltip-data">${diaSemana}, ${dia} de ${mesNome.charAt(0) + mesNome.slice(1).toLowerCase()}</div>
+                            <div class="tooltip-horario">🕐 ${aula.horario}</div>
+                            <div class="tooltip-tema">📚 ${aula.tema}</div>
+                        `;
+                    });
+                    
+                    diaEl.appendChild(tooltip);
+                }
+
+                // Número do dia
+                const numeroEl = document.createElement('span');
+                numeroEl.className = 'calendario-dia-numero';
+                numeroEl.textContent = dia;
+                diaEl.appendChild(numeroEl);
+
+                diasEl.appendChild(diaEl);
+            }
+
+            // Atualizar botões de navegação
+            atualizarBotoesNavegacaoCalendario();
+        }
+
+        // Navegar entre meses
+        function navegarMes(direcao) {
+            const novoMes = new Date(calendarioMesAtual);
+            novoMes.setMonth(novoMes.getMonth() + direcao);
+
+            // Verificar limites
+            const hoje = new Date();
+            hoje.setDate(1);
+            hoje.setHours(0, 0, 0, 0);
+
+            const limite = new Date(calendarioLimiteMaximo);
+            limite.setDate(1);
+
+            if (novoMes < hoje) return; // Não pode voltar antes de hoje
+            if (novoMes > limite) return; // Não pode passar de junho/2026
+
+            calendarioMesAtual = novoMes;
+            renderizarCalendario();
+        }
+
+        // Atualizar estado dos botões de navegação
+        function atualizarBotoesNavegacaoCalendario() {
+            const btnAnterior = document.querySelectorAll('.btn-calendario-nav')[0];
+            const btnProximo = document.querySelectorAll('.btn-calendario-nav')[1];
+
+            if (!btnAnterior || !btnProximo) return;
+
+            const hoje = new Date();
+            hoje.setDate(1);
+            hoje.setHours(0, 0, 0, 0);
+
+            const limite = new Date(calendarioLimiteMaximo);
+            limite.setDate(1);
+
+            const mesAtual = new Date(calendarioMesAtual);
+            mesAtual.setDate(1);
+
+            const mesAnterior = new Date(mesAtual);
+            mesAnterior.setMonth(mesAnterior.getMonth() - 1);
+
+            const mesProximo = new Date(mesAtual);
+            mesProximo.setMonth(mesProximo.getMonth() + 1);
+
+            // Desabilitar botão anterior se estiver no mês atual
+            btnAnterior.disabled = mesAnterior < hoje;
+
+            // Desabilitar botão próximo se estiver no limite
+            btnProximo.disabled = mesProximo > limite;
         }
 
         // === MODAL DE PENDÊNCIAS ===
@@ -4356,6 +4845,7 @@
             renderizarAgendamento(); // 📅 AGENDAMENTO
             renderizarBiblioteca();
             renderizarFormularios();
+            carregarCalendarioAulas(); // 📅 CALENDÁRIO DE AULAS
 
             // Abrir modal de pendências após carregar tudo (delay de 1 segundo)
             setTimeout(() => {

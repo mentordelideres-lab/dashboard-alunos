@@ -303,38 +303,26 @@
         /* ============================================
            HEADER + CALENDÁRIO LATERAL
            ============================================ */
-        .header-calendario-container {
-            display: flex;
-            gap: 20px;
-            margin-bottom: 20px;
-            align-items: stretch;
-        }
-
         .dashboard-header {
             background: linear-gradient(135deg, #0dcaf0 0%, #0ba8cc 100%);
-            padding: 24px 28px;
+            padding: 20px 24px;
             border-radius: 12px;
-            flex: 1;
+            margin-bottom: 20px;
             display: flex;
-            flex-direction: column;
             justify-content: space-between;
+            align-items: center;
             box-shadow: 0 4px 15px rgba(13, 202, 240, 0.3);
-            min-height: 160px;
-        }
-
-        .dashboard-header > div:first-child {
-            flex: 1;
         }
 
         .dashboard-header h2 {
-            font-size: 1.6em;
-            margin-bottom: 6px;
+            font-size: 1.5em;
+            margin-bottom: 5px;
             font-weight: 700;
         }
 
         .dashboard-header p {
             opacity: 0.9;
-            font-size: 1.05em;
+            font-size: 1em;
         }
 
         /* === CONTAINER BANNER + MENU + CALENDÁRIO === */
@@ -487,86 +475,18 @@
         }
 
         /* Tooltip do Calendário */
-        .calendario-tooltip {
+        .calendario-dia-com-aula::after {
+            content: '👆';
             position: absolute;
-            top: 100%;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: #000000;
-            border: 3px solid #00d9ff;
-            border-radius: 12px;
-            padding: 18px 20px;
-            min-width: 250px;
-            z-index: 999999;
-            margin-top: 15px;
-            box-shadow: 
-                0 25px 60px rgba(0,0,0,1),
-                0 0 0 1px #00d9ff,
-                inset 0 0 0 2000px #000000;
-            pointer-events: none;
+            bottom: -2px;
+            right: -2px;
+            font-size: 0.7em;
             opacity: 0;
-            transition: opacity 0.3s, transform 0.3s;
+            transition: opacity 0.3s;
         }
 
-        /* Garantir que o tooltip fique ACIMA de tudo com múltiplas camadas 100% OPACAS */
-        .calendario-tooltip::before {
-            content: '';
-            position: absolute;
-            top: -8px;
-            left: -8px;
-            right: -8px;
-            bottom: -8px;
-            background-color: #000000;
-            border-radius: 14px;
-            z-index: -3;
-        }
-
-        .calendario-tooltip::after {
-            content: '';
-            position: absolute;
-            top: -4px;
-            left: -4px;
-            right: -4px;
-            bottom: -4px;
-            background-color: #000000;
-            border-radius: 13px;
-            z-index: -2;
-        }
-
-        .calendario-dia-com-aula:hover .calendario-tooltip {
+        .calendario-dia-com-aula:hover::after {
             opacity: 1;
-            transform: translateX(-50%) translateY(2px);
-        }
-
-        .tooltip-data {
-            font-weight: 800;
-            color: #00ffff;
-            margin-bottom: 12px;
-            font-size: 1.05em;
-            text-shadow: 0 3px 6px rgba(0,0,0,1), 0 0 10px rgba(0,255,255,0.5);
-            letter-spacing: 0.5px;
-            position: relative;
-            z-index: 10;
-        }
-
-        .tooltip-horario {
-            color: #ffff00;
-            margin-bottom: 12px;
-            font-size: 1em;
-            font-weight: 800;
-            text-shadow: 0 3px 6px rgba(0,0,0,1), 0 0 10px rgba(255,255,0,0.5);
-            position: relative;
-            z-index: 10;
-        }
-
-        .tooltip-tema {
-            color: #ffffff;
-            font-size: 1em;
-            line-height: 1.6;
-            font-weight: 600;
-            text-shadow: 0 3px 6px rgba(0,0,0,1);
-            position: relative;
-            z-index: 10;
         }
 
         /* Responsivo - Calendário em Mobile */
@@ -617,6 +537,119 @@
                 padding: 15px;
             }
         }
+        }
+
+        /* === MODAL DE INFORMAÇÕES DA AULA === */
+        .modal-aula-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 999999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(5px);
+            opacity: 1;
+            transition: opacity 0.3s;
+        }
+
+        .modal-aula-overlay.hidden {
+            display: none;
+            opacity: 0;
+        }
+
+        .modal-aula-content {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            border: 3px solid #00d9ff;
+            border-radius: 16px;
+            padding: 0;
+            max-width: 450px;
+            width: 90%;
+            max-height: 80vh;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 
+                0 25px 80px rgba(0,0,0,0.9),
+                0 0 0 1px rgba(0, 217, 255, 0.5),
+                inset 0 1px 0 rgba(255,255,255,0.1);
+            animation: modalSlideIn 0.3s ease-out;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-aula-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(255, 0, 0, 0.2);
+            border: 2px solid rgba(255, 0, 0, 0.5);
+            color: #ff4444;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            font-size: 1.2em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            z-index: 10;
+        }
+
+        .modal-aula-close:hover {
+            background: rgba(255, 0, 0, 0.4);
+            border-color: #ff4444;
+            transform: rotate(90deg);
+        }
+
+        .modal-aula-body {
+            padding: 35px 30px 30px;
+            overflow-y: auto;
+            max-height: 70vh;
+        }
+
+        .modal-aula-data {
+            font-size: 1.3em;
+            font-weight: 800;
+            color: #00ffff;
+            margin-bottom: 20px;
+            text-align: center;
+            text-shadow: 0 0 15px rgba(0,255,255,0.5);
+            padding: 15px;
+            background: rgba(0, 217, 255, 0.1);
+            border-radius: 10px;
+            border: 1px solid rgba(0, 217, 255, 0.3);
+        }
+
+        .modal-aula-horario {
+            font-size: 1.2em;
+            font-weight: 700;
+            color: #ffff00;
+            margin-bottom: 20px;
+            text-align: center;
+            text-shadow: 0 0 15px rgba(255,255,0,0.5);
+        }
+
+        .modal-aula-tema {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #ffffff;
+            line-height: 1.6;
+            text-align: center;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            border-left: 4px solid #00d9ff;
         }
 
         /* Modal de Edição de Nome */
@@ -2961,36 +2994,16 @@
         <!-- Dashboard do Aluno -->
         <div id="dashboardScreen" class="dashboard-card hidden">
             <!-- CONTAINER HEADER + CALENDÁRIO -->
-            <div class="header-calendario-container">
-                <div class="dashboard-header">
-                    <div>
-                        <h2 id="alunoNome">Carregando...</h2>
-                        <p id="alunoTurma">Turma</p>
-                    </div>
-                    <div class="aluno-header-actions">
-                        <button class="btn-edit-name" onclick="mostrarModalEditarNome()">
-                            ✏️ Editar Nome
-                        </button>
-                        <button class="logout-btn-aluno" onclick="logout()">Sair</button>
-                    </div>
+            <div class="dashboard-header">
+                <div>
+                    <h2 id="alunoNome">Carregando...</h2>
+                    <p id="alunoTurma">Turma</p>
                 </div>
-
-                <!-- CALENDÁRIO COMPACTO AO LADO -->
-                <div class="calendario-lateral">
-                    <h4 class="calendario-titulo">📅 Próximos Encontros</h4>
-                    <div id="miniCalendario" class="mini-calendario">
-                        <div class="calendario-nav">
-                            <button class="btn-calendario-nav" onclick="navegarMes(-1)">◀</button>
-                            <div class="calendario-mes-ano" id="calendarioMesAno">JAN 2025</div>
-                            <button class="btn-calendario-nav" onclick="navegarMes(1)">▶</button>
-                        </div>
-                        <div class="calendario-dias-semana">
-                            <div>D</div><div>S</div><div>T</div><div>Q</div><div>Q</div><div>S</div><div>S</div>
-                        </div>
-                        <div class="calendario-dias" id="calendarioDias">
-                            <!-- Dias serão inseridos via JavaScript -->
-                        </div>
-                    </div>
+                <div class="aluno-header-actions">
+                    <button class="btn-edit-name" onclick="mostrarModalEditarNome()">
+                        ✏️ Editar Nome
+                    </button>
+                    <button class="logout-btn-aluno" onclick="logout()">Sair</button>
                 </div>
             </div>
 
@@ -3171,6 +3184,16 @@
 
             <h3 class="section-title">📝 Seus Formulários</h3>
             <div id="formulariosContainer" class="formularios-grid"></div>
+        </div>
+
+        <!-- Modal de Informações da Aula -->
+        <div id="modalAulaInfo" class="modal-aula-overlay hidden" onclick="fecharModalAula(event)">
+            <div class="modal-aula-content" onclick="event.stopPropagation()">
+                <button class="modal-aula-close" onclick="fecharModalAula()">✕</button>
+                <div id="modalAulaBody" class="modal-aula-body">
+                    <!-- Conteúdo será inserido via JavaScript -->
+                </div>
+            </div>
         </div>
 
         <!-- Modal de Edição de Nome -->
@@ -4656,23 +4679,13 @@
                 if (aulasPorDia[dia]) {
                     diaEl.classList.add('calendario-dia-com-aula');
                     
-                    // Criar tooltip
-                    const tooltip = document.createElement('div');
-                    tooltip.className = 'calendario-tooltip';
-                    
-                    aulasPorDia[dia].forEach((aula, index) => {
-                        const diaSemana = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'][aula.data.getDay()];
-                        
-                        if (index > 0) tooltip.innerHTML += '<hr style="margin: 8px 0; border-color: rgba(255,255,255,0.2);">';
-                        
-                        tooltip.innerHTML += `
-                            <div class="tooltip-data">${diaSemana}, ${dia} de ${mesNome.charAt(0) + mesNome.slice(1).toLowerCase()}</div>
-                            <div class="tooltip-horario">🕐 ${aula.horario}</div>
-                            <div class="tooltip-tema">📚 ${aula.tema}</div>
-                        `;
+                    // Adicionar evento de clique
+                    diaEl.addEventListener('click', () => {
+                        mostrarModalAula(aulasPorDia[dia], dia, mesNome);
                     });
                     
-                    diaEl.appendChild(tooltip);
+                    // Armazenar dados no elemento para referência
+                    diaEl.dataset.aulas = JSON.stringify(aulasPorDia[dia]);
                 }
 
                 // Número do dia
@@ -4736,6 +4749,55 @@
 
             // Desabilitar botão próximo se estiver no limite
             btnProximo.disabled = mesProximo > limite;
+        }
+
+        // Mostrar modal com informações da aula
+        function mostrarModalAula(aulas, dia, mes) {
+            const modal = document.getElementById('modalAulaInfo');
+            const modalBody = document.getElementById('modalAulaBody');
+            
+            if (!modal || !modalBody) return;
+            
+            let conteudo = '';
+            
+            aulas.forEach((aula, index) => {
+                const mesesCompletos = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+                                       'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+                const diasSemana = ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 
+                                   'Quinta-feira', 'Sexta-feira', 'Sábado'];
+                const diaSemana = diasSemana[aula.data.getDay()];
+                const mesCompleto = mesesCompletos[aula.data.getMonth()];
+                
+                if (index > 0) {
+                    conteudo += '<hr style="margin: 25px 0; border: none; border-top: 2px solid rgba(0, 217, 255, 0.3);">';
+                }
+                
+                conteudo += `
+                    <div class="modal-aula-data">
+                        📅 ${diaSemana}, ${dia} de ${mesCompleto} de ${aula.data.getFullYear()}
+                    </div>
+                    <div class="modal-aula-horario">
+                        🕐 ${aula.horario}
+                    </div>
+                    <div class="modal-aula-tema">
+                        📚 ${aula.tema}
+                    </div>
+                `;
+            });
+            
+            modalBody.innerHTML = conteudo;
+            modal.classList.remove('hidden');
+        }
+
+        // Fechar modal de aula
+        function fecharModalAula(event) {
+            const modal = document.getElementById('modalAulaInfo');
+            if (!modal) return;
+            
+            // Se event existir e não foi clique no overlay, não fecha
+            if (event && event.target.closest('.modal-aula-content')) return;
+            
+            modal.classList.add('hidden');
         }
 
         // === MODAL DE PENDÊNCIAS ===

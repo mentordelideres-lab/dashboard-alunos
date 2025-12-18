@@ -322,31 +322,25 @@
         }
 
         /* ============================================
-           SEÇÃO DE CALENDÁRIO DE AULAS
+           HEADER + CALENDÁRIO LATERAL
            ============================================ */
-        .calendario-section {
-            background: rgba(45, 45, 68, 0.5);
-            padding: 20px;
-            border-radius: 12px;
+        .header-calendario-container {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 15px;
             margin-bottom: 20px;
-            border: 1px solid rgba(255,255,255,0.1);
+            align-items: start;
         }
 
-        .calendario-section-titulo {
-            font-size: 1.2em;
-            font-weight: 700;
-            color: #0dcaf0;
-            margin-bottom: 15px;
-            text-align: center;
+        .calendario-lateral {
+            background: rgba(45, 45, 68, 0.5);
+            border: 1px solid rgba(13, 202, 240, 0.3);
+            border-radius: 12px;
+            padding: 12px;
         }
 
         .mini-calendario {
-            background: rgba(26, 26, 46, 0.5);
-            border: 1px solid rgba(13, 202, 240, 0.3);
-            border-radius: 10px;
-            padding: 15px;
-            max-width: 450px;
-            margin: 0 auto;
+            width: 260px;
         }
 
         .calendario-nav {
@@ -440,19 +434,15 @@
 
         .calendario-dia-com-aula {
             cursor: pointer;
-        }
-
-        .calendario-dia-com-aula::after {
-            content: '🔵';
-            position: absolute;
-            bottom: 2px;
-            right: 2px;
-            font-size: 0.6em;
+            border: 2px solid #0dcaf0;
+            border-radius: 50%;
+            background: rgba(13, 202, 240, 0.1);
         }
 
         .calendario-dia-com-aula:hover {
-            background: rgba(255, 255, 255, 0.25);
+            background: rgba(13, 202, 240, 0.25);
             transform: scale(1.1);
+            box-shadow: 0 0 10px rgba(13, 202, 240, 0.5);
         }
 
         /* Tooltip do Calendário */
@@ -461,21 +451,23 @@
             top: 100%;
             left: 50%;
             transform: translateX(-50%);
-            background: rgba(26, 26, 46, 0.95);
-            border: 1px solid rgba(13, 202, 240, 0.5);
-            border-radius: 8px;
-            padding: 10px 12px;
-            min-width: 200px;
+            background: rgba(20, 20, 35, 0.98);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(13, 202, 240, 0.7);
+            border-radius: 10px;
+            padding: 12px 15px;
+            min-width: 220px;
             z-index: 10000;
-            margin-top: 5px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            margin-top: 8px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.8), 0 0 0 1px rgba(13, 202, 240, 0.3);
             pointer-events: none;
             opacity: 0;
-            transition: opacity 0.3s;
+            transition: opacity 0.3s, transform 0.3s;
         }
 
         .calendario-dia-com-aula:hover .calendario-tooltip {
             opacity: 1;
+            transform: translateX(-50%) translateY(2px);
         }
 
         .tooltip-data {
@@ -495,6 +487,35 @@
             color: #e4e4e4;
             font-size: 0.85em;
             line-height: 1.3;
+        }
+
+        /* Responsivo - Calendário em Mobile */
+        @media (max-width: 900px) {
+            .header-calendario-container {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+
+            .calendario-lateral {
+                width: 100%;
+            }
+
+            .mini-calendario {
+                width: 100%;
+                max-width: 400px;
+                margin: 0 auto;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .mini-calendario {
+                width: 100%;
+            }
+            
+            .calendario-tooltip {
+                min-width: 180px;
+                font-size: 0.9em;
+            }
         }
 
         /* Modal de Edição de Nome */
@@ -2838,16 +2859,36 @@
 
         <!-- Dashboard do Aluno -->
         <div id="dashboardScreen" class="dashboard-card hidden">
-            <div class="dashboard-header">
-                <div>
-                    <h2 id="alunoNome">Carregando...</h2>
-                    <p id="alunoTurma">Turma</p>
+            <!-- CONTAINER HEADER + CALENDÁRIO -->
+            <div class="header-calendario-container">
+                <div class="dashboard-header">
+                    <div>
+                        <h2 id="alunoNome">Carregando...</h2>
+                        <p id="alunoTurma">Turma</p>
+                    </div>
+                    <div class="aluno-header-actions">
+                        <button class="btn-edit-name" onclick="mostrarModalEditarNome()">
+                            ✏️ Editar Nome
+                        </button>
+                        <button class="logout-btn-aluno" onclick="logout()">Sair</button>
+                    </div>
                 </div>
-                <div class="aluno-header-actions">
-                    <button class="btn-edit-name" onclick="mostrarModalEditarNome()">
-                        ✏️ Editar Nome
-                    </button>
-                    <button class="logout-btn-aluno" onclick="logout()">Sair</button>
+
+                <!-- CALENDÁRIO COMPACTO AO LADO -->
+                <div class="calendario-lateral">
+                    <div id="miniCalendario" class="mini-calendario">
+                        <div class="calendario-nav">
+                            <button class="btn-calendario-nav" onclick="navegarMes(-1)">◀</button>
+                            <div class="calendario-mes-ano" id="calendarioMesAno">JAN 2025</div>
+                            <button class="btn-calendario-nav" onclick="navegarMes(1)">▶</button>
+                        </div>
+                        <div class="calendario-dias-semana">
+                            <div>D</div><div>S</div><div>T</div><div>Q</div><div>Q</div><div>S</div><div>S</div>
+                        </div>
+                        <div class="calendario-dias" id="calendarioDias">
+                            <!-- Dias serão inseridos via JavaScript -->
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -2878,9 +2919,6 @@
                     <div class="menu-item" onclick="scrollParaSecao('imersoesSection')">
                         📚 Imersões
                     </div>
-                    <div class="menu-item" onclick="scrollParaSecao('calendarioSection')">
-                        📅 Calendário
-                    </div>
                     <div class="menu-item" id="menuPodcast" onclick="scrollParaSecao('podcastSection')">
                         🎙️ Podcast
                     </div>
@@ -2901,24 +2939,6 @@
                     </div>
                 </div>
             </nav>
-
-            <!-- SEÇÃO DE CALENDÁRIO DE AULAS -->
-            <div id="calendarioSection" class="calendario-section">
-                <h3 class="calendario-section-titulo">📅 Calendário de Aulas</h3>
-                <div id="miniCalendario" class="mini-calendario">
-                    <div class="calendario-nav">
-                        <button class="btn-calendario-nav" onclick="navegarMes(-1)">◀</button>
-                        <div class="calendario-mes-ano" id="calendarioMesAno">JANEIRO 2025</div>
-                        <button class="btn-calendario-nav" onclick="navegarMes(1)">▶</button>
-                    </div>
-                    <div class="calendario-dias-semana">
-                        <div>D</div><div>S</div><div>T</div><div>Q</div><div>Q</div><div>S</div><div>S</div>
-                    </div>
-                    <div class="calendario-dias" id="calendarioDias">
-                        <!-- Dias serão inseridos via JavaScript -->
-                    </div>
-                </div>
-            </div>
 
             <!-- SEÇÃO DE PILARES -->
             <div id="pilaresSection" class="pilares-section hidden">
@@ -4443,10 +4463,10 @@
             
             if (!mesAnoEl || !diasEl) return;
 
-            // Formatar mês e ano
-            const meses = ['JANEIRO', 'FEVEREIRO', 'MARÇO', 'ABRIL', 'MAIO', 'JUNHO', 
-                          'JULHO', 'AGOSTO', 'SETEMBRO', 'OUTUBRO', 'NOVEMBRO', 'DEZEMBRO'];
-            const mesNome = meses[calendarioMesAtual.getMonth()];
+            // Formatar mês e ano (abreviado para calendário compacto)
+            const mesesAbrev = ['JAN', 'FEV', 'MAR', 'ABR', 'MAI', 'JUN', 
+                               'JUL', 'AGO', 'SET', 'OUT', 'NOV', 'DEZ'];
+            const mesNome = mesesAbrev[calendarioMesAtual.getMonth()];
             const ano = calendarioMesAtual.getFullYear();
             mesAnoEl.textContent = `${mesNome} ${ano}`;
 

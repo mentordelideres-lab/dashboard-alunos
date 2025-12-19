@@ -466,17 +466,14 @@
             border: 2px solid #0dcaf0;
             border-radius: 50%;
             background: rgba(13, 202, 240, 0.1);
+            position: relative;
         }
 
         .calendario-dia-com-aula:hover {
             background: rgba(13, 202, 240, 0.25);
             transform: scale(1.1);
             box-shadow: 0 0 10px rgba(13, 202, 240, 0.5);
-        }
-
-        /* Tooltip do Calendário */
-        .calendario-dia-com-aula {
-            position: relative;
+            z-index: 9999998;
         }
 
         /* === TOOLTIP QUE APARECE AO PASSAR MOUSE === */
@@ -491,15 +488,29 @@
             padding: 16px 20px;
             min-width: 250px;
             max-width: 320px;
-            z-index: 999999;
+            z-index: 9999999;
             margin-bottom: 12px;
             box-shadow: 
                 0 20px 60px rgba(0,0,0,1),
                 0 0 0 1px rgba(0, 217, 255, 0.6),
-                inset 0 1px 0 rgba(255,255,255,0.1);
+                0 0 0 3px rgba(0,0,0,1),
+                inset 0 0 0 100px rgba(0,0,0,1);
             pointer-events: none;
             opacity: 0;
             transition: opacity 0.3s, transform 0.3s;
+        }
+
+        /* Camada extra de fundo para garantir opacidade */
+        .calendario-tooltip::before {
+            content: '';
+            position: absolute;
+            top: -3px;
+            left: -3px;
+            right: -3px;
+            bottom: -3px;
+            background: #000000;
+            border-radius: 12px;
+            z-index: -1;
         }
 
         .calendario-dia-com-aula:hover .calendario-tooltip {
@@ -553,14 +564,14 @@
             bottom: 100%;
             left: 50%;
             transform: translateX(-50%);
-            margin-bottom: 12px;
+            margin-bottom: 18px;
             margin-top: 0;
             margin-left: 0;
             margin-right: 0;
         }
 
         .calendario-dia-com-aula:hover .calendario-tooltip.tooltip-cima {
-            transform: translateX(-50%) translateY(-8px);
+            transform: translateX(-50%) translateY(-10px);
         }
 
         /* Tooltip embaixo (para primeiras linhas) */
@@ -570,11 +581,11 @@
             left: 50%;
             transform: translateX(-50%);
             margin-bottom: 0;
-            margin-top: 12px;
+            margin-top: 18px;
         }
 
         .calendario-dia-com-aula:hover .calendario-tooltip.tooltip-embaixo {
-            transform: translateX(-50%) translateY(8px);
+            transform: translateX(-50%) translateY(10px);
         }
 
         /* Tooltip à esquerda (para últimas colunas) */
@@ -585,11 +596,26 @@
             right: 100%;
             transform: translateY(-50%);
             margin-bottom: 0;
-            margin-right: 12px;
+            margin-right: 18px;
         }
 
         .calendario-dia-com-aula:hover .calendario-tooltip.tooltip-esquerda {
-            transform: translateY(-50%) translateX(-8px);
+            transform: translateY(-50%) translateX(-10px);
+        }
+
+        /* Tooltip à direita (para primeiras colunas) */
+        .calendario-tooltip.tooltip-direita {
+            bottom: auto;
+            top: 50%;
+            left: 100%;
+            right: auto;
+            transform: translateY(-50%);
+            margin-bottom: 0;
+            margin-left: 18px;
+        }
+
+        .calendario-dia-com-aula:hover .calendario-tooltip.tooltip-direita {
+            transform: translateY(-50%) translateX(10px);
         }
 
         .calendario-dia-com-aula::after {
@@ -4814,14 +4840,21 @@
                     tooltip.className = 'calendario-tooltip';
                     
                     // Adicionar classe baseada na posição para posicionamento inteligente
-                    if (linha < 2) {
-                        // Primeiras 2 linhas: tooltip embaixo
+                    // Prioridade: 1) Linha, 2) Coluna
+                    if (linha === 0) {
+                        // Primeira linha SEMPRE embaixo
+                        tooltip.classList.add('tooltip-embaixo');
+                    } else if (linha === 1 && coluna >= 3 && coluna <= 5) {
+                        // Segunda linha no meio: embaixo
                         tooltip.classList.add('tooltip-embaixo');
                     } else if (coluna >= 5) {
-                        // Últimas 2 colunas: tooltip à esquerda
+                        // Últimas 2 colunas: à esquerda
                         tooltip.classList.add('tooltip-esquerda');
+                    } else if (coluna <= 1) {
+                        // Primeiras 2 colunas: à direita
+                        tooltip.classList.add('tooltip-direita');
                     } else {
-                        // Caso padrão: tooltip em cima
+                        // Caso padrão: em cima
                         tooltip.classList.add('tooltip-cima');
                     }
                     

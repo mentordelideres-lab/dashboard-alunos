@@ -476,146 +476,75 @@
             z-index: 9999998;
         }
 
-        /* === TOOLTIP QUE APARECE AO PASSAR MOUSE === */
-        .calendario-tooltip {
-            position: absolute;
-            bottom: 100%;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: #000000;
-            border: 3px solid #00d9ff;
-            border-radius: 12px;
-            padding: 16px 20px;
-            min-width: 250px;
-            max-width: 320px;
-            z-index: 9999999;
-            margin-bottom: 12px;
-            box-shadow: 
-                0 20px 60px rgba(0,0,0,1),
-                0 0 0 1px rgba(0, 217, 255, 0.6),
-                0 0 0 3px rgba(0,0,0,1),
-                inset 0 0 0 100px rgba(0,0,0,1);
+        /* === TOOLTIP FLUTUANTE FIXO - SEMPRE VISÍVEL === */
+        
+        /* Container fixo para tooltip */
+        #tooltipCalendarioFixo {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            z-index: 99999999;
             pointer-events: none;
             opacity: 0;
-            transition: opacity 0.3s, transform 0.3s;
+            transform: translateY(-20px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        /* Camada extra de fundo para garantir opacidade */
-        .calendario-tooltip::before {
-            content: '';
-            position: absolute;
-            top: -3px;
-            left: -3px;
-            right: -3px;
-            bottom: -3px;
-            background: #000000;
-            border-radius: 12px;
-            z-index: -1;
-        }
-
-        .calendario-dia-com-aula:hover .calendario-tooltip {
+        #tooltipCalendarioFixo.ativo {
             opacity: 1;
-            transform: translateX(-50%) translateY(-8px);
+            transform: translateY(0);
         }
 
-        .tooltip-data {
+        .calendario-tooltip-fixo {
+            background: linear-gradient(135deg, #000000 0%, #0a0a0a 100%);
+            border: 3px solid #00d9ff;
+            border-radius: 12px;
+            padding: 18px 22px;
+            min-width: 280px;
+            max-width: 350px;
+            box-shadow: 
+                0 20px 60px rgba(0,0,0,0.9),
+                0 0 0 1px rgba(0, 217, 255, 0.6),
+                0 0 20px rgba(0, 217, 255, 0.3),
+                inset 0 1px 0 rgba(255,255,255,0.1);
+        }
+
+        .tooltip-fixo-data {
             font-weight: 800;
             color: #00ffff;
-            margin-bottom: 10px;
-            font-size: 1.05em;
+            margin-bottom: 12px;
+            font-size: 1.1em;
             text-shadow: 0 0 15px rgba(0,255,255,0.6), 0 2px 4px rgba(0,0,0,1);
             letter-spacing: 0.3px;
         }
 
-        .tooltip-horario {
+        .tooltip-fixo-horario {
             color: #ffff00;
-            margin-bottom: 10px;
-            font-size: 1em;
+            margin-bottom: 12px;
+            font-size: 1.05em;
             font-weight: 800;
             text-shadow: 0 0 15px rgba(255,255,0,0.6), 0 2px 4px rgba(0,0,0,1);
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 8px;
         }
 
-        .tooltip-tema {
+        .tooltip-fixo-tema {
             color: #ffffff;
-            font-size: 1em;
-            line-height: 1.5;
+            font-size: 1.05em;
+            line-height: 1.6;
             font-weight: 600;
             text-shadow: 0 2px 4px rgba(0,0,0,1);
-            white-space: normal;
-            padding: 8px 12px;
-            background: rgba(255,255,255,0.05);
-            border-radius: 6px;
-            border-left: 3px solid #00d9ff;
+            padding: 10px 14px;
+            background: rgba(255,255,255,0.08);
+            border-radius: 8px;
+            border-left: 4px solid #00d9ff;
         }
 
-        .tooltip-separator {
-            margin: 12px 0;
+        .tooltip-fixo-separador {
+            margin: 15px 0;
             border: none;
             border-top: 2px solid rgba(0, 217, 255, 0.4);
-        }
-
-        /* === POSICIONAMENTO INTELIGENTE DO TOOLTIP === */
-        
-        /* Tooltip em cima (padrão) - já está definido acima */
-        .calendario-tooltip.tooltip-cima {
-            bottom: 100%;
-            left: 50%;
-            transform: translateX(-50%);
-            margin-bottom: 18px;
-            margin-top: 0;
-            margin-left: 0;
-            margin-right: 0;
-        }
-
-        .calendario-dia-com-aula:hover .calendario-tooltip.tooltip-cima {
-            transform: translateX(-50%) translateY(-10px);
-        }
-
-        /* Tooltip embaixo (para primeiras linhas) */
-        .calendario-tooltip.tooltip-embaixo {
-            bottom: auto;
-            top: 100%;
-            left: 50%;
-            transform: translateX(-50%);
-            margin-bottom: 0;
-            margin-top: 18px;
-        }
-
-        .calendario-dia-com-aula:hover .calendario-tooltip.tooltip-embaixo {
-            transform: translateX(-50%) translateY(10px);
-        }
-
-        /* Tooltip à esquerda (para últimas colunas) */
-        .calendario-tooltip.tooltip-esquerda {
-            bottom: auto;
-            top: 50%;
-            left: auto;
-            right: 100%;
-            transform: translateY(-50%);
-            margin-bottom: 0;
-            margin-right: 18px;
-        }
-
-        .calendario-dia-com-aula:hover .calendario-tooltip.tooltip-esquerda {
-            transform: translateY(-50%) translateX(-10px);
-        }
-
-        /* Tooltip à direita (para primeiras colunas) */
-        .calendario-tooltip.tooltip-direita {
-            bottom: auto;
-            top: 50%;
-            left: 100%;
-            right: auto;
-            transform: translateY(-50%);
-            margin-bottom: 0;
-            margin-left: 18px;
-        }
-
-        .calendario-dia-com-aula:hover .calendario-tooltip.tooltip-direita {
-            transform: translateY(-50%) translateX(10px);
         }
 
         .calendario-dia-com-aula::after {
@@ -630,6 +559,33 @@
 
         .calendario-dia-com-aula:hover::after {
             opacity: 0.7;
+        }
+
+        /* Responsivo - Tooltip Fixo */
+        @media (max-width: 768px) {
+            #tooltipCalendarioFixo {
+                top: 60px;
+                right: 10px;
+                left: 10px;
+                max-width: calc(100vw - 20px);
+            }
+
+            .calendario-tooltip-fixo {
+                min-width: auto;
+                width: 100%;
+            }
+
+            .tooltip-fixo-data {
+                font-size: 1em;
+            }
+
+            .tooltip-fixo-horario {
+                font-size: 0.95em;
+            }
+
+            .tooltip-fixo-tema {
+                font-size: 0.95em;
+            }
         }
 
         /* Responsivo - Calendário em Mobile */
@@ -3397,6 +3353,13 @@
             <div id="formulariosContainer" class="formularios-grid"></div>
         </div>
 
+        <!-- Tooltip Flutuante Fixo (ao passar mouse nas datas) -->
+        <div id="tooltipCalendarioFixo">
+            <div class="calendario-tooltip-fixo">
+                <div id="tooltipFixoConteudo"></div>
+            </div>
+        </div>
+
         <!-- Painel de Informações da Aula (Desliza da Direita) -->
         <div id="modalAulaInfo" class="painel-aula-overlay hidden" onclick="fecharModalAula(event)">
             <div class="painel-aula-content" onclick="event.stopPropagation()">
@@ -4890,52 +4853,16 @@
                 if (aulasPorDia[dia]) {
                     diaEl.classList.add('calendario-dia-com-aula');
                     
-                    // Calcular posição do dia no grid (0-6 = coluna, linha)
-                    const posicaoNoGrid = (diaSemanaInicio + dia - 1);
-                    const coluna = posicaoNoGrid % 7; // 0 = domingo, 6 = sábado
-                    const linha = Math.floor(posicaoNoGrid / 7); // 0 = primeira linha
-                    
-                    // Criar tooltip para hover
-                    const tooltip = document.createElement('div');
-                    tooltip.className = 'calendario-tooltip';
-                    
-                    // Adicionar classe baseada na posição para posicionamento inteligente
-                    // Prioridade: 1) Linha, 2) Coluna
-                    if (linha === 0) {
-                        // Primeira linha SEMPRE embaixo
-                        tooltip.classList.add('tooltip-embaixo');
-                    } else if (linha === 1 && coluna >= 3 && coluna <= 5) {
-                        // Segunda linha no meio: embaixo
-                        tooltip.classList.add('tooltip-embaixo');
-                    } else if (coluna >= 5) {
-                        // Últimas 2 colunas: à esquerda
-                        tooltip.classList.add('tooltip-esquerda');
-                    } else if (coluna <= 1) {
-                        // Primeiras 2 colunas: à direita
-                        tooltip.classList.add('tooltip-direita');
-                    } else {
-                        // Caso padrão: em cima
-                        tooltip.classList.add('tooltip-cima');
-                    }
-                    
-                    aulasPorDia[dia].forEach((aula, index) => {
-                        const diasSemana = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
-                        const diaSemana = diasSemana[aula.data.getDay()];
-                        
-                        if (index > 0) {
-                            tooltip.innerHTML += '<hr class="tooltip-separator">';
-                        }
-                        
-                        tooltip.innerHTML += `
-                            <div class="tooltip-data">${diaSemana}, ${dia} de ${mesNome}</div>
-                            <div class="tooltip-horario">🕐 ${aula.horario}</div>
-                            <div class="tooltip-tema">📚 ${aula.tema}</div>
-                        `;
+                    // Adicionar eventos de mouse para mostrar tooltip fixo
+                    diaEl.addEventListener('mouseenter', () => {
+                        mostrarTooltipFixo(aulasPorDia[dia], dia, mesNome);
                     });
                     
-                    diaEl.appendChild(tooltip);
+                    diaEl.addEventListener('mouseleave', () => {
+                        esconderTooltipFixo();
+                    });
                     
-                    // Adicionar evento de clique para abrir modal
+                    // Adicionar evento de clique para abrir painel
                     diaEl.addEventListener('click', () => {
                         mostrarModalAula(aulasPorDia[dia], dia, mesNome);
                     });
@@ -5007,7 +4934,43 @@
             btnProximo.disabled = mesProximo > limite;
         }
 
-        // Mostrar modal com informações da aula
+        // Mostrar tooltip flutuante fixo
+        function mostrarTooltipFixo(aulas, dia, mes) {
+            const tooltipFixo = document.getElementById('tooltipCalendarioFixo');
+            const tooltipConteudo = document.getElementById('tooltipFixoConteudo');
+            
+            if (!tooltipFixo || !tooltipConteudo) return;
+            
+            let conteudo = '';
+            
+            aulas.forEach((aula, index) => {
+                const diasSemana = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
+                const diaSemana = diasSemana[aula.data.getDay()];
+                
+                if (index > 0) {
+                    conteudo += '<hr class="tooltip-fixo-separador">';
+                }
+                
+                conteudo += `
+                    <div class="tooltip-fixo-data">${diaSemana}, ${dia} de ${mes}</div>
+                    <div class="tooltip-fixo-horario">🕐 ${aula.horario}</div>
+                    <div class="tooltip-fixo-tema">📚 ${aula.tema}</div>
+                `;
+            });
+            
+            tooltipConteudo.innerHTML = conteudo;
+            tooltipFixo.classList.add('ativo');
+        }
+
+        // Esconder tooltip flutuante fixo
+        function esconderTooltipFixo() {
+            const tooltipFixo = document.getElementById('tooltipCalendarioFixo');
+            if (tooltipFixo) {
+                tooltipFixo.classList.remove('ativo');
+            }
+        }
+
+        // Mostrar painel com informações da aula
         function mostrarModalAula(aulas, dia, mes) {
             const modal = document.getElementById('modalAulaInfo');
             const modalBody = document.getElementById('modalAulaBody');

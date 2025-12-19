@@ -691,170 +691,175 @@
         }
 
         /* === MODAL DE INFORMAÇÕES DA AULA === */
-        .modal-aula-overlay {
+        /* === PAINEL LATERAL DE INFORMAÇÕES DA AULA === */
+        .painel-aula-overlay {
             position: fixed !important;
             top: 0 !important;
+            right: 0 !important;
+            bottom: 0 !important;
             left: 0 !important;
-            width: 100vw !important;
-            height: 100vh !important;
-            background: rgba(0, 0, 0, 0.9);
-            z-index: 99999999 !important;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            backdrop-filter: blur(8px);
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 999999999 !important;
             opacity: 1;
-            transition: opacity 0.3s;
-            padding: 20px;
+            transition: opacity 0.3s ease;
+            pointer-events: all !important;
+        }
+
+        .painel-aula-overlay.hidden {
+            opacity: 0;
+            pointer-events: none !important;
+        }
+
+        .painel-aula-content {
+            position: fixed !important;
+            top: 0 !important;
+            right: 0 !important;
+            width: 450px;
+            max-width: 90vw;
+            height: 100vh;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            border-left: 4px solid #00d9ff;
+            box-shadow: 
+                -10px 0 50px rgba(0,0,0,0.9),
+                0 0 0 1px rgba(0, 217, 255, 0.5);
+            transform: translateX(0);
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 9999999999 !important;
             overflow-y: auto;
             -webkit-overflow-scrolling: touch;
         }
 
-        .modal-aula-overlay.hidden {
-            display: none !important;
-            opacity: 0;
+        .painel-aula-overlay.hidden .painel-aula-content {
+            transform: translateX(100%);
         }
 
-        .modal-aula-content {
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            border: 3px solid #00d9ff;
-            border-radius: 16px;
-            padding: 0;
-            max-width: 500px;
-            width: 90%;
-            max-height: 85vh;
-            overflow: hidden;
-            position: relative;
-            margin: auto;
-            box-shadow: 
-                0 25px 80px rgba(0,0,0,0.9),
-                0 0 0 1px rgba(0, 217, 255, 0.5),
-                0 0 0 3px rgba(0,0,0,1),
-                inset 0 1px 0 rgba(255,255,255,0.1);
-            animation: modalSlideIn 0.3s ease-out;
-            transform: translateZ(0);
-            will-change: transform;
-        }
-
-        @keyframes modalSlideIn {
-            from {
-                transform: translateY(-50px);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-
-        .modal-aula-close {
-            position: absolute;
+        .painel-aula-close {
+            position: sticky;
             top: 15px;
-            right: 15px;
-            background: rgba(255, 0, 0, 0.2);
-            border: 2px solid rgba(255, 0, 0, 0.5);
+            left: 15px;
+            float: left;
+            background: rgba(255, 0, 0, 0.3);
+            border: 2px solid rgba(255, 0, 0, 0.6);
             color: #ff4444;
-            width: 36px;
-            height: 36px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
-            font-size: 1.2em;
+            font-size: 1.3em;
             font-weight: bold;
             cursor: pointer;
             transition: all 0.3s;
             z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 15px;
         }
 
-        .modal-aula-close:hover {
-            background: rgba(255, 0, 0, 0.4);
+        .painel-aula-close:hover {
+            background: rgba(255, 0, 0, 0.6);
             border-color: #ff4444;
-            transform: rotate(90deg);
+            transform: rotate(90deg) scale(1.1);
         }
 
-        .modal-aula-body {
-            padding: 35px 30px 30px;
-            overflow-y: auto;
-            max-height: 70vh;
-            -webkit-overflow-scrolling: touch;
+        .painel-aula-body {
+            padding: 80px 30px 30px;
+            min-height: 100vh;
         }
 
         .modal-aula-data {
             font-size: 1.3em;
             font-weight: 800;
             color: #00ffff;
-            margin-bottom: 20px;
-            text-align: center;
+            margin-bottom: 25px;
+            text-align: left;
             text-shadow: 0 0 15px rgba(0,255,255,0.5);
-            padding: 15px;
-            background: rgba(0, 217, 255, 0.1);
-            border-radius: 10px;
-            border: 1px solid rgba(0, 217, 255, 0.3);
+            padding: 20px;
+            background: rgba(0, 217, 255, 0.15);
+            border-radius: 12px;
+            border-left: 5px solid #00d9ff;
         }
 
         .modal-aula-horario {
             font-size: 1.2em;
             font-weight: 700;
             color: #ffff00;
-            margin-bottom: 20px;
-            text-align: center;
+            margin-bottom: 25px;
+            text-align: left;
             text-shadow: 0 0 15px rgba(255,255,0,0.5);
+            padding: 15px 20px;
+            background: rgba(255, 255, 0, 0.1);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         .modal-aula-tema {
             font-size: 1.1em;
             font-weight: 600;
             color: #ffffff;
-            line-height: 1.6;
-            text-align: center;
-            padding: 20px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 10px;
-            border-left: 4px solid #00d9ff;
+            line-height: 1.7;
+            text-align: left;
+            padding: 25px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            border-left: 5px solid #0dcaf0;
         }
 
-        /* Responsivo - Modal de Aula */
+        /* Responsivo - Painel de Aula */
         @media (max-width: 768px) {
-            .modal-aula-content {
-                max-width: 95%;
-                width: 95%;
-                max-height: 90vh;
+            .painel-aula-content {
+                width: 85vw;
             }
 
-            .modal-aula-body {
-                padding: 30px 20px 25px;
+            .painel-aula-body {
+                padding: 70px 20px 25px;
             }
 
             .modal-aula-data {
-                font-size: 1.1em;
-                padding: 12px;
+                font-size: 1.15em;
+                padding: 18px;
             }
 
             .modal-aula-horario {
-                font-size: 1.05em;
+                font-size: 1.1em;
+                padding: 13px 18px;
             }
 
             .modal-aula-tema {
-                font-size: 1em;
-                padding: 15px;
+                font-size: 1.05em;
+                padding: 20px;
             }
         }
 
         @media (max-width: 480px) {
-            .modal-aula-content {
-                max-width: 92%;
-                width: 92%;
-                margin: 20px auto;
+            .painel-aula-content {
+                width: 95vw;
+            }
+
+            .painel-aula-body {
+                padding: 65px 15px 20px;
+            }
+
+            .painel-aula-close {
+                width: 36px;
+                height: 36px;
+                font-size: 1.1em;
             }
 
             .modal-aula-data {
-                font-size: 1em;
+                font-size: 1.05em;
+                padding: 15px;
             }
 
             .modal-aula-horario {
-                font-size: 0.95em;
+                font-size: 1em;
+                padding: 12px 15px;
             }
 
             .modal-aula-tema {
-                font-size: 0.95em;
+                font-size: 1em;
+                padding: 18px;
             }
         }
 
@@ -3392,11 +3397,11 @@
             <div id="formulariosContainer" class="formularios-grid"></div>
         </div>
 
-        <!-- Modal de Informações da Aula -->
-        <div id="modalAulaInfo" class="modal-aula-overlay hidden" onclick="fecharModalAula(event)">
-            <div class="modal-aula-content" onclick="event.stopPropagation()">
-                <button class="modal-aula-close" onclick="fecharModalAula()">✕</button>
-                <div id="modalAulaBody" class="modal-aula-body">
+        <!-- Painel de Informações da Aula (Desliza da Direita) -->
+        <div id="modalAulaInfo" class="painel-aula-overlay hidden" onclick="fecharModalAula(event)">
+            <div class="painel-aula-content" onclick="event.stopPropagation()">
+                <button class="painel-aula-close" onclick="fecharModalAula()">✕</button>
+                <div id="modalAulaBody" class="painel-aula-body">
                     <!-- Conteúdo será inserido via JavaScript -->
                 </div>
             </div>
@@ -5038,28 +5043,20 @@
             
             modalBody.innerHTML = conteudo;
             modal.classList.remove('hidden');
-            
-            // Bloquear scroll do body
-            document.body.style.overflow = 'hidden';
-            document.body.style.paddingRight = '0px';
         }
 
-        // Fechar modal de aula
+        // Fechar painel de aula
         function fecharModalAula(event) {
             const modal = document.getElementById('modalAulaInfo');
             if (!modal) return;
             
             // Se event existir e não foi clique no overlay, não fecha
-            if (event && event.target.closest('.modal-aula-content')) return;
+            if (event && event.target.closest('.painel-aula-content')) return;
             
             modal.classList.add('hidden');
-            
-            // Desbloquear scroll do body
-            document.body.style.overflow = '';
-            document.body.style.paddingRight = '';
         }
 
-        // Adicionar listener para tecla ESC fechar o modal
+        // Adicionar listener para tecla ESC fechar o painel
         document.addEventListener('keydown', function(event) {
             if (event.key === 'Escape') {
                 const modal = document.getElementById('modalAulaInfo');

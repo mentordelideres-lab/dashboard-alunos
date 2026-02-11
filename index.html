@@ -3457,6 +3457,30 @@
     <script>
         console.log('✅ Dashboard script iniciado');
         
+        // ===== CAPTURA GLOBAL DE ERROS =====
+        window.onerror = function(message, source, lineno, colno, error) {
+            console.error('❌❌❌ ERRO GLOBAL CAPTURADO:');
+            console.error('Mensagem:', message);
+            console.error('Arquivo:', source);
+            console.error('Linha:', lineno, 'Coluna:', colno);
+            console.error('Objeto erro:', error);
+            console.error('Stack:', error?.stack);
+            
+            // NÃO retorna true para não suprimir o erro no console
+            return false;
+        };
+        
+        window.addEventListener('unhandledrejection', function(event) {
+            console.error('❌❌❌ PROMISE REJECTION NÃO TRATADA:');
+            console.error('Reason:', event.reason);
+            console.error('Promise:', event.promise);
+            if (event.reason && event.reason.stack) {
+                console.error('Stack:', event.reason.stack);
+            }
+        });
+        
+        console.log('🛡️ Handlers de erro globais instalados');
+        
         // Configuração
         // PLANILHA DESTINO (com bug da API)
         const SHEET_ID = '1OjxHwWh6kWaNgQrCPP57GB_FMs4LVFH3Orbve3ciylQ';
@@ -3693,9 +3717,22 @@
         // Login
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const email = document.getElementById('emailInput').value.toLowerCase().trim();
-            const senha = document.getElementById('senhaInput').value;
-            await autenticar(email, senha);
+            console.log('🚀 Form submit - preventDefault executado');
+            
+            try {
+                const email = document.getElementById('emailInput').value.toLowerCase().trim();
+                const senha = document.getElementById('senhaInput').value;
+                
+                console.log('📧 Email digitado:', email);
+                console.log('🔒 Senha digitada:', senha ? '***' + senha.length + ' caracteres***' : '(vazia)');
+                
+                await autenticar(email, senha);
+                
+            } catch (error) {
+                console.error('❌❌❌ ERRO CRÍTICO NO LOGIN:', error);
+                console.error('Stack trace:', error.stack);
+                showMessage('messageBox', 'Erro inesperado ao fazer login. Veja o console (F12) para detalhes.', 'error');
+            }
         });
 
         // Criar Senha
@@ -3726,12 +3763,15 @@
 
         async function autenticar(email, senha) {
             try {
+                console.log('===== INÍCIO DO LOGIN =====');
                 showMessage('messageBox', '', 'clear');
                 
                 email = email.trim().toLowerCase();
                 senha = senha.trim();
                 
                 console.log('🔐 Tentando login...');
+                console.log('📧 Email:', email);
+                console.log('🔒 Senha:', senha ? '(informada)' : '(vazia)');
                 
                 // Verificar master
                 if (email === MASTER_EMAIL.toLowerCase() && senha === MASTER_PASSWORD) {
@@ -3744,15 +3784,27 @@
                 console.log('👤 Buscando aluno...');
 
                 // Buscar aluno nas planilhas DESTINO e ORIGEM
-                let resultado = await verificarAlunoComOrigem(email, senha);
+                let resultado = null;
+                
+                try {
+                    resultado = await verificarAlunoComOrigem(email, senha);
+                } catch (errorBusca) {
+                    console.error('❌ Erro ao buscar aluno:', errorBusca);
+                    console.error('Stack:', errorBusca.stack);
+                    throw errorBusca; // Propaga para o try-catch externo
+                }
 
                 if (!resultado) {
+                    console.log('❌ Login falhou - email ou senha incorretos');
                     showMessage('messageBox', 'Email ou senha incorretos.', 'error');
                     return;
                 }
+                
+                console.log('✅ Aluno encontrado!', resultado.aluno.nome);
 
                 // Verificar se é primeiro acesso
                 if (resultado.primeiroAcesso) {
+                    console.log('🆕 Primeiro acesso detectado');
                     primeiroAcessoEmail = email;
                     document.getElementById('nomeAlunoCriar').textContent = resultado.aluno.nome;
                     mostrarTela('criarSenhaScreen');
@@ -3772,10 +3824,16 @@
 
                 alunoData = resultado.aluno;
                 mostrarDashboard();
+                
+                console.log('===== LOGIN CONCLUÍDO COM SUCESSO =====');
 
             } catch (error) {
-                console.error('❌ Erro completo:', error);
-                showMessage('messageBox', 'Erro ao conectar. Verifique sua internet e se a planilha está acessível.', 'error');
+                console.error('❌❌❌ ERRO CRÍTICO NA FUNÇÃO AUTENTICAR:', error);
+                console.error('Nome do erro:', error.name);
+                console.error('Mensagem:', error.message);
+                console.error('Stack completo:', error.stack);
+                showMessage('messageBox', 'Erro ao conectar. Verifique sua internet e se a planilha está acessível. Veja o console (F12) para mais detalhes.', 'error');
+                throw error; // Re-lança para o event listener capturar
             }
         }
 
@@ -3868,43 +3926,82 @@
         }
 
         async function verificarAlunoComOrigem(email, senha) {
-            console.log('🔍 Buscando aluno nas planilhas DESTINO...');
+            console.log('===== BUSCA DE ALUNO INICIADA =====');
+            console.log('🔍 Email procurado:', email);
             
-            // 1. Buscar na planilha DESTINO primeiro
-            const turma1Data = await fetchSheetData('TURMA 1');
-            const turma2Data = await fetchSheetData('TURMA 2');
-            
-            let resultado = verificarAluno(turma1Data, email, senha, 'TURMA 1');
-            if (resultado) {
-                console.log('✅ Aluno encontrado na TURMA 1 (DESTINO)');
-                return resultado;
+            try {
+                // 1. Buscar na planilha DESTINO primeiro
+                console.log('📍 ETAPA 1: Buscando nas planilhas DESTINO...');
+                
+                let turma1Data, turma2Data;
+                
+                try {
+                    turma1Data = await fetchSheetData('TURMA 1');
+                    console.log('✅ TURMA 1 DESTINO carregada:', turma1Data.length, 'linhas');
+                } catch (error) {
+                    console.error('❌ Erro ao carregar TURMA 1 DESTINO:', error);
+                    throw error;
+                }
+                
+                try {
+                    turma2Data = await fetchSheetData('TURMA 2');
+                    console.log('✅ TURMA 2 DESTINO carregada:', turma2Data.length, 'linhas');
+                } catch (error) {
+                    console.error('❌ Erro ao carregar TURMA 2 DESTINO:', error);
+                    throw error;
+                }
+                
+                let resultado = verificarAluno(turma1Data, email, senha, 'TURMA 1');
+                if (resultado) {
+                    console.log('✅ Aluno encontrado na TURMA 1 (DESTINO)');
+                    return resultado;
+                }
+                
+                resultado = verificarAluno(turma2Data, email, senha, 'TURMA 2');
+                if (resultado) {
+                    console.log('✅ Aluno encontrado na TURMA 2 (DESTINO)');
+                    return resultado;
+                }
+                
+                // 2. Se não encontrou na DESTINO, buscar na ORIGEM
+                console.log('📍 ETAPA 2: Não encontrado na DESTINO, buscando na ORIGEM...');
+                
+                // Buscar TURMA 1 ORIGEM
+                console.log('🔎 Verificando TURMA 1 ORIGEM...');
+                try {
+                    resultado = await verificarAlunoOrigem(SHEET_ORIGEM_T1, email, senha, 'TURMA 1', 21); // Coluna V
+                    if (resultado) {
+                        console.log('✅ Aluno encontrado na TURMA 1 (ORIGEM)');
+                        return resultado;
+                    }
+                } catch (errorOrigem1) {
+                    console.error('❌ Erro ao buscar TURMA 1 ORIGEM:', errorOrigem1);
+                    console.error('Stack:', errorOrigem1.stack);
+                    // Continua para tentar TURMA 2
+                }
+                
+                // Buscar TURMA 2 ORIGEM
+                console.log('🔎 Verificando TURMA 2 ORIGEM...');
+                try {
+                    resultado = await verificarAlunoOrigem(SHEET_ORIGEM_T2, email, senha, 'TURMA 2', 16); // Coluna Q
+                    if (resultado) {
+                        console.log('✅ Aluno encontrado na TURMA 2 (ORIGEM)');
+                        return resultado;
+                    }
+                } catch (errorOrigem2) {
+                    console.error('❌ Erro ao buscar TURMA 2 ORIGEM:', errorOrigem2);
+                    console.error('Stack:', errorOrigem2.stack);
+                    // Continua
+                }
+                
+                console.log('❌ Aluno não encontrado em nenhuma planilha (DESTINO ou ORIGEM)');
+                return null;
+                
+            } catch (error) {
+                console.error('❌❌❌ ERRO CRÍTICO em verificarAlunoComOrigem:', error);
+                console.error('Stack:', error.stack);
+                throw error; // Propaga o erro
             }
-            
-            resultado = verificarAluno(turma2Data, email, senha, 'TURMA 2');
-            if (resultado) {
-                console.log('✅ Aluno encontrado na TURMA 2 (DESTINO)');
-                return resultado;
-            }
-            
-            // 2. Se não encontrou na DESTINO, buscar na ORIGEM
-            console.log('⚠️ Aluno não encontrado na DESTINO, buscando na ORIGEM...');
-            
-            // Buscar TURMA 1 ORIGEM
-            resultado = await verificarAlunoOrigem(SHEET_ORIGEM_T1, email, senha, 'TURMA 1', 21); // Coluna V
-            if (resultado) {
-                console.log('✅ Aluno encontrado na TURMA 1 (ORIGEM)');
-                return resultado;
-            }
-            
-            // Buscar TURMA 2 ORIGEM
-            resultado = await verificarAlunoOrigem(SHEET_ORIGEM_T2, email, senha, 'TURMA 2', 16); // Coluna Q
-            if (resultado) {
-                console.log('✅ Aluno encontrado na TURMA 2 (ORIGEM)');
-                return resultado;
-            }
-            
-            console.log('❌ Aluno não encontrado em nenhuma planilha');
-            return null;
         }
         
         async function verificarAlunoOrigem(sheetId, emailBusca, senha, turma, emailColIndex) {
@@ -3986,39 +4083,59 @@
                 
                 const turma1Data = await fetchSheetData('TURMA 1');
                 const turma2Data = await fetchSheetData('TURMA 2');
-            const turma2Data = await fetchSheetData('TURMA 2');
-            
-            let resultado = verificarAluno(turma1Data, email, senha, 'TURMA 1');
-            if (resultado) {
-                console.log('✅ Aluno encontrado na TURMA 1 (DESTINO)');
-                return resultado;
+                
+                let alunoEncontrado = false;
+                for (let i = 0; i < turma1Data.length; i++) {
+                    const row = turma1Data[i];
+                    const emailRow = row.c && row.c[1] && row.c[1].v ? row.c[1].v.toLowerCase().trim() : '';
+                    // Pula cabeçalho
+                    if (emailRow === 'e-mail' || emailRow === '') continue;
+                    if (emailRow === email) {
+                        alunoEncontrado = true;
+                        break;
+                    }
+                }
+                
+                if (!alunoEncontrado) {
+                    for (let i = 0; i < turma2Data.length; i++) {
+                        const row = turma2Data[i];
+                        const emailRow = row.c && row.c[1] && row.c[1].v ? row.c[1].v.toLowerCase().trim() : '';
+                        // Pula cabeçalho
+                        if (emailRow === 'e-mail' || emailRow === '') continue;
+                        if (emailRow === email) {
+                            alunoEncontrado = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (!alunoEncontrado) {
+                    showMessage('messageBoxEsqueci', 'Email não encontrado no sistema.', 'error');
+                    return;
+                }
+
+                await fetch(APPS_SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'recuperarSenha',
+                        email: email
+                    })
+                });
+
+                showMessage('messageBoxEsqueci', 
+                    '✅ Link de recuperação enviado para seu email! Verifique sua caixa de entrada.', 
+                    'success');
+                
+                setTimeout(() => {
+                    voltarLogin();
+                }, 3000);
+
+            } catch (error) {
+                console.error('Erro:', error);
+                showMessage('messageBoxEsqueci', 'Erro ao enviar link de recuperação.', 'error');
             }
-            
-            resultado = verificarAluno(turma2Data, email, senha, 'TURMA 2');
-            if (resultado) {
-                console.log('✅ Aluno encontrado na TURMA 2 (DESTINO)');
-                return resultado;
-            }
-            
-            // 2. Se não encontrou na DESTINO, buscar na ORIGEM
-            console.log('⚠️ Aluno não encontrado na DESTINO, buscando na ORIGEM...');
-            
-            // Buscar TURMA 1 ORIGEM
-            resultado = await verificarAlunoOrigem(SHEET_ORIGEM_T1, email, senha, 'TURMA 1', 21); // Coluna V
-            if (resultado) {
-                console.log('✅ Aluno encontrado na TURMA 1 (ORIGEM)');
-                return resultado;
-            }
-            
-            // Buscar TURMA 2 ORIGEM
-            resultado = await verificarAlunoOrigem(SHEET_ORIGEM_T2, email, senha, 'TURMA 2', 16); // Coluna Q
-            if (resultado) {
-                console.log('✅ Aluno encontrado na TURMA 2 (ORIGEM)');
-                return resultado;
-            }
-            
-            console.log('❌ Aluno não encontrado em nenhuma planilha');
-            return null;
         }
         
         async function verificarAlunoOrigem(sheetId, emailBusca, senha, turma, emailColIndex) {

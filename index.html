@@ -3787,7 +3787,7 @@
                 const emailAluno = row.c[1].v ? row.c[1].v.toLowerCase().trim() : '';
                 
                 if (emailAluno === email) {
-                    const senhaAluno = row.c[9]?.v || '';
+                    const senhaAluno = (row.c[9]?.v || '').trim();
                     const nomeReal = row.c[0]?.v || 'Sem nome';
                     const nomePreferido = row.c[10]?.v || ''; // Coluna K
                     const arquetipo = row.c[11]?.v || ''; // Coluna L - ARQUÉTIPO
@@ -3806,8 +3806,8 @@
                         };
                     }
                     
-                    // Login normal
-                    if (senhaAluno === senha) {
+                    // Login normal - comparação com trim em ambas as senhas
+                    if (senhaAluno === senha.trim()) {
                         return {
                             primeiroAcesso: false,
                             aluno: {
@@ -3954,9 +3954,29 @@
 
         function processarTurma(rows, turma) {
             const alunos = [];
+            console.log(`📊 Processando ${turma}: ${rows.length} linhas totais`);
+            
             for (let i = 1; i < rows.length; i++) {
                 const row = rows[i];
-                if (!row.c || !row.c[0]) continue;
+                
+                // Pula apenas se não tem dados na linha
+                if (!row.c) {
+                    console.log(`⚠️ Linha ${i}: Sem dados (row.c vazio)`);
+                    continue;
+                }
+                
+                // Pega email e nome
+                const email = row.c[1]?.v || '';
+                const nome = row.c[0]?.v || '';
+                
+                // Pula se não tem email (linha realmente vazia)
+                if (!email || email.trim() === '') {
+                    console.log(`⚠️ Linha ${i}: Sem email - pulando`);
+                    continue;
+                }
+                
+                // Log para debug
+                console.log(`✅ Linha ${i}: ${nome || '(sem nome)'} - ${email}`);
                 
                 const formularios = [
                     row.c[3]?.v || 'Pendente',
@@ -3970,8 +3990,8 @@
                 const preenchidos = formularios.filter(f => f === 'Preenchido').length;
 
                 alunos.push({
-                    nome: row.c[0]?.v || 'Sem nome',
-                    email: row.c[1]?.v || 'Sem email',
+                    nome: nome || 'Sem nome',
+                    email: email,
                     turma: turma,
                     arquetipo: row.c[11]?.v || '', // Coluna L
                     formularios: formularios,
@@ -3979,6 +3999,8 @@
                     temSenha: !!(row.c[9]?.v)
                 });
             }
+            
+            console.log(`✅ ${turma}: ${alunos.length} alunos processados`);
             return alunos;
         }
 

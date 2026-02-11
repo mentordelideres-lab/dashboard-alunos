@@ -3743,14 +3743,8 @@
                 
                 console.log('👤 Buscando aluno...');
 
-                // Buscar aluno
-                const turma1Data = await fetchSheetData('TURMA 1');
-                const turma2Data = await fetchSheetData('TURMA 2');
-                
-                let resultado = verificarAluno(turma1Data, email, senha, 'TURMA 1');
-                if (!resultado) {
-                    resultado = verificarAluno(turma2Data, email, senha, 'TURMA 2');
-                }
+                // Buscar aluno nas planilhas DESTINO e ORIGEM
+                let resultado = await verificarAlunoComOrigem(email, senha);
 
                 if (!resultado) {
                     showMessage('messageBox', 'Email ou senha incorretos.', 'error');
@@ -3873,7 +3867,210 @@
             }
         }
 
+        async function verificarAlunoComOrigem(email, senha) {
+            console.log('🔍 Buscando aluno nas planilhas DESTINO...');
+            
+            // 1. Buscar na planilha DESTINO primeiro
+            const turma1Data = await fetchSheetData('TURMA 1');
+            const turma2Data = await fetchSheetData('TURMA 2');
+            
+            let resultado = verificarAluno(turma1Data, email, senha, 'TURMA 1');
+            if (resultado) {
+                console.log('✅ Aluno encontrado na TURMA 1 (DESTINO)');
+                return resultado;
+            }
+            
+            resultado = verificarAluno(turma2Data, email, senha, 'TURMA 2');
+            if (resultado) {
+                console.log('✅ Aluno encontrado na TURMA 2 (DESTINO)');
+                return resultado;
+            }
+            
+            // 2. Se não encontrou na DESTINO, buscar na ORIGEM
+            console.log('⚠️ Aluno não encontrado na DESTINO, buscando na ORIGEM...');
+            
+            // Buscar TURMA 1 ORIGEM
+            resultado = await verificarAlunoOrigem(SHEET_ORIGEM_T1, email, senha, 'TURMA 1', 21); // Coluna V
+            if (resultado) {
+                console.log('✅ Aluno encontrado na TURMA 1 (ORIGEM)');
+                return resultado;
+            }
+            
+            // Buscar TURMA 2 ORIGEM
+            resultado = await verificarAlunoOrigem(SHEET_ORIGEM_T2, email, senha, 'TURMA 2', 16); // Coluna Q
+            if (resultado) {
+                console.log('✅ Aluno encontrado na TURMA 2 (ORIGEM)');
+                return resultado;
+            }
+            
+            console.log('❌ Aluno não encontrado em nenhuma planilha');
+            return null;
+        }
+        
+        async function verificarAlunoOrigem(sheetId, emailBusca, senha, turma, emailColIndex) {
+            try {
+                console.log(`🔍 Buscando ${emailBusca} na planilha ORIGEM ${turma}...`);
+                
+                const range = 'A1:Z200';
+                const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&range=${range}`;
+                
+                console.log(`📡 URL ORIGEM: ${url.substring(0, 100)}...`);
+                
+                const response = await fetch(url);
+                console.log(`📡 Status ORIGEM: ${response.status}`);
+                
+                if (!response.ok) {
+                    console.error(`❌ Erro ao acessar planilha ORIGEM: Status ${response.status}`);
+                    return null;
+                }
+                
+                const text = await response.text();
+                const jsonText = text.substring(text.indexOf('{')).slice(0, -2);
+                const json = JSON.parse(jsonText);
+                const rows = json.table.rows;
+                
+                console.log(`📊 ${turma} ORIGEM: ${rows.length} linhas carregadas`);
+                console.log(`📧 Buscando email na coluna índice: ${emailColIndex}`);
+                
+                for (let i = 0; i < rows.length; i++) {
+                    const row = rows[i];
+                    if (!row.c || !row.c[emailColIndex]) continue;
+                    
+                    const emailAluno = row.c[emailColIndex].v ? row.c[emailColIndex].v.toLowerCase().trim() : '';
+                    const nome = row.c[0]?.v || '';
+                    
+                    // Pula cabeçalho
+                    if (emailAluno === '' || emailAluno.toUpperCase() === 'E-MAIL' || nome.toUpperCase() === 'NOME') {
+                        continue;
+                    }
+                    
+                    // Log primeiras 3 linhas para debug
+                    if (i < 3) {
+                        console.log(`📋 Linha ${i}: ${nome} - ${emailAluno}`);
+                    }
+                    
+                    if (emailAluno === emailBusca) {
+                        console.log(`🎯 ✅ ALUNO ENCONTRADO na ORIGEM!`);
+                        console.log(`   📝 Nome: ${nome}`);
+                        console.log(`   📧 Email: ${emailAluno}`);
+                        console.log(`   🎓 Turma: ${turma}`);
+                        console.log(`   🔑 Primeiro acesso: SIM (dados da ORIGEM)`);
+                        
+                        // Na planilha ORIGEM não temos senha armazenada facilmente
+                        // Então vamos considerar como PRIMEIRO ACESSO sempre
+                        return {
+                            primeiroAcesso: true,
+                            aluno: {
+                                nome: nome,
+                                nomePreferido: '',
+                                email: emailAluno,
+                                turma: turma,
+                                arquetipo: ''
+                            }
+                        };
+                    }
+                }
+                
+                console.log(`❌ ${emailBusca} NÃO encontrado na ORIGEM ${turma}`);
+                return null;
+                
+            } catch (error) {
+                console.error(`❌ Erro ao buscar na ORIGEM ${turma}:`, error);
+                return null;
+            }
+        }
+
         async function solicitarRecuperacaoSenha(email) {
+            try {
+                showMessage('messageBoxEsqueci', 'Verificando email...', 'info');
+                
+                const turma1Data = await fetchSheetData('TURMA 1');
+                const turma2Data = await fetchSheetData('TURMA 2');
+            const turma2Data = await fetchSheetData('TURMA 2');
+            
+            let resultado = verificarAluno(turma1Data, email, senha, 'TURMA 1');
+            if (resultado) {
+                console.log('✅ Aluno encontrado na TURMA 1 (DESTINO)');
+                return resultado;
+            }
+            
+            resultado = verificarAluno(turma2Data, email, senha, 'TURMA 2');
+            if (resultado) {
+                console.log('✅ Aluno encontrado na TURMA 2 (DESTINO)');
+                return resultado;
+            }
+            
+            // 2. Se não encontrou na DESTINO, buscar na ORIGEM
+            console.log('⚠️ Aluno não encontrado na DESTINO, buscando na ORIGEM...');
+            
+            // Buscar TURMA 1 ORIGEM
+            resultado = await verificarAlunoOrigem(SHEET_ORIGEM_T1, email, senha, 'TURMA 1', 21); // Coluna V
+            if (resultado) {
+                console.log('✅ Aluno encontrado na TURMA 1 (ORIGEM)');
+                return resultado;
+            }
+            
+            // Buscar TURMA 2 ORIGEM
+            resultado = await verificarAlunoOrigem(SHEET_ORIGEM_T2, email, senha, 'TURMA 2', 16); // Coluna Q
+            if (resultado) {
+                console.log('✅ Aluno encontrado na TURMA 2 (ORIGEM)');
+                return resultado;
+            }
+            
+            console.log('❌ Aluno não encontrado em nenhuma planilha');
+            return null;
+        }
+        
+        async function verificarAlunoOrigem(sheetId, emailBusca, senha, turma, emailColIndex) {
+            try {
+                const range = 'A1:Z200';
+                const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&range=${range}`;
+                
+                const response = await fetch(url);
+                const text = await response.text();
+                const jsonText = text.substring(text.indexOf('{')).slice(0, -2);
+                const json = JSON.parse(jsonText);
+                const rows = json.table.rows;
+                
+                console.log(`📊 Buscando em ${turma} ORIGEM: ${rows.length} linhas`);
+                
+                for (let i = 0; i < rows.length; i++) {
+                    const row = rows[i];
+                    if (!row.c || !row.c[emailColIndex]) continue;
+                    
+                    const emailAluno = row.c[emailColIndex].v ? row.c[emailColIndex].v.toLowerCase().trim() : '';
+                    const nome = row.c[0]?.v || '';
+                    
+                    // Pula cabeçalho
+                    if (emailAluno === '' || emailAluno.toUpperCase() === 'E-MAIL' || nome.toUpperCase() === 'NOME') {
+                        continue;
+                    }
+                    
+                    if (emailAluno === emailBusca) {
+                        console.log(`🎯 Aluno encontrado na ORIGEM: ${nome} - ${emailAluno}`);
+                        
+                        // Na planilha ORIGEM não temos senha armazenada facilmente
+                        // Então vamos considerar como PRIMEIRO ACESSO sempre
+                        return {
+                            primeiroAcesso: true,
+                            aluno: {
+                                nome: nome,
+                                nomePreferido: '',
+                                email: emailAluno,
+                                turma: turma,
+                                arquetipo: ''
+                            }
+                        };
+                    }
+                }
+                
+                return null;
+                
+            } catch (error) {
+                console.error(`❌ Erro ao buscar na ORIGEM ${turma}:`, error);
+                return null;
+            }
+        }
             try {
                 showMessage('messageBoxEsqueci', 'Verificando email...', 'info');
                 

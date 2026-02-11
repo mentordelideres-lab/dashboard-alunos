@@ -3901,6 +3901,39 @@
                 btn.textContent = 'Salvando...';
                 
                 console.log('💾 Salvando senha via Apps Script...');
+                console.log('📧 Email:', email);
+                
+                // Descobre em qual planilha o aluno está
+                let alunoNaOrigem = false;
+                let dadosAluno = null;
+                
+                // Busca na DESTINO primeiro
+                const turma1Data = await fetchSheetData('TURMA 1');
+                const turma2Data = await fetchSheetData('TURMA 2');
+                
+                let encontrado = verificarAlunoSemSenha(turma1Data, email, 'TURMA 1');
+                if (!encontrado) {
+                    encontrado = verificarAlunoSemSenha(turma2Data, email, 'TURMA 2');
+                }
+                
+                if (!encontrado) {
+                    console.log('⚠️ Aluno não está na DESTINO, está na ORIGEM!');
+                    alunoNaOrigem = true;
+                    
+                    // Busca dados na ORIGEM
+                    const origemT2 = await buscarDadosOrigem(SHEET_ORIGEM_T2, email, 16);
+                    if (origemT2) {
+                        dadosAluno = origemT2;
+                    } else {
+                        const origemT1 = await buscarDadosOrigem(SHEET_ORIGEM_T1, email, 21);
+                        if (origemT1) {
+                            dadosAluno = origemT1;
+                        }
+                    }
+                }
+                
+                console.log('📍 Aluno na ORIGEM?', alunoNaOrigem);
+                console.log('📋 Dados do aluno:', dadosAluno);
                 
                 await fetch(APPS_SCRIPT_URL, {
                     method: 'POST',
@@ -3909,16 +3942,19 @@
                     body: JSON.stringify({
                         action: 'salvarSenha',
                         email: email,
-                        senha: senha
+                        senha: senha,
+                        naOrigem: alunoNaOrigem,
+                        dadosAluno: dadosAluno
                     })
                 });
 
                 console.log('✅ Requisição de salvar senha enviada');
                 showMessage('messageBoxCriar', 'Senha criada com sucesso! Entrando...', 'success');
                 
-                // AGUARDA 5 segundos para o Apps Script salvar na planilha
-                console.log('⏳ Aguardando 5 segundos para sincronizar...');
-                await new Promise(resolve => setTimeout(resolve, 5000));
+                // AGUARDA mais tempo se aluno está na ORIGEM (precisa criar linha na DESTINO)
+                const tempoEspera = alunoNaOrigem ? 8000 : 5000;
+                console.log(`⏳ Aguardando ${tempoEspera/1000} segundos para sincronizar...`);
+                await new Promise(resolve => setTimeout(resolve, tempoEspera));
                 
                 // Tenta fazer login com retry (até 3 tentativas)
                 console.log('🔄 Tentando fazer login (com retry)...');
@@ -3929,6 +3965,58 @@
                 showMessage('messageBoxCriar', 'Erro ao salvar senha. Tente novamente.', 'error');
                 btn.disabled = false;
                 btn.textContent = 'Criar Senha e Entrar';
+            }
+        }
+        
+        function verificarAlunoSemSenha(rows, email, turma) {
+            for (let i = 0; i < rows.length; i++) {
+                const row = rows[i];
+                if (!row.c || !row.c[1]) continue;
+                
+                const emailAluno = row.c[1].v ? row.c[1].v.toLowerCase().trim() : '';
+                if (emailAluno === '' || emailAluno.toUpperCase() === 'E-MAIL') continue;
+                
+                if (emailAluno === email) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        
+        async function buscarDadosOrigem(sheetId, email, emailColIndex) {
+            try {
+                const range = 'A1:Z200';
+                const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&range=${range}`;
+                
+                const response = await fetch(url);
+                const text = await response.text();
+                const jsonText = text.substring(text.indexOf('{')).slice(0, -2);
+                const json = JSON.parse(jsonText);
+                const rows = json.table.rows;
+                
+                for (let i = 0; i < rows.length; i++) {
+                    const row = rows[i];
+                    if (!row.c || !row.c[emailColIndex]) continue;
+                    
+                    const emailAluno = row.c[emailColIndex].v ? row.c[emailColIndex].v.toLowerCase().trim() : '';
+                    const nome = row.c[0]?.v || '';
+                    
+                    if (emailAluno === '' || emailAluno.toUpperCase() === 'E-MAIL') continue;
+                    
+                    if (emailAluno === email) {
+                        // Retorna dados básicos do aluno
+                        return {
+                            nome: nome,
+                            email: emailAluno,
+                            // Adicione outros campos se necessário
+                        };
+                    }
+                }
+                
+                return null;
+            } catch (error) {
+                console.error('Erro ao buscar dados na ORIGEM:', error);
+                return null;
             }
         }
         

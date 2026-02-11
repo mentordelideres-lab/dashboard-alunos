@@ -3780,11 +3780,14 @@
         }
 
         function verificarAluno(rows, email, senha, turma) {
-            for (let i = 1; i < rows.length; i++) {
+            for (let i = 0; i < rows.length; i++) {
                 const row = rows[i];
                 if (!row.c || !row.c[1]) continue;
                 
                 const emailAluno = row.c[1].v ? row.c[1].v.toLowerCase().trim() : '';
+                
+                // Pula linha de cabeçalho
+                if (emailAluno === '' || emailAluno.toUpperCase() === 'E-MAIL') continue;
                 
                 if (emailAluno === email) {
                     const senhaAluno = (row.c[9]?.v || '').trim();
@@ -3872,18 +3875,24 @@
                 const turma2Data = await fetchSheetData('TURMA 2');
                 
                 let alunoEncontrado = false;
-                for (let i = 1; i < turma1Data.length; i++) {
+                for (let i = 0; i < turma1Data.length; i++) {
                     const row = turma1Data[i];
-                    if (row.c && row.c[1] && row.c[1].v.toLowerCase().trim() === email) {
+                    const emailRow = row.c && row.c[1] && row.c[1].v ? row.c[1].v.toLowerCase().trim() : '';
+                    // Pula cabeçalho
+                    if (emailRow === 'e-mail' || emailRow === '') continue;
+                    if (emailRow === email) {
                         alunoEncontrado = true;
                         break;
                     }
                 }
                 
                 if (!alunoEncontrado) {
-                    for (let i = 1; i < turma2Data.length; i++) {
+                    for (let i = 0; i < turma2Data.length; i++) {
                         const row = turma2Data[i];
-                        if (row.c && row.c[1] && row.c[1].v.toLowerCase().trim() === email) {
+                        const emailRow = row.c && row.c[1] && row.c[1].v ? row.c[1].v.toLowerCase().trim() : '';
+                        // Pula cabeçalho
+                        if (emailRow === 'e-mail' || emailRow === '') continue;
+                        if (emailRow === email) {
                             alunoEncontrado = true;
                             break;
                         }
@@ -3920,7 +3929,9 @@
         }
 
         async function fetchSheetData(sheetName) {
-            const url = SHEETS_BASE_URL + encodeURIComponent(sheetName);
+            // Força leitura de range específico para evitar linhas puladas
+            const range = 'A1:Z200'; // Range grande para pegar todos os dados
+            const url = `${SHEETS_BASE_URL}${encodeURIComponent(sheetName)}&range=${range}`;
             console.log('🔍 Acessando:', url);
             
             try {
@@ -3935,7 +3946,11 @@
                 const jsonText = text.substring(text.indexOf('{')).slice(0, -2);
                 const json = JSON.parse(jsonText);
                 
-                console.log('✅ Dados carregados');
+                console.log('✅ Dados carregados:', json.table.rows.length, 'linhas');
+                console.log('🔍 Primeira linha de dados (índice 1):', json.table.rows[1]?.c[0]?.v, '-', json.table.rows[1]?.c[1]?.v);
+                console.log('🔍 Segunda linha de dados (índice 2):', json.table.rows[2]?.c[0]?.v, '-', json.table.rows[2]?.c[1]?.v);
+                console.log('🔍 Terceira linha de dados (índice 3):', json.table.rows[3]?.c[0]?.v, '-', json.table.rows[3]?.c[1]?.v);
+                console.log('🔍 Quarta linha de dados (índice 4):', json.table.rows[4]?.c[0]?.v, '-', json.table.rows[4]?.c[1]?.v);
                 
                 return json.table.rows;
             } catch (error) {
@@ -3956,10 +3971,11 @@
             const alunos = [];
             console.log(`📊 Processando ${turma}: ${rows.length} linhas totais`);
             
-            for (let i = 1; i < rows.length; i++) {
+            // Processa TODAS as linhas a partir do índice 0
+            for (let i = 0; i < rows.length; i++) {
                 const row = rows[i];
                 
-                // Pula apenas se não tem dados na linha
+                // Pula se não tem dados na linha
                 if (!row.c) {
                     console.log(`⚠️ Linha ${i}: Sem dados (row.c vazio)`);
                     continue;
@@ -3969,9 +3985,9 @@
                 const email = row.c[1]?.v || '';
                 const nome = row.c[0]?.v || '';
                 
-                // Pula se não tem email (linha realmente vazia)
-                if (!email || email.trim() === '') {
-                    console.log(`⚠️ Linha ${i}: Sem email - pulando`);
+                // Pula linha de cabeçalho (detecta pelo email sendo "E-MAIL" ou vazio)
+                if (!email || email.trim() === '' || email.toUpperCase() === 'E-MAIL' || nome.toUpperCase() === 'NOME') {
+                    console.log(`⚠️ Linha ${i}: Cabeçalho ou vazia - pulando (nome: "${nome}", email: "${email}")`);
                     continue;
                 }
                 

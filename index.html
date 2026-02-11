@@ -3458,8 +3458,14 @@
         console.log('✅ Dashboard script iniciado');
         
         // Configuração
+        // PLANILHA DESTINO (com bug da API)
         const SHEET_ID = '1OjxHwWh6kWaNgQrCPP57GB_FMs4LVFH3Orbve3ciylQ';
         const SHEETS_BASE_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=`;
+        
+        // PLANILHAS ORIGEM (dados completos e corretos)
+        const SHEET_ORIGEM_T1 = '11ui0ysyuzNTS4Y1QChI_f8cUnFcvPkTgPTosGjBFjlI';
+        const SHEET_ORIGEM_T2 = '1U4MD8raoEHnbzEWn5GVJ1h8QgvEpkejD29yjnEKrAUI';
+        
         const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxPoJtzkVonMhXxYqA9a886dEAYIIoBD8p4ocjjALn4wJw1zhMzVhATaI-cuyUEdkXw3w/exec';
 
         const MASTER_EMAIL = 'mentordelideres@gmail.com';
@@ -3960,11 +3966,109 @@
         }
 
         async function carregarDadosMaster() {
+            console.log('🔄 Carregando dados do painel master...');
+            
+            // Carregar dados da planilha DESTINO
             const turma1Data = await fetchSheetData('TURMA 1');
             const turma2Data = await fetchSheetData('TURMA 2');
             
+            console.log('📊 TURMA 1 DESTINO:', turma1Data.length, 'linhas');
+            console.log('📊 TURMA 2 DESTINO:', turma2Data.length, 'linhas');
+            
+            // Processar dados da DESTINO
             allStudentsData.turma1 = processarTurma(turma1Data, 'TURMA 1');
             allStudentsData.turma2 = processarTurma(turma2Data, 'TURMA 2');
+            
+            console.log('✅ Alunos TURMA 1 (DESTINO):', allStudentsData.turma1.length);
+            console.log('✅ Alunos TURMA 2 (DESTINO):', allStudentsData.turma2.length);
+            
+            // Se faltam alunos, buscar das planilhas ORIGEM
+            if (allStudentsData.turma1.length < 58) {
+                console.log('⚠️ TURMA 1: Faltam alunos! Buscando da ORIGEM...');
+                await complementarDadosOrigem('TURMA 1', SHEET_ORIGEM_T1, 21); // Email na coluna V (índice 21)
+            }
+            
+            if (allStudentsData.turma2.length < 64) {
+                console.log('⚠️ TURMA 2: Faltam alunos! Buscando da ORIGEM...');
+                await complementarDadosOrigem('TURMA 2', SHEET_ORIGEM_T2, 16); // Email na coluna Q (índice 16)
+            }
+            
+            console.log('🎉 TOTAL FINAL - TURMA 1:', allStudentsData.turma1.length);
+            console.log('🎉 TOTAL FINAL - TURMA 2:', allStudentsData.turma2.length);
+        }
+        
+        async function complementarDadosOrigem(turma, sheetId, emailColIndex) {
+            try {
+                console.log(`🔍 Buscando dados complementares da ORIGEM para ${turma}...`);
+                
+                const range = 'A1:Z200';
+                const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&range=${range}`;
+                
+                const response = await fetch(url);
+                const text = await response.text();
+                const jsonText = text.substring(text.indexOf('{')).slice(0, -2);
+                const json = JSON.parse(jsonText);
+                const rows = json.table.rows;
+                
+                console.log(`📊 ${turma} ORIGEM: ${rows.length} linhas`);
+                
+                // Pegar emails que já existem na DESTINO
+                const emailsExistentes = new Set(
+                    (turma === 'TURMA 1' ? allStudentsData.turma1 : allStudentsData.turma2)
+                        .map(a => a.email.toLowerCase().trim())
+                );
+                
+                let adicionados = 0;
+                
+                // Processar linhas da ORIGEM
+                for (let i = 0; i < rows.length; i++) {
+                    const row = rows[i];
+                    if (!row.c || !row.c[emailColIndex]) continue;
+                    
+                    const email = row.c[emailColIndex]?.v || '';
+                    const nome = row.c[0]?.v || '';
+                    
+                    // Pula cabeçalho e vazios
+                    if (!email || email.trim() === '' || email.toUpperCase() === 'E-MAIL' || nome.toUpperCase() === 'NOME') {
+                        continue;
+                    }
+                    
+                    const emailLimpo = email.toLowerCase().trim();
+                    
+                    // Se o aluno JÁ está na DESTINO, pula
+                    if (emailsExistentes.has(emailLimpo)) {
+                        continue;
+                    }
+                    
+                    // ADICIONA o aluno que está FALTANDO
+                    console.log(`➕ Adicionando da ORIGEM: ${nome} - ${email}`);
+                    
+                    // Na ORIGEM, os formulários e outros dados estão em colunas diferentes
+                    // Vamos adicionar com dados básicos apenas
+                    const novoAluno = {
+                        nome: nome || 'Sem nome',
+                        email: emailLimpo,
+                        turma: turma,
+                        arquetipo: '', // Não temos na ORIGEM facilmente
+                        formularios: ['Pendente', 'Pendente', 'Pendente', 'Pendente', 'Pendente', 'Pendente'],
+                        progresso: 0,
+                        temSenha: false
+                    };
+                    
+                    if (turma === 'TURMA 1') {
+                        allStudentsData.turma1.push(novoAluno);
+                    } else {
+                        allStudentsData.turma2.push(novoAluno);
+                    }
+                    
+                    adicionados++;
+                }
+                
+                console.log(`✅ ${turma}: Adicionados ${adicionados} alunos da ORIGEM`);
+                
+            } catch (error) {
+                console.error(`❌ Erro ao buscar dados da ORIGEM para ${turma}:`, error);
+            }
         }
 
         function processarTurma(rows, turma) {

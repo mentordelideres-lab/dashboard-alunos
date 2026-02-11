@@ -3900,6 +3900,8 @@
                 btn.disabled = true;
                 btn.textContent = 'Salvando...';
                 
+                console.log('💾 Salvando senha via Apps Script...');
+                
                 await fetch(APPS_SCRIPT_URL, {
                     method: 'POST',
                     mode: 'no-cors',
@@ -3911,18 +3913,81 @@
                     })
                 });
 
+                console.log('✅ Requisição de salvar senha enviada');
                 showMessage('messageBoxCriar', 'Senha criada com sucesso! Entrando...', 'success');
                 
-                setTimeout(() => {
-                    autenticar(email, senha);
-                }, 1500);
+                // AGUARDA 5 segundos para o Apps Script salvar na planilha
+                console.log('⏳ Aguardando 5 segundos para sincronizar...');
+                await new Promise(resolve => setTimeout(resolve, 5000));
+                
+                // Tenta fazer login com retry (até 3 tentativas)
+                console.log('🔄 Tentando fazer login (com retry)...');
+                await autenticarComRetry(email, senha, 3);
 
             } catch (error) {
-                console.error('Erro:', error);
+                console.error('❌ Erro ao salvar senha:', error);
                 showMessage('messageBoxCriar', 'Erro ao salvar senha. Tente novamente.', 'error');
                 btn.disabled = false;
                 btn.textContent = 'Criar Senha e Entrar';
             }
+        }
+        
+        async function autenticarComRetry(email, senha, tentativas) {
+            for (let i = 1; i <= tentativas; i++) {
+                console.log(`🔄 Tentativa ${i}/${tentativas} de fazer login...`);
+                
+                try {
+                    // Busca APENAS na planilha DESTINO (onde a senha foi salva)
+                    const turma1Data = await fetchSheetData('TURMA 1');
+                    const turma2Data = await fetchSheetData('TURMA 2');
+                    
+                    let resultado = verificarAluno(turma1Data, email, senha, 'TURMA 1');
+                    if (!resultado) {
+                        resultado = verificarAluno(turma2Data, email, senha, 'TURMA 2');
+                    }
+                    
+                    if (resultado && !resultado.primeiroAcesso) {
+                        console.log(`✅ Login bem-sucedido na tentativa ${i}!`);
+                        
+                        // Carregar config e recursos
+                        configData = await fetchSheetData('CONFIG');
+                        
+                        try {
+                            recursosData = await fetchSheetData('RECURSOS');
+                            console.log('📚 Recursos carregados');
+                        } catch (error) {
+                            console.log('ℹ️ Aba RECURSOS não encontrada');
+                            recursosData = [];
+                        }
+                        
+                        alunoData = resultado.aluno;
+                        mostrarDashboard();
+                        return; // SUCESSO!
+                    }
+                    
+                    // Se ainda é primeiro acesso ou não encontrou, aguarda e tenta novamente
+                    if (i < tentativas) {
+                        console.log(`⏳ Senha ainda não apareceu, aguardando 3 segundos...`);
+                        await new Promise(resolve => setTimeout(resolve, 3000));
+                    }
+                    
+                } catch (error) {
+                    console.error(`❌ Erro na tentativa ${i}:`, error);
+                    if (i === tentativas) {
+                        throw error; // Lança erro na última tentativa
+                    }
+                }
+            }
+            
+            // Se chegou aqui, todas as tentativas falharam
+            console.error('❌ Todas as tentativas de login falharam');
+            showMessage('messageBoxCriar', 
+                'Senha salva, mas houve um problema ao fazer login. Por favor, volte à tela de login e tente entrar normalmente.', 
+                'error');
+            
+            setTimeout(() => {
+                voltarLogin();
+            }, 3000);
         }
 
         async function verificarAlunoComOrigem(email, senha) {

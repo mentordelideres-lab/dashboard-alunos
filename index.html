@@ -3935,20 +3935,27 @@
                 console.log('📍 Aluno na ORIGEM?', alunoNaOrigem);
                 console.log('📋 Dados do aluno:', dadosAluno);
                 
+                // Prepara corpo da requisição
+                const requestBody = {
+                    action: 'salvarSenha',
+                    email: email,
+                    senha: senha,
+                    naOrigem: String(alunoNaOrigem), // Converte para string
+                    dadosAluno: dadosAluno ? JSON.stringify(dadosAluno) : null // Envia como string JSON
+                };
+                
+                console.log('📤 Corpo da requisição:', requestBody);
+                
                 await fetch(APPS_SCRIPT_URL, {
                     method: 'POST',
                     mode: 'no-cors',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        action: 'salvarSenha',
-                        email: email,
-                        senha: senha,
-                        naOrigem: alunoNaOrigem,
-                        dadosAluno: dadosAluno
-                    })
+                    body: JSON.stringify(requestBody)
                 });
 
                 console.log('✅ Requisição de salvar senha enviada');
+                console.log('⚠️ ATENÇÃO: Verifique se o Apps Script foi atualizado com o novo código!');
+                console.log('⚠️ Se a linha não foi criada, o Apps Script NÃO foi atualizado corretamente!');
                 showMessage('messageBoxCriar', 'Senha criada com sucesso! Entrando...', 'success');
                 
                 // AGUARDA mais tempo se aluno está na ORIGEM (precisa criar linha na DESTINO)

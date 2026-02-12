@@ -4076,13 +4076,46 @@
             
             // Se chegou aqui, todas as tentativas falharam
             console.error('❌ Todas as tentativas de login falharam');
+            console.log('');
+            console.log('==========================================');
+            console.log('⚠️ A SENHA FOI SALVA, MAS O LOGIN FALHOU');
+            console.log('==========================================');
+            console.log('');
+            console.log('POSSÍVEIS CAUSAS:');
+            console.log('1. O Apps Script NÃO criou a linha na DESTINO');
+            console.log('2. A senha ainda não sincronizou');
+            console.log('3. O aluno NÃO está na planilha DESTINO');
+            console.log('');
+            console.log('SOLUÇÃO:');
+            console.log('1. Volte para a tela de login');
+            console.log('2. Tente fazer login com a senha que você criou');
+            console.log('3. Se não funcionar, a senha NÃO foi salva corretamente');
+            console.log('');
+            console.log('🔄 Voltando para o login em 5 segundos...');
+            console.log('==========================================');
+            console.log('');
+            
             showMessage('messageBoxCriar', 
-                'Senha salva, mas houve um problema ao fazer login. Por favor, volte à tela de login e tente entrar normalmente.', 
+                'A senha foi enviada para ser salva, mas o login automático não funcionou. Aguarde 5 segundos ou clique no botão abaixo para voltar à tela de login e tentar entrar manualmente com a senha que você criou.', 
                 'error');
             
-            setTimeout(() => {
+            // Adiciona botão para voltar manualmente
+            const messageBox = document.getElementById('messageBoxCriar');
+            const btnVoltar = document.createElement('button');
+            btnVoltar.textContent = '← Voltar ao Login Agora';
+            btnVoltar.className = 'btn-primary';
+            btnVoltar.style.marginTop = '15px';
+            btnVoltar.onclick = () => {
+                console.log('👆 Usuário clicou em voltar ao login');
                 voltarLogin();
-            }, 3000);
+            };
+            messageBox.appendChild(btnVoltar);
+            
+            // Volta automaticamente depois de 5 segundos
+            setTimeout(() => {
+                console.log('⏱️ 5 segundos passaram, voltando ao login...');
+                voltarLogin();
+            }, 5000);
         }
 
         async function verificarAlunoComOrigem(email, senha) {
@@ -4299,10 +4332,12 @@
         }
 
         async function fetchSheetData(sheetName) {
-            // Força leitura de range específico para evitar linhas puladas
-            const range = 'A1:Z200'; // Range grande para pegar todos os dados
+            // ⚠️ CORREÇÃO CRÍTICA: Range específico por aba para evitar bug da API
+            // Para TURMA 1 e TURMA 2: usar A6:Z200 (planilha DESTINO começa na linha 6)
+            // Para outras abas: usar A1:Z200 (estrutura normal)
+            const range = (sheetName === 'TURMA 1' || sheetName === 'TURMA 2') ? 'A6:Z200' : 'A1:Z200';
             const url = `${SHEETS_BASE_URL}${encodeURIComponent(sheetName)}&range=${range}`;
-            console.log('🔍 Acessando:', url);
+            console.log(`🔍 Acessando ${sheetName} com range ${range}:`, url);
             
             try {
                 const response = await fetch(url);
@@ -4316,11 +4351,22 @@
                 const jsonText = text.substring(text.indexOf('{')).slice(0, -2);
                 const json = JSON.parse(jsonText);
                 
-                console.log('✅ Dados carregados:', json.table.rows.length, 'linhas');
-                console.log('🔍 Primeira linha de dados (índice 1):', json.table.rows[1]?.c[0]?.v, '-', json.table.rows[1]?.c[1]?.v);
-                console.log('🔍 Segunda linha de dados (índice 2):', json.table.rows[2]?.c[0]?.v, '-', json.table.rows[2]?.c[1]?.v);
-                console.log('🔍 Terceira linha de dados (índice 3):', json.table.rows[3]?.c[0]?.v, '-', json.table.rows[3]?.c[1]?.v);
-                console.log('🔍 Quarta linha de dados (índice 4):', json.table.rows[4]?.c[0]?.v, '-', json.table.rows[4]?.c[1]?.v);
+                console.log(`✅ ${sheetName}: ${json.table.rows.length} linhas carregadas`);
+                
+                // Debug detalhado para TURMA 1 e TURMA 2
+                if (sheetName === 'TURMA 1' || sheetName === 'TURMA 2') {
+                    console.log(`📋 ${sheetName} - Detalhamento das primeiras linhas:`);
+                    for (let i = 0; i < Math.min(10, json.table.rows.length); i++) {
+                        const nome = json.table.rows[i]?.c[0]?.v || '(vazio)';
+                        const email = json.table.rows[i]?.c[1]?.v || '(vazio)';
+                        console.log(`   Linha API ${i} (Planilha linha ${i + 6}): ${nome} - ${email}`);
+                    }
+                } else {
+                    console.log('🔍 Primeira linha de dados (índice 1):', json.table.rows[1]?.c[0]?.v, '-', json.table.rows[1]?.c[1]?.v);
+                    console.log('🔍 Segunda linha de dados (índice 2):', json.table.rows[2]?.c[0]?.v, '-', json.table.rows[2]?.c[1]?.v);
+                    console.log('🔍 Terceira linha de dados (índice 3):', json.table.rows[3]?.c[0]?.v, '-', json.table.rows[3]?.c[1]?.v);
+                    console.log('🔍 Quarta linha de dados (índice 4):', json.table.rows[4]?.c[0]?.v, '-', json.table.rows[4]?.c[1]?.v);
+                }
                 
                 return json.table.rows;
             } catch (error) {

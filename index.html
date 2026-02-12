@@ -3906,17 +3906,18 @@
                 // Descobre em qual planilha o aluno está
                 let alunoNaOrigem = false;
                 let dadosAluno = null;
+                let turmaAluno = null; // Nova variável para armazenar a turma
                 
                 // Busca na DESTINO primeiro
                 const turma1Data = await fetchSheetData('TURMA 1');
                 const turma2Data = await fetchSheetData('TURMA 2');
                 
-                let encontrado = verificarAlunoSemSenha(turma1Data, email, 'TURMA 1');
-                if (!encontrado) {
-                    encontrado = verificarAlunoSemSenha(turma2Data, email, 'TURMA 2');
+                let resultado = verificarAlunoSemSenha(turma1Data, email, 'TURMA 1');
+                if (!resultado.encontrado) {
+                    resultado = verificarAlunoSemSenha(turma2Data, email, 'TURMA 2');
                 }
                 
-                if (!encontrado) {
+                if (!resultado.encontrado) {
                     console.log('⚠️ Aluno não está na DESTINO, está na ORIGEM!');
                     alunoNaOrigem = true;
                     
@@ -3924,16 +3925,22 @@
                     const origemT2 = await buscarDadosOrigem(SHEET_ORIGEM_T2, email, 16);
                     if (origemT2) {
                         dadosAluno = origemT2;
+                        turmaAluno = 'TURMA 2';
                     } else {
                         const origemT1 = await buscarDadosOrigem(SHEET_ORIGEM_T1, email, 21);
                         if (origemT1) {
                             dadosAluno = origemT1;
+                            turmaAluno = 'TURMA 1';
                         }
                     }
+                } else {
+                    console.log('✅ Aluno está na DESTINO!');
+                    turmaAluno = resultado.turma; // Pega a turma retornada pela função
                 }
                 
                 console.log('📍 Aluno na ORIGEM?', alunoNaOrigem);
                 console.log('📋 Dados do aluno:', dadosAluno);
+                console.log('🎓 Turma do aluno:', turmaAluno);
                 
                 // Prepara corpo da requisição
                 const requestBody = {
@@ -3941,6 +3948,7 @@
                     email: email,
                     senha: senha,
                     naOrigem: String(alunoNaOrigem), // Converte para string
+                    turma: turmaAluno, // Envia a turma para o Apps Script
                     dadosAluno: dadosAluno ? JSON.stringify(dadosAluno) : null // Envia como string JSON
                 };
                 
@@ -3984,10 +3992,11 @@
                 if (emailAluno === '' || emailAluno.toUpperCase() === 'E-MAIL') continue;
                 
                 if (emailAluno === email) {
-                    return true;
+                    // Retorna objeto com turma para o Apps Script saber onde atualizar
+                    return { encontrado: true, turma: turma };
                 }
             }
-            return false;
+            return { encontrado: false, turma: null };
         }
         
         async function buscarDadosOrigem(sheetId, email, emailColIndex) {

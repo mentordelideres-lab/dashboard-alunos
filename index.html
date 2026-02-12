@@ -3744,6 +3744,13 @@
         // Criar Senha
         document.getElementById('criarSenhaForm').addEventListener('submit', async (e) => {
             e.preventDefault();
+            
+            // 🔒 PROTEÇÃO: Evita múltiplas submissões
+            if (salvandoSenha) {
+                console.log('⚠️ BLOQUEADO: Formulário já está sendo processado!');
+                return;
+            }
+            
             const novaSenha = document.getElementById('novaSenhaInput').value;
             const confirmarSenha = document.getElementById('confirmarSenhaInput').value;
             
@@ -3928,23 +3935,37 @@
             return null;
         }
 
+        // 🔒 Flag para evitar múltiplas execuções simultâneas
+        let salvandoSenha = false;
+        
         async function salvarNovaSenha(email, senha) {
+            // 🔒 PROTEÇÃO: Evita execuções simultâneas
+            if (salvandoSenha) {
+                console.log('⚠️ BLOQUEADO: Já há uma execução de salvarNovaSenha em andamento!');
+                return;
+            }
+            
             try {
+                salvandoSenha = true; // 🔒 Bloqueia novas execuções
+                
                 const btn = document.getElementById('btnCriarSenha');
                 btn.disabled = true;
                 btn.textContent = 'Salvando...';
                 
-                console.log('💾 Salvando senha via Apps Script...');
+                console.log('='.repeat(60));
+                console.log('💾 INICIANDO salvarNovaSenha');
+                console.log('🕐 Timestamp:', new Date().toISOString());
                 console.log('📧 Email:', email);
+                console.log('='.repeat(60));
                 
                 // Descobre em qual planilha o aluno está
                 let alunoNaOrigem = false;
                 let dadosAluno = null;
                 let turmaAluno = null; // Nova variável para armazenar a turma
                 
-                // Busca na DESTINO primeiro
-                const turma1Data = await fetchSheetData('TURMA 1');
-                const turma2Data = await fetchSheetData('TURMA 2');
+                // Busca na DESTINO primeiro - SEMPRE com cache-busting
+                const turma1Data = await fetchSheetData('TURMA 1', true);
+                const turma2Data = await fetchSheetData('TURMA 2', true);
                 
                 let resultado = verificarAlunoSemSenha(turma1Data, email, 'TURMA 1');
                 if (!resultado.encontrado) {
@@ -3986,7 +4007,17 @@
                     dadosAluno: dadosAluno ? JSON.stringify(dadosAluno) : null // Envia como string JSON
                 };
                 
-                console.log('📤 Corpo da requisição:', requestBody);
+                console.log('📤 CORPO DA REQUISIÇÃO COMPLETO:');
+                console.log('   action:', requestBody.action);
+                console.log('   email:', requestBody.email);
+                console.log('   senha:', requestBody.senha.substring(0, 3) + '***');
+                console.log('   naOrigem:', requestBody.naOrigem, '← CRÍTICO!');
+                console.log('   turma:', requestBody.turma);
+                console.log('   dadosAluno:', requestBody.dadosAluno ? 'Fornecido' : 'null');
+                console.log('');
+                console.log('⚠️ SE naOrigem = "false" → Apps Script deve ATUALIZAR linha existente');
+                console.log('⚠️ SE naOrigem = "true" → Apps Script deve CRIAR nova linha');
+                console.log('');
                 
                 await fetch(APPS_SCRIPT_URL, {
                     method: 'POST',
@@ -4007,6 +4038,9 @@
                 
                 // Tenta fazer login com retry (até 3 tentativas)
                 console.log('🔄 Tentando fazer login (com retry)...');
+                console.log('🔓 Liberando flag de salvandoSenha');
+                salvandoSenha = false; // 🔓 Libera flag ANTES de fazer login
+                
                 await autenticarComRetry(email, senha, 3);
 
             } catch (error) {
@@ -4014,6 +4048,13 @@
                 showMessage('messageBoxCriar', 'Erro ao salvar senha. Tente novamente.', 'error');
                 btn.disabled = false;
                 btn.textContent = 'Criar Senha e Entrar';
+                salvandoSenha = false; // 🔓 Libera flag em caso de erro
+            } finally {
+                // 🔓 Garante que a flag seja liberada em qualquer caso
+                if (salvandoSenha) {
+                    console.log('🔓 Liberando flag de salvandoSenha (finally)');
+                    salvandoSenha = false;
+                }
             }
         }
         
@@ -4173,7 +4214,8 @@
                 let turma1Data, turma2Data;
                 
                 try {
-                    turma1Data = await fetchSheetData('TURMA 1');
+                    // 🔄 SEMPRE usa cache-busting para garantir dados atualizados
+                    turma1Data = await fetchSheetData('TURMA 1', true);
                     console.log('✅ TURMA 1 DESTINO carregada:', turma1Data.length, 'linhas');
                 } catch (error) {
                     console.error('❌ Erro ao carregar TURMA 1 DESTINO:', error);
@@ -4181,7 +4223,8 @@
                 }
                 
                 try {
-                    turma2Data = await fetchSheetData('TURMA 2');
+                    // 🔄 SEMPRE usa cache-busting para garantir dados atualizados
+                    turma2Data = await fetchSheetData('TURMA 2', true);
                     console.log('✅ TURMA 2 DESTINO carregada:', turma2Data.length, 'linhas');
                 } catch (error) {
                     console.error('❌ Erro ao carregar TURMA 2 DESTINO:', error);

@@ -4420,10 +4420,9 @@
         }
 
         async function fetchSheetData(sheetName, cacheBust = false) {
-            // ⚠️ CORREÇÃO CRÍTICA: Range específico por aba para evitar bug da API
-            // Para TURMA 1 e TURMA 2: usar A6:Z200 (planilha DESTINO começa na linha 6)
-            // Para outras abas: usar A1:Z200 (estrutura normal)
-            const range = (sheetName === 'TURMA 1' || sheetName === 'TURMA 2') ? 'A6:Z200' : 'A1:Z200';
+            // 🔧 MUDANÇA: Ler A1:Z200 para TODAS as abas (pega linhas ocultas e filtradas)
+            // Filtros/linhas ocultas fazem A6:Z200 pular dados!
+            const range = 'A1:Z200';
             
             // 🎯 CORREÇÃO: Usar GID ao invés de nome da aba para TURMA 1 e TURMA 2
             let url;
@@ -4463,7 +4462,7 @@
                     for (let i = 0; i < Math.min(10, json.table.rows.length); i++) {
                         const nome = json.table.rows[i]?.c[0]?.v || '(vazio)';
                         const email = json.table.rows[i]?.c[1]?.v || '(vazio)';
-                        console.log(`   Linha API ${i} (Planilha linha ${i + 6}): ${nome} - ${email}`);
+                        console.log(`   Linha API ${i} (Planilha linha ${i + 1}): ${nome} - ${email}`);
                     }
                 } else {
                     console.log('🔍 Primeira linha de dados (índice 1):', json.table.rows[1]?.c[0]?.v, '-', json.table.rows[1]?.c[1]?.v);

@@ -3484,11 +3484,17 @@
         // Configuração
         // PLANILHA DESTINO (com bug da API)
         const SHEET_ID = '1OjxHwWh6kWaNgQrCPP57GB_FMs4LVFH3Orbve3ciylQ';
+        
+        // GIDs das abas DESTINO
+        const GID_TURMA_1 = '1942550026';
+        const GID_TURMA_2 = '811800566';
+        
         const SHEETS_BASE_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=`;
         
         // PLANILHAS ORIGEM (dados completos e corretos)
         const SHEET_ORIGEM_T1 = '11ui0ysyuzNTS4Y1QChI_f8cUnFcvPkTgPTosGjBFjlI';
         const SHEET_ORIGEM_T2 = '1U4MD8raoEHnbzEWn5GVJ1h8QgvEpkejD29yjnEKrAUI';
+        const GID_ORIGEM = '91665075'; // GID da aba de respostas do formulário (mesmo para T1 e T2)
         
         const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx5IicFnSy2-6Pknlq4f60PIZ1IGVcou2dfKUiKTfa9U9ecUDO4De7_0G2hH18g4yh-5A/exec';
 
@@ -4030,7 +4036,8 @@
         async function buscarDadosOrigem(sheetId, email, emailColIndex) {
             try {
                 const range = 'A1:Z200';
-                const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&range=${range}`;
+                // 🎯 CORREÇÃO: Usar GID da aba de respostas do formulário
+                const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&gid=${GID_ORIGEM}&range=${range}`;
                 
                 const response = await fetch(url);
                 const text = await response.text();
@@ -4239,7 +4246,8 @@
                 console.log(`🔍 Buscando ${emailBusca} na planilha ORIGEM ${turma}...`);
                 
                 const range = 'A1:Z200';
-                const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&range=${range}`;
+                // 🎯 CORREÇÃO: Usar GID da aba de respostas do formulário
+                const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&gid=${GID_ORIGEM}&range=${range}`;
                 
                 console.log(`📡 URL ORIGEM: ${url.substring(0, 100)}...`);
                 
@@ -4373,7 +4381,16 @@
             // Para TURMA 1 e TURMA 2: usar A6:Z200 (planilha DESTINO começa na linha 6)
             // Para outras abas: usar A1:Z200 (estrutura normal)
             const range = (sheetName === 'TURMA 1' || sheetName === 'TURMA 2') ? 'A6:Z200' : 'A1:Z200';
-            let url = `${SHEETS_BASE_URL}${encodeURIComponent(sheetName)}&range=${range}`;
+            
+            // 🎯 CORREÇÃO: Usar GID ao invés de nome da aba para TURMA 1 e TURMA 2
+            let url;
+            if (sheetName === 'TURMA 1') {
+                url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&gid=${GID_TURMA_1}&range=${range}`;
+            } else if (sheetName === 'TURMA 2') {
+                url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&gid=${GID_TURMA_2}&range=${range}`;
+            } else {
+                url = `${SHEETS_BASE_URL}${encodeURIComponent(sheetName)}&range=${range}`;
+            }
             
             // 🔄 Cache-busting: adiciona timestamp para forçar dados novos (evita cache do navegador)
             if (cacheBust) {
@@ -4456,7 +4473,8 @@
                 console.log(`🔍 Buscando dados complementares da ORIGEM para ${turma}...`);
                 
                 const range = 'A1:Z200';
-                const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&range=${range}`;
+                // 🎯 CORREÇÃO: Usar GID da aba de respostas do formulário
+                const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&gid=${GID_ORIGEM}&range=${range}`;
                 
                 const response = await fetch(url);
                 const text = await response.text();

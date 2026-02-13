@@ -3484,19 +3484,13 @@
         // Configuração
         // PLANILHA DESTINO (com bug da API)
         const SHEET_ID = '1OjxHwWh6kWaNgQrCPP57GB_FMs4LVFH3Orbve3ciylQ';
-        
-        // GIDs das abas DESTINO
-        const GID_TURMA_1 = '1942550026';
-        const GID_TURMA_2 = '811800566';
-        
         const SHEETS_BASE_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=`;
         
         // PLANILHAS ORIGEM (dados completos e corretos)
         const SHEET_ORIGEM_T1 = '11ui0ysyuzNTS4Y1QChI_f8cUnFcvPkTgPTosGjBFjlI';
         const SHEET_ORIGEM_T2 = '1U4MD8raoEHnbzEWn5GVJ1h8QgvEpkejD29yjnEKrAUI';
-        const GID_ORIGEM = '91665075'; // GID da aba de respostas do formulário (mesmo para T1 e T2)
         
-        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzlDVO3KjeF5dqgj_ehd9x-q436rvRZRZP4uWAUAqLAeHHGgLMTFkn_kobUKgobGpbedA/exec';
+        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxPoJtzkVonMhXxYqA9a886dEAYIIoBD8p4ocjjALn4wJw1zhMzVhATaI-cuyUEdkXw3w/exec';
 
         const MASTER_EMAIL = 'mentordelideres@gmail.com';
         const MASTER_PASSWORD = 'master2024';
@@ -3694,6 +3688,75 @@
         };
 
         // Força da senha
+
+        // === CÓDIGO DE DEBUG - REMOVER DEPOIS ===
+        async function debugAlunosProblematicos() {
+            console.log("🔍 === DEBUG ALUNOS PROBLEMÁTICOS ===");
+            
+            const emailsProblema = [
+                "r.anaflavia@gmail.com",
+                "analice0616@hotmail.com", 
+                "athanael.norberto@outlook.com"
+            ];
+            
+            const url = "https://docs.google.com/spreadsheets/d/1cymSq22sqKNg3g7KvTlxlCjhtf4uZ_YimP297ro0Iv0/gviz/tq?tqx=out=json&gid=1942550026";
+            
+            const response = await fetch(url);
+            const text = await response.text();
+            const json = JSON.parse(text.substring(47).slice(0, -2));
+            const rows = json.table.rows;
+            
+            console.log(`📊 Total linhas na planilha: ${rows.length}`);
+            
+            for (const emailBusca of emailsProblema) {
+                console.log("");
+                console.log(`🔎 Procurando: ${emailBusca}`);
+                let encontrado = false;
+                
+                for (let i = 0; i < rows.length; i++) {
+                    const row = rows[i];
+                    if (!row.c || !row.c[31]) continue;
+                    
+                    const emailPlanilha = row.c[31]?.v || "";
+                    
+                    if (i < 10) {
+                        console.log(`   Linha ${i}: "${emailPlanilha}"`);
+                    }
+                    
+                    if (emailPlanilha === emailBusca) {
+                        console.log(`   ✅ ENCONTRADO (comparação exata) na linha ${i}`);
+                        encontrado = true;
+                        break;
+                    }
+                    
+                    if (emailPlanilha.toLowerCase().trim() === emailBusca.toLowerCase().trim()) {
+                        console.log(`   ✅ ENCONTRADO (com normalize) na linha ${i}`);
+                        console.log(`   Email planilha: "${emailPlanilha}"`);
+                        console.log(`   Email buscado: "${emailBusca}"`);
+                        encontrado = true;
+                        break;
+                    }
+                }
+                
+                if (!encontrado) {
+                    console.log(`   ❌ NÃO ENCONTRADO!`);
+                }
+            }
+        }
+
+        // Executar automaticamente após 2 segundos
+        setTimeout(() => {
+            if (alunoData && [
+                "r.anaflavia@gmail.com",
+                "analice0616@hotmail.com",
+                "athanael.norberto@outlook.com"
+            ].includes(alunoData.email?.toLowerCase().trim())) {
+                debugAlunosProblematicos();
+            }
+        }, 2000);
+        // === FIM DO CÓDIGO DE DEBUG ===
+
+
         document.getElementById('novaSenhaInput')?.addEventListener('input', (e) => {
             const senha = e.target.value;
             const strength = calcularForcaSenha(senha);
@@ -3744,13 +3807,6 @@
         // Criar Senha
         document.getElementById('criarSenhaForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            
-            // 🔒 PROTEÇÃO: Evita múltiplas submissões
-            if (salvandoSenha) {
-                console.log('⚠️ BLOQUEADO: Formulário já está sendo processado!');
-                return;
-            }
-            
             const novaSenha = document.getElementById('novaSenhaInput').value;
             const confirmarSenha = document.getElementById('confirmarSenhaInput').value;
             
@@ -3851,27 +3907,14 @@
         }
 
         function verificarAluno(rows, email, senha, turma) {
-            console.log(`🔍 verificarAluno: Procurando ${email} na ${turma}`);
-            console.log(`📊 Total de linhas recebidas: ${rows.length}`);
-            
             for (let i = 0; i < rows.length; i++) {
                 const row = rows[i];
                 if (!row.c || !row.c[1]) continue;
                 
                 const emailAluno = row.c[1].v ? row.c[1].v.toLowerCase().trim() : '';
                 
-                // Debug das primeiras 10 linhas para ver o que está sendo lido
-                if (i < 10) {
-                    const nomeDebug = row.c[0]?.v || '(vazio)';
-                    const senhaDebug = row.c[9]?.v || '(sem senha)';
-                    console.log(`   [${i}] ${nomeDebug} | ${emailAluno} | Senha: ${senhaDebug ? '***' : '(vazia)'}`);
-                }
-                
                 // Pula linha de cabeçalho
-                if (emailAluno === '' || emailAluno.toUpperCase() === 'E-MAIL') {
-                    console.log(`   [${i}] PULADO: cabeçalho`);
-                    continue;
-                }
+                if (emailAluno === '' || emailAluno.toUpperCase() === 'E-MAIL') continue;
                 
                 if (emailAluno === email) {
                     const senhaAluno = (row.c[9]?.v || '').trim();
@@ -3879,16 +3922,8 @@
                     const nomePreferido = row.c[10]?.v || ''; // Coluna K
                     const arquetipo = row.c[11]?.v || ''; // Coluna L - ARQUÉTIPO
                     
-                    console.log(`✅ ALUNO ENCONTRADO na linha ${i}!`);
-                    console.log(`   Nome: ${nomeReal}`);
-                    console.log(`   Email: ${emailAluno}`);
-                    console.log(`   Senha na planilha: "${senhaAluno}"`);
-                    console.log(`   Senha tentada: "${senha.trim()}"`);
-                    console.log(`   Senhas iguais? ${senhaAluno === senha.trim()}`);
-                    
                     // Primeiro acesso
                     if (!senhaAluno || senhaAluno === '') {
-                        console.log(`⚠️ PRIMEIRO ACESSO (sem senha)`);
                         return {
                             primeiroAcesso: true,
                             aluno: {
@@ -3903,7 +3938,6 @@
                     
                     // Login normal - comparação com trim em ambas as senhas
                     if (senhaAluno === senha.trim()) {
-                        console.log(`✅ LOGIN BEM-SUCEDIDO!`);
                         return {
                             primeiroAcesso: false,
                             aluno: {
@@ -3923,56 +3957,35 @@
                                 ]
                             }
                         };
-                    } else {
-                        console.log(`❌ SENHA INCORRETA!`);
-                        console.log(`   Esperado: "${senhaAluno}" (${senhaAluno.length} chars)`);
-                        console.log(`   Recebido: "${senha.trim()}" (${senha.trim().length} chars)`);
-                        return null;
                     }
                 }
             }
-            console.log(`❌ Email ${email} NÃO encontrado na ${turma}`);
             return null;
         }
 
-        // 🔒 Flag para evitar múltiplas execuções simultâneas
-        let salvandoSenha = false;
-        
         async function salvarNovaSenha(email, senha) {
-            // 🔒 PROTEÇÃO: Evita execuções simultâneas
-            if (salvandoSenha) {
-                console.log('⚠️ BLOQUEADO: Já há uma execução de salvarNovaSenha em andamento!');
-                return;
-            }
-            
             try {
-                salvandoSenha = true; // 🔒 Bloqueia novas execuções
-                
                 const btn = document.getElementById('btnCriarSenha');
                 btn.disabled = true;
                 btn.textContent = 'Salvando...';
                 
-                console.log('='.repeat(60));
-                console.log('💾 INICIANDO salvarNovaSenha');
-                console.log('🕐 Timestamp:', new Date().toISOString());
+                console.log('💾 Salvando senha via Apps Script...');
                 console.log('📧 Email:', email);
-                console.log('='.repeat(60));
                 
                 // Descobre em qual planilha o aluno está
                 let alunoNaOrigem = false;
                 let dadosAluno = null;
-                let turmaAluno = null; // Nova variável para armazenar a turma
                 
-                // Busca na DESTINO primeiro - SEMPRE com cache-busting
-                const turma1Data = await fetchSheetData('TURMA 1', true);
-                const turma2Data = await fetchSheetData('TURMA 2', true);
+                // Busca na DESTINO primeiro
+                const turma1Data = await fetchSheetData('TURMA 1');
+                const turma2Data = await fetchSheetData('TURMA 2');
                 
-                let resultado = verificarAlunoSemSenha(turma1Data, email, 'TURMA 1');
-                if (!resultado.encontrado) {
-                    resultado = verificarAlunoSemSenha(turma2Data, email, 'TURMA 2');
+                let encontrado = verificarAlunoSemSenha(turma1Data, email, 'TURMA 1');
+                if (!encontrado) {
+                    encontrado = verificarAlunoSemSenha(turma2Data, email, 'TURMA 2');
                 }
                 
-                if (!resultado.encontrado) {
+                if (!encontrado) {
                     console.log('⚠️ Aluno não está na DESTINO, está na ORIGEM!');
                     alunoNaOrigem = true;
                     
@@ -3980,22 +3993,16 @@
                     const origemT2 = await buscarDadosOrigem(SHEET_ORIGEM_T2, email, 16);
                     if (origemT2) {
                         dadosAluno = origemT2;
-                        turmaAluno = 'TURMA 2';
                     } else {
                         const origemT1 = await buscarDadosOrigem(SHEET_ORIGEM_T1, email, 21);
                         if (origemT1) {
                             dadosAluno = origemT1;
-                            turmaAluno = 'TURMA 1';
                         }
                     }
-                } else {
-                    console.log('✅ Aluno está na DESTINO!');
-                    turmaAluno = resultado.turma; // Pega a turma retornada pela função
                 }
                 
                 console.log('📍 Aluno na ORIGEM?', alunoNaOrigem);
                 console.log('📋 Dados do aluno:', dadosAluno);
-                console.log('🎓 Turma do aluno:', turmaAluno);
                 
                 // Prepara corpo da requisição
                 const requestBody = {
@@ -4003,21 +4010,10 @@
                     email: email,
                     senha: senha,
                     naOrigem: String(alunoNaOrigem), // Converte para string
-                    turma: turmaAluno, // Envia a turma para o Apps Script
                     dadosAluno: dadosAluno ? JSON.stringify(dadosAluno) : null // Envia como string JSON
                 };
                 
-                console.log('📤 CORPO DA REQUISIÇÃO COMPLETO:');
-                console.log('   action:', requestBody.action);
-                console.log('   email:', requestBody.email);
-                console.log('   senha:', requestBody.senha.substring(0, 3) + '***');
-                console.log('   naOrigem:', requestBody.naOrigem, '← CRÍTICO!');
-                console.log('   turma:', requestBody.turma);
-                console.log('   dadosAluno:', requestBody.dadosAluno ? 'Fornecido' : 'null');
-                console.log('');
-                console.log('⚠️ SE naOrigem = "false" → Apps Script deve ATUALIZAR linha existente');
-                console.log('⚠️ SE naOrigem = "true" → Apps Script deve CRIAR nova linha');
-                console.log('');
+                console.log('📤 Corpo da requisição:', requestBody);
                 
                 await fetch(APPS_SCRIPT_URL, {
                     method: 'POST',
@@ -4038,9 +4034,6 @@
                 
                 // Tenta fazer login com retry (até 3 tentativas)
                 console.log('🔄 Tentando fazer login (com retry)...');
-                console.log('🔓 Liberando flag de salvandoSenha');
-                salvandoSenha = false; // 🔓 Libera flag ANTES de fazer login
-                
                 await autenticarComRetry(email, senha, 3);
 
             } catch (error) {
@@ -4048,13 +4041,6 @@
                 showMessage('messageBoxCriar', 'Erro ao salvar senha. Tente novamente.', 'error');
                 btn.disabled = false;
                 btn.textContent = 'Criar Senha e Entrar';
-                salvandoSenha = false; // 🔓 Libera flag em caso de erro
-            } finally {
-                // 🔓 Garante que a flag seja liberada em qualquer caso
-                if (salvandoSenha) {
-                    console.log('🔓 Liberando flag de salvandoSenha (finally)');
-                    salvandoSenha = false;
-                }
             }
         }
         
@@ -4067,18 +4053,16 @@
                 if (emailAluno === '' || emailAluno.toUpperCase() === 'E-MAIL') continue;
                 
                 if (emailAluno === email) {
-                    // Retorna objeto com turma para o Apps Script saber onde atualizar
-                    return { encontrado: true, turma: turma };
+                    return true;
                 }
             }
-            return { encontrado: false, turma: null };
+            return false;
         }
         
         async function buscarDadosOrigem(sheetId, email, emailColIndex) {
             try {
                 const range = 'A1:Z200';
-                // 🎯 CORREÇÃO: Usar GID da aba de respostas do formulário
-                const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&gid=${GID_ORIGEM}&range=${range}`;
+                const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&range=${range}`;
                 
                 const response = await fetch(url);
                 const text = await response.text();
@@ -4117,9 +4101,9 @@
                 console.log(`🔄 Tentativa ${i}/${tentativas} de fazer login...`);
                 
                 try {
-                    // ⚠️ IMPORTANTE: Usa cache-busting para forçar dados novos (evita cache do navegador)
-                    const turma1Data = await fetchSheetData('TURMA 1', true);
-                    const turma2Data = await fetchSheetData('TURMA 2', true);
+                    // Busca APENAS na planilha DESTINO (onde a senha foi salva)
+                    const turma1Data = await fetchSheetData('TURMA 1');
+                    const turma2Data = await fetchSheetData('TURMA 2');
                     
                     let resultado = verificarAluno(turma1Data, email, senha, 'TURMA 1');
                     if (!resultado) {
@@ -4214,8 +4198,7 @@
                 let turma1Data, turma2Data;
                 
                 try {
-                    // 🔄 SEMPRE usa cache-busting para garantir dados atualizados
-                    turma1Data = await fetchSheetData('TURMA 1', true);
+                    turma1Data = await fetchSheetData('TURMA 1');
                     console.log('✅ TURMA 1 DESTINO carregada:', turma1Data.length, 'linhas');
                 } catch (error) {
                     console.error('❌ Erro ao carregar TURMA 1 DESTINO:', error);
@@ -4223,8 +4206,7 @@
                 }
                 
                 try {
-                    // 🔄 SEMPRE usa cache-busting para garantir dados atualizados
-                    turma2Data = await fetchSheetData('TURMA 2', true);
+                    turma2Data = await fetchSheetData('TURMA 2');
                     console.log('✅ TURMA 2 DESTINO carregada:', turma2Data.length, 'linhas');
                 } catch (error) {
                     console.error('❌ Erro ao carregar TURMA 2 DESTINO:', error);
@@ -4289,8 +4271,7 @@
                 console.log(`🔍 Buscando ${emailBusca} na planilha ORIGEM ${turma}...`);
                 
                 const range = 'A1:Z200';
-                // 🎯 CORREÇÃO: Usar GID da aba de respostas do formulário
-                const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&gid=${GID_ORIGEM}&range=${range}`;
+                const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&range=${range}`;
                 
                 console.log(`📡 URL ORIGEM: ${url.substring(0, 100)}...`);
                 
@@ -4419,27 +4400,12 @@
             }
         }
 
-        async function fetchSheetData(sheetName, cacheBust = false) {
-            // 🔧 MUDANÇA: Ler A1:Z200 para TODAS as abas (pega linhas ocultas e filtradas)
-            // Filtros/linhas ocultas fazem A6:Z200 pular dados!
-            const range = 'A1:Z200';
-            
-            // 🎯 CORREÇÃO: Usar GID ao invés de nome da aba para TURMA 1 e TURMA 2
-            let url;
-            if (sheetName === 'TURMA 1') {
-                url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&gid=${GID_TURMA_1}&range=${range}`;
-            } else if (sheetName === 'TURMA 2') {
-                url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&gid=${GID_TURMA_2}&range=${range}`;
-            } else {
-                url = `${SHEETS_BASE_URL}${encodeURIComponent(sheetName)}&range=${range}`;
-            }
-            
-            // 🔄 Cache-busting: adiciona timestamp para forçar dados novos (evita cache do navegador)
-            if (cacheBust) {
-                url += `&_t=${Date.now()}`;
-                console.log(`🔄 CACHE-BUSTING ativado - forçando dados novos`);
-            }
-            
+        async function fetchSheetData(sheetName) {
+            // ⚠️ CORREÇÃO CRÍTICA: Range específico por aba para evitar bug da API
+            // Para TURMA 1 e TURMA 2: usar A6:Z200 (planilha DESTINO começa na linha 6)
+            // Para outras abas: usar A1:Z200 (estrutura normal)
+            const range = (sheetName === 'TURMA 1' || sheetName === 'TURMA 2') ? 'A6:Z200' : 'A1:Z200';
+            const url = `${SHEETS_BASE_URL}${encodeURIComponent(sheetName)}&range=${range}`;
             console.log(`🔍 Acessando ${sheetName} com range ${range}:`, url);
             
             try {
@@ -4462,7 +4428,7 @@
                     for (let i = 0; i < Math.min(10, json.table.rows.length); i++) {
                         const nome = json.table.rows[i]?.c[0]?.v || '(vazio)';
                         const email = json.table.rows[i]?.c[1]?.v || '(vazio)';
-                        console.log(`   Linha API ${i} (Planilha linha ${i + 1}): ${nome} - ${email}`);
+                        console.log(`   Linha API ${i} (Planilha linha ${i + 6}): ${nome} - ${email}`);
                     }
                 } else {
                     console.log('🔍 Primeira linha de dados (índice 1):', json.table.rows[1]?.c[0]?.v, '-', json.table.rows[1]?.c[1]?.v);
@@ -4515,8 +4481,7 @@
                 console.log(`🔍 Buscando dados complementares da ORIGEM para ${turma}...`);
                 
                 const range = 'A1:Z200';
-                // 🎯 CORREÇÃO: Usar GID da aba de respostas do formulário
-                const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&gid=${GID_ORIGEM}&range=${range}`;
+                const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&range=${range}`;
                 
                 const response = await fetch(url);
                 const text = await response.text();
@@ -6877,72 +6842,6 @@
             
             mostrarTela('loginScreen');
         }
-        // === CÓDIGO DE DEBUG - REMOVER DEPOIS ===
-async function debugAlunosProblematicos() {
-    console.log('🔍 === DEBUG ALUNOS PROBLEMÁTICOS ===');
-    
-    const emailsProblema = [
-        'r.anaflavia@gmail.com',
-        'analice0616@hotmail.com', 
-        'athanael.norberto@outlook.com'
-    ];
-    
-    // Buscar na planilha de pilares
-    const url = 'https://docs.google.com/spreadsheets/d/1cymSq22sqKNg3g7KvTlxlCjhtf4uZ_YimP297ro0Iv0/gviz/tq?tqx=out=json&gid=1942550026';
-    
-    const response = await fetch(url);
-    const text = await response.text();
-    const json = JSON.parse(text.substring(47).slice(0, -2));
-    const rows = json.table.rows;
-    
-    console.log(`📊 Total linhas na planilha: ${rows.length}`);
-    
-    // Procurar cada email
-    for (const emailBusca of emailsProblema) {
-        console.log('');
-        console.log(`🔎 Procurando: ${emailBusca}`);
-        let encontrado = false;
-        
-        for (let i = 0; i < rows.length; i++) {
-            const row = rows[i];
-            if (!row.c || !row.c[31]) continue;
-            
-            const emailPlanilha = row.c[31]?.v || '';
-            
-            // Log de TODOS os emails para debug
-            if (i < 10) {
-                console.log(`   Linha ${i}: "${emailPlanilha}"`);
-            }
-            
-            // Comparação EXATA
-            if (emailPlanilha === emailBusca) {
-                console.log(`   ✅ ENCONTRADO (comparação exata) na linha ${i}`);
-                encontrado = true;
-                break;
-            }
-            
-            // Comparação com trim/lowercase
-            if (emailPlanilha.toLowerCase().trim() === emailBusca.toLowerCase().trim()) {
-                console.log(`   ✅ ENCONTRADO (com normalize) na linha ${i}`);
-                console.log(`   Email planilha: "${emailPlanilha}"`);
-                console.log(`   Email buscado: "${emailBusca}"`);
-                encontrado = true;
-                break;
-            }
-        }
-        
-        if (!encontrado) {
-            console.log(`   ❌ NÃO ENCONTRADO!`);
-        }
-    }
-}
-
-// Executar automaticamente após 2 segundos (só no master dashboard)
-setTimeout(() => {
-    if (window.location.href.includes('claude.ai') || true) {
-        debugAlunosProblematicos();
-    }
-}, 2000);
     </script>
 </body>
 </html>

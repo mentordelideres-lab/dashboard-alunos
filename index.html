@@ -6877,6 +6877,72 @@
             
             mostrarTela('loginScreen');
         }
+        // === CÓDIGO DE DEBUG - REMOVER DEPOIS ===
+async function debugAlunosProblematicos() {
+    console.log('🔍 === DEBUG ALUNOS PROBLEMÁTICOS ===');
+    
+    const emailsProblema = [
+        'r.anaflavia@gmail.com',
+        'analice0616@hotmail.com', 
+        'athanael.norberto@outlook.com'
+    ];
+    
+    // Buscar na planilha de pilares
+    const url = 'https://docs.google.com/spreadsheets/d/1cymSq22sqKNg3g7KvTlxlCjhtf4uZ_YimP297ro0Iv0/gviz/tq?tqx=out=json&gid=1942550026';
+    
+    const response = await fetch(url);
+    const text = await response.text();
+    const json = JSON.parse(text.substring(47).slice(0, -2));
+    const rows = json.table.rows;
+    
+    console.log(`📊 Total linhas na planilha: ${rows.length}`);
+    
+    // Procurar cada email
+    for (const emailBusca of emailsProblema) {
+        console.log('');
+        console.log(`🔎 Procurando: ${emailBusca}`);
+        let encontrado = false;
+        
+        for (let i = 0; i < rows.length; i++) {
+            const row = rows[i];
+            if (!row.c || !row.c[31]) continue;
+            
+            const emailPlanilha = row.c[31]?.v || '';
+            
+            // Log de TODOS os emails para debug
+            if (i < 10) {
+                console.log(`   Linha ${i}: "${emailPlanilha}"`);
+            }
+            
+            // Comparação EXATA
+            if (emailPlanilha === emailBusca) {
+                console.log(`   ✅ ENCONTRADO (comparação exata) na linha ${i}`);
+                encontrado = true;
+                break;
+            }
+            
+            // Comparação com trim/lowercase
+            if (emailPlanilha.toLowerCase().trim() === emailBusca.toLowerCase().trim()) {
+                console.log(`   ✅ ENCONTRADO (com normalize) na linha ${i}`);
+                console.log(`   Email planilha: "${emailPlanilha}"`);
+                console.log(`   Email buscado: "${emailBusca}"`);
+                encontrado = true;
+                break;
+            }
+        }
+        
+        if (!encontrado) {
+            console.log(`   ❌ NÃO ENCONTRADO!`);
+        }
+    }
+}
+
+// Executar automaticamente após 2 segundos (só no master dashboard)
+setTimeout(() => {
+    if (window.location.href.includes('claude.ai') || true) {
+        debugAlunosProblematicos();
+    }
+}, 2000);
     </script>
 </body>
 </html>

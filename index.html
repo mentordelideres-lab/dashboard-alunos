@@ -3,12 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="manifest" href="/manifest.json">
-    <meta name="theme-color" content="#0dcaf0">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Mentor de Líderes">
-    <link rel="apple-touch-icon" href="/icon-192.png">
     <title>Mentor de Líderes - Dashboard</title>
     <style>
         * {
@@ -3724,7 +3718,9 @@
         };
 
         // Força da senha
-
+        document.getElementById('novaSenhaInput')?.addEventListener('input', (e) => {
+            const senha = e.target.value;
+            const strength = calcularForcaSenha(senha);
             const bar = document.getElementById('strengthBar');
             const text = document.getElementById('strengthText');
             
@@ -6954,11 +6950,3 @@
         }
     </script>
     <script>
-        if ("serviceWorker" in navigator) {
-            navigator.serviceWorker.register("/service-worker.js")
-                .then(() => console.log("Service Worker registrado"))
-                .catch((err) => console.error("Service Worker falhou:", err));
-        }
-    </script>
-</body>
-</html>

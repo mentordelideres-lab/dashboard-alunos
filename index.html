@@ -3167,6 +3167,9 @@
             white-space: nowrap;
             flex-shrink: 0;
         }
+        .livro-etapa-futura {
+            opacity: 0.35;
+        }
 
 
     </style>
@@ -4819,58 +4822,73 @@
 
             const tudoConcluido = indiceAtual === etapas.length;
 
-            let concluidasHTML = '';
-            for (let i = 0; i < indiceAtual; i++) {
-                concluidasHTML += `
-                    <div class="livro-etapa livro-etapa-concluida">
-                        <span class="livro-etapa-icone">${etapas[i].icone}</span>
-                        <span class="livro-etapa-label">${etapas[i].label}</span>
-                        <span class="livro-etapa-badge livro-badge-entregue">✅ Entregue</span>
-                    </div>`;
-            }
-
-            let atualHTML = '';
-            let proximoHTML = '';
+            // Renderizar TODAS as etapas
+            let todasEtapasHTML = '';
 
             if (tudoConcluido) {
-                atualHTML = `
+                // Todas entregues
+                for (let i = 0; i < etapas.length; i++) {
+                    todasEtapasHTML += `
+                        <div class="livro-etapa livro-etapa-concluida">
+                            <span class="livro-etapa-icone">${etapas[i].icone}</span>
+                            <span class="livro-etapa-label">${etapas[i].label}</span>
+                            <span class="livro-etapa-badge livro-badge-entregue">✅ Entregue</span>
+                        </div>`;
+                }
+                todasEtapasHTML += `
                     <div class="livro-etapa livro-etapa-atual livro-etapa-final">
                         <span class="livro-etapa-icone">🎉</span>
                         <span class="livro-etapa-label">Livro Publicado!</span>
                         <span class="livro-etapa-badge livro-badge-entregue">✅ Concluído</span>
                     </div>`;
             } else {
-                const atual = etapas[indiceAtual];
-                const statusAtual = (atual.normFn || normalizar)(atual.valor);
-                const badgeAtual = statusAtual === 'andamento'
-                    ? '<span class="livro-etapa-badge livro-badge-andamento">🟡 Em Andamento</span>'
-                    : '<span class="livro-etapa-badge livro-badge-nao-iniciado">⚪ Não Iniciado</span>';
+                for (let i = 0; i < etapas.length; i++) {
+                    const fn = etapas[i].normFn || normalizar;
+                    const status = fn(etapas[i].valor);
 
-                atualHTML = `
-                    <div class="livro-etapa livro-etapa-atual">
-                        <span class="livro-etapa-icone">${atual.icone}</span>
-                        <span class="livro-etapa-label">${atual.label}</span>
-                        ${badgeAtual}
-                        <span class="livro-etapa-destaque">← Você está aqui</span>
-                    </div>`;
-
-                if (indiceAtual + 1 < etapas.length) {
-                    const proximo = etapas[indiceAtual + 1];
-                    proximoHTML = `
-                        <div class="livro-etapa livro-etapa-proxima">
-                            <span class="livro-etapa-icone">${proximo.icone}</span>
-                            <span class="livro-etapa-label">${proximo.label}</span>
-                            <span class="livro-etapa-badge livro-badge-proximo">⏭️ Próximo</span>
-                        </div>`;
+                    if (i < indiceAtual) {
+                        // Concluída
+                        todasEtapasHTML += `
+                            <div class="livro-etapa livro-etapa-concluida">
+                                <span class="livro-etapa-icone">${etapas[i].icone}</span>
+                                <span class="livro-etapa-label">${etapas[i].label}</span>
+                                <span class="livro-etapa-badge livro-badge-entregue">✅ Entregue</span>
+                            </div>`;
+                    } else if (i === indiceAtual) {
+                        // Atual
+                        const badgeAtual = status === 'andamento'
+                            ? '<span class="livro-etapa-badge livro-badge-andamento">🟡 Em Andamento</span>'
+                            : '<span class="livro-etapa-badge livro-badge-nao-iniciado">⚪ Não Iniciado</span>';
+                        todasEtapasHTML += `
+                            <div class="livro-etapa livro-etapa-atual">
+                                <span class="livro-etapa-icone">${etapas[i].icone}</span>
+                                <span class="livro-etapa-label">${etapas[i].label}</span>
+                                ${badgeAtual}
+                                <span class="livro-etapa-destaque">← Você está aqui</span>
+                            </div>`;
+                    } else if (i === indiceAtual + 1) {
+                        // Próximo
+                        todasEtapasHTML += `
+                            <div class="livro-etapa livro-etapa-proxima">
+                                <span class="livro-etapa-icone">${etapas[i].icone}</span>
+                                <span class="livro-etapa-label">${etapas[i].label}</span>
+                                <span class="livro-etapa-badge livro-badge-proximo">⏭️ Próximo</span>
+                            </div>`;
+                    } else {
+                        // Futuro (ainda não chegou)
+                        todasEtapasHTML += `
+                            <div class="livro-etapa livro-etapa-futura">
+                                <span class="livro-etapa-icone">${etapas[i].icone}</span>
+                                <span class="livro-etapa-label">${etapas[i].label}</span>
+                            </div>`;
+                    }
                 }
             }
 
             return `
                 <div class="livro-jornada">
                     <div class="livro-jornada-titulo">📖 Jornada do Livro</div>
-                    ${concluidasHTML}
-                    ${atualHTML}
-                    ${proximoHTML}
+                    ${todasEtapasHTML}
                 </div>`;
         }
 

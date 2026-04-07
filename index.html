@@ -1598,10 +1598,13 @@
         }
 
         .pilares-lista {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
+            display: flex;
+            flex-wrap: wrap;
             gap: 15px;
-            align-items: start;
+        }
+        .pilares-lista > .pilar-item {
+            flex: 1 1 calc(50% - 8px);
+            min-width: 250px;
         }
 
         /* Responsivo: Em tablets menores, mantém 2 colunas */
@@ -3145,7 +3148,7 @@
             flex-shrink: 0;
         }
         .pilar-item-livro {
-            /* ocupa apenas sua célula normal no grid */
+            /* altura natural */
         }
 
     </style>

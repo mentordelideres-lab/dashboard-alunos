@@ -3048,6 +3048,99 @@
                 font-size: 1.1em;
             }
         }
+
+        /* === JORNADA DO LIVRO === */
+        .livro-jornada {
+            margin-top: 12px;
+            padding: 14px;
+            background: rgba(13, 202, 240, 0.05);
+            border-radius: 10px;
+            border: 1px solid rgba(13, 202, 240, 0.2);
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .livro-jornada-titulo {
+            font-size: 0.85em;
+            font-weight: 700;
+            color: #0dcaf0;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .livro-etapa {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 7px 10px;
+            border-radius: 8px;
+            font-size: 0.85em;
+            flex-wrap: wrap;
+        }
+        .livro-etapa-concluida {
+            opacity: 0.55;
+            background: rgba(52, 199, 89, 0.05);
+        }
+        .livro-etapa-atual {
+            background: rgba(13, 202, 240, 0.12);
+            border: 1px solid rgba(13, 202, 240, 0.4);
+        }
+        .livro-etapa-final {
+            background: rgba(52, 199, 89, 0.12);
+            border: 1px solid rgba(52, 199, 89, 0.4);
+        }
+        .livro-etapa-proxima {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px dashed rgba(255, 255, 255, 0.15);
+            opacity: 0.7;
+        }
+        .livro-etapa-icone {
+            font-size: 1.1em;
+            min-width: 22px;
+            text-align: center;
+        }
+        .livro-etapa-label {
+            flex: 1;
+            font-weight: 600;
+            color: #e4e4e4;
+        }
+        .livro-etapa-badge {
+            font-size: 0.78em;
+            font-weight: 700;
+            padding: 3px 9px;
+            border-radius: 10px;
+            white-space: nowrap;
+        }
+        .livro-badge-entregue {
+            background: rgba(52, 199, 89, 0.2);
+            color: #34c759;
+            border: 1px solid #34c759;
+        }
+        .livro-badge-andamento {
+            background: rgba(255, 193, 7, 0.2);
+            color: #ffc107;
+            border: 1px solid #ffc107;
+        }
+        .livro-badge-nao-iniciado {
+            background: rgba(108, 117, 125, 0.2);
+            color: #b8b8b8;
+            border: 1px solid #6c757d;
+        }
+        .livro-badge-proximo {
+            background: rgba(255, 255, 255, 0.08);
+            color: #b8b8b8;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+        .livro-etapa-destaque {
+            font-size: 0.78em;
+            color: #0dcaf0;
+            font-style: italic;
+            white-space: nowrap;
+        }
+        .pilar-item-livro {
+            grid-column: 1 / -1;
+        }
+
     </style>
 </head>
 <body>
@@ -4654,6 +4747,92 @@
             return mapeamentoPadrao[statusUpper] || { texto: status, percentual: 0, emoji: '⚪', badge: 'status-nao-iniciado', classe: '' };
         }
 
+        // === RENDERIZAR JORNADA DO LIVRO ===
+        function renderizarJornadaLivro(pilaresData) {
+            const etapas = [
+                { label: 'Capítulos',             icone: '✍️', valor: pilaresData.escritor },
+                { label: 'Capa',                  icone: '🎨', valor: pilaresData.livroCapa },
+                { label: 'Diagramação',            icone: '📐', valor: pilaresData.livroDiagramacao },
+                { label: 'Aprovação',             icone: '✅', valor: pilaresData.livroAprovacao },
+                { label: 'Registro Oficial',      icone: '📋', valor: pilaresData.livroRegistro },
+                { label: 'Perfil Amazon',         icone: '🛒', valor: pilaresData.livroAmazon },
+                { label: 'Disponível para Venda', icone: '🚀', valor: pilaresData.livroVenda },
+            ];
+
+            function normalizar(val) {
+                if (!val || val.trim() === '') return 'nao_iniciado';
+                const v = val.toUpperCase().trim()
+                    .normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+                if (v === 'ENTREGUE' || v === 'REALIZADO') return 'entregue';
+                if (v.includes('ANDAMENTO')) return 'andamento';
+                return 'nao_iniciado';
+            }
+
+            let indiceAtual = etapas.length;
+            for (let i = 0; i < etapas.length; i++) {
+                if (normalizar(etapas[i].valor) !== 'entregue') {
+                    indiceAtual = i;
+                    break;
+                }
+            }
+
+            const tudoConcluido = indiceAtual === etapas.length;
+
+            let concluidasHTML = '';
+            for (let i = 0; i < indiceAtual; i++) {
+                concluidasHTML += `
+                    <div class="livro-etapa livro-etapa-concluida">
+                        <span class="livro-etapa-icone">${etapas[i].icone}</span>
+                        <span class="livro-etapa-label">${etapas[i].label}</span>
+                        <span class="livro-etapa-badge livro-badge-entregue">✅ Entregue</span>
+                    </div>`;
+            }
+
+            let atualHTML = '';
+            let proximoHTML = '';
+
+            if (tudoConcluido) {
+                atualHTML = `
+                    <div class="livro-etapa livro-etapa-atual livro-etapa-final">
+                        <span class="livro-etapa-icone">🎉</span>
+                        <span class="livro-etapa-label">Livro Publicado!</span>
+                        <span class="livro-etapa-badge livro-badge-entregue">✅ Concluído</span>
+                    </div>`;
+            } else {
+                const atual = etapas[indiceAtual];
+                const statusAtual = normalizar(atual.valor);
+                const badgeAtual = statusAtual === 'andamento'
+                    ? '<span class="livro-etapa-badge livro-badge-andamento">🟡 Em Andamento</span>'
+                    : '<span class="livro-etapa-badge livro-badge-nao-iniciado">⚪ Não Iniciado</span>';
+
+                atualHTML = `
+                    <div class="livro-etapa livro-etapa-atual">
+                        <span class="livro-etapa-icone">${atual.icone}</span>
+                        <span class="livro-etapa-label">${atual.label}</span>
+                        ${badgeAtual}
+                        <span class="livro-etapa-destaque">← Você está aqui</span>
+                    </div>`;
+
+                if (indiceAtual + 1 < etapas.length) {
+                    const proximo = etapas[indiceAtual + 1];
+                    proximoHTML = `
+                        <div class="livro-etapa livro-etapa-proxima">
+                            <span class="livro-etapa-icone">${proximo.icone}</span>
+                            <span class="livro-etapa-label">${proximo.label}</span>
+                            <span class="livro-etapa-badge livro-badge-proximo">⏭️ Próximo</span>
+                        </div>`;
+                }
+            }
+
+            return `
+                <div class="livro-jornada">
+                    <div class="livro-jornada-titulo">📖 Jornada do Livro</div>
+                    ${concluidasHTML}
+                    ${atualHTML}
+                    ${proximoHTML}
+                </div>`;
+        }
+
         // === BUSCAR DADOS DOS PILARES ===
         async function buscarPilaresAluno(email, turma) {
             try {
@@ -4709,7 +4888,14 @@
                             escritor: row.c[9]?.v || '',      // Coluna J
                             mentorHighTicket: row.c[25]?.v || '', // Coluna Z (índice 25)
                             podcastAgendado: row.c[29]?.v || '', // Coluna AD (índice 29)
-                            podcastData: row.c[30]?.f || row.c[30]?.v || ''  // Coluna AE (índice 30) - PRIORIZA .f (formatted)
+                            podcastData: row.c[30]?.f || row.c[30]?.v || '', // Coluna AE (índice 30) - PRIORIZA .f (formatted)
+                            // === ETAPAS DO LIVRO ===
+                            livroCapa: row.c[32]?.v || '',        // Coluna AG
+                            livroDiagramacao: row.c[33]?.v || '', // Coluna AH
+                            livroAprovacao: row.c[34]?.v || '',   // Coluna AI
+                            livroRegistro: row.c[35]?.v || '',    // Coluna AJ
+                            livroAmazon: row.c[36]?.v || '',      // Coluna AK
+                            livroVenda: row.c[37]?.v || '',       // Coluna AL
                         };
                         
                         console.log('📊 Status dos pilares:');
@@ -4804,8 +4990,12 @@
                 pilares.forEach(pilar => {
                     const statusInfo = mapearStatusPilar(pilar.status, pilar.isPilarLivro);
                     
+                    const jornadaLivroHTML = pilar.isPilarLivro
+                        ? renderizarJornadaLivro(pilaresData)
+                        : '';
+
                     const pilarHTML = `
-                        <div class="pilar-item">
+                        <div class="pilar-item ${pilar.isPilarLivro ? 'pilar-item-livro' : ''}">
                             <div class="pilar-icon">${pilar.icone}</div>
                             <div class="pilar-content">
                                 <div class="pilar-nome">${pilar.nome}</div>
@@ -4819,6 +5009,7 @@
                                 <div class="pilar-progresso">
                                     <div class="pilar-progresso-fill ${statusInfo.classe}" style="width: ${statusInfo.percentual}%"></div>
                                 </div>
+                                ${jornadaLivroHTML}
                             </div>
                         </div>
                     `;

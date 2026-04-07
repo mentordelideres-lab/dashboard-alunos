@@ -5818,8 +5818,12 @@
         }
 
         function fecharModalPendencias() {
+            const modal = document.getElementById('modalPendencias');
+            if (modal) modal.style.display = 'none';
+        }
 
         // === FUNÇÕES DE VALIDAÇÃO DE AGENDAMENTO ===
+        // IMPORTANTE: Estas funções precisam estar no escopo global para serem acessíveis pelo onclick
         
         function tentarAgendar(pilar, linkAgendamento, nomeMentor) {
             console.log('🔍 Tentando agendar:', pilar, 'com', nomeMentor);
@@ -5902,81 +5906,6 @@
             const modal = document.getElementById('modalFormularioPendente');
             modal.classList.remove('active');
             modal.classList.add('hidden');
-        }
-
-            const modal = document.getElementById('modalPendencias');
-            if (modal) {
-                modal.classList.add('hidden');
-            }
-
-        // === VALIDAÇÃO DE FORMULÁRIOS ANTES DE AGENDAMENTO ===
-        function fecharModalFormulario() {
-            document.getElementById('modalFormularioPendente').classList.add('hidden');
-        }
-
-        function validarFormularioPreenchido(pilar) {
-            if (!alunoData || !alunoData.formularios) {
-                console.log('⚠️ Dados de formulários não disponíveis');
-                return false;
-            }
-
-            // Mapeamento de pilar para índice do formulário
-            const mapeamento = {
-                'Influenciador Digital': 3,  // Coluna G = índice 3 em FORMULARIOS (após Anamnese, Jornada, Escritor)
-                'Escritor Best Seller': 2,   // Coluna F = índice 2
-                'Palestrante Poderoso': 4,   // Coluna H = índice 4
-                'Mentoria': 5                // Coluna I = índice 5 (Mentor High Ticket)
-            };
-
-            const indice = mapeamento[pilar];
-            if (indice === undefined) {
-                console.log('⚠️ Pilar não mapeado:', pilar);
-                return true; // Se não conseguir mapear, permite agendar
-            }
-
-            const formulario = alunoData.formularios[indice];
-            const preenchido = formulario?.status === 'Preenchido';
-
-            console.log(`🔍 Validando formulário do pilar "${pilar}":`, {
-                indice,
-                formulario: formulario?.nome,
-                status: formulario?.status,
-                preenchido
-            });
-
-            return preenchido;
-        }
-
-        function tentarAgendar(pilar, link, nomeCompleto) {
-            console.log(`📅 Tentativa de agendamento: ${nomeCompleto}`);
-
-            // Validar se formulário foi preenchido
-            if (!validarFormularioPreenchido(pilar)) {
-                // Buscar link do formulário
-                const mapeamentoFormularios = {
-                    'Influenciador Digital': alunoData.formularios[3],
-                    'Escritor Best Seller': alunoData.formularios[2],
-                    'Palestrante Poderoso': alunoData.formularios[4],
-                    'Mentoria': alunoData.formularios[5]
-                };
-
-                const formulario = mapeamentoFormularios[pilar];
-                const linkFormulario = formulario?.link || '#';
-
-                // Mostrar modal de aviso
-                document.getElementById('mensagemFormularioPendente').innerHTML = `
-                    Para agendar uma mentoria sobre <strong>${pilar}</strong>, 
-                    é necessário preencher o formulário <strong>${formulario?.nome || 'correspondente'}</strong> primeiro.
-                `;
-                document.getElementById('linkFormularioPendente').href = linkFormulario;
-                document.getElementById('modalFormularioPendente').classList.remove('hidden');
-                return;
-            }
-
-            // Se formulário foi preenchido, abrir link de agendamento
-            window.open(link, '_blank', 'noopener,noreferrer');
-        }
-
         }
 
         // Navegar para uma seção a partir das pendências

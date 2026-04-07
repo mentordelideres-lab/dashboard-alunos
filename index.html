@@ -5874,14 +5874,23 @@
             } else {
                 // Formulário NÃO preenchido - mostrar modal de aviso
                 console.log('⚠️ Formulário NÃO preenchido - mostrando modal');
-                mostrarModalFormularioPendente(pilar, config.emoji, config.formulario);
+                
+                // Buscar o link do formulário na planilha CONFIG
+                const linksFormularios = buscarLinksConfig(alunoData.turma);
+                const linkFormulario = linksFormularios[indice];
+                
+                console.log('🔗 Link do formulário buscado:', linkFormulario);
+                
+                mostrarModalFormularioPendente(pilar, config.emoji, config.formulario, linkFormulario);
             }
         }
         
-        function mostrarModalFormularioPendente(pilar, emoji, nomeFormulario) {
+        function mostrarModalFormularioPendente(pilar, emoji, nomeFormulario, linkFormulario) {
             const modal = document.getElementById('modalFormularioPendente');
             const mensagem = document.getElementById('mensagemFormularioPendente');
             const link = document.getElementById('linkFormularioPendente');
+            
+            console.log('🔗 Link do formulário:', linkFormulario);
             
             // Atualizar mensagem
             mensagem.innerHTML = `
@@ -5891,10 +5900,19 @@
                 Após preencher o formulário, volte aqui para agendar sua mentoria!
             `;
             
-            // Link para a seção de formulários
+            // Configurar ação do botão
             link.onclick = () => {
                 fecharModalFormulario();
-                scrollParaSecao('formulariosSection');
+                
+                if (linkFormulario) {
+                    // Abrir link externo do formulário
+                    console.log('✅ Abrindo formulário em nova aba:', linkFormulario);
+                    window.open(linkFormulario, '_blank');
+                } else {
+                    // Fallback: ir para seção de formulários
+                    console.log('⚠️ Link não encontrado, redirecionando para seção de formulários');
+                    scrollParaSecao('formulariosSection');
+                }
             };
             
             // Mostrar modal

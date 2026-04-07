@@ -3,6 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#0dcaf0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Mentor de Líderes">
+    <link rel="apple-touch-icon" href="/icon-192.png">
     <title>Mentor de Líderes - Dashboard</title>
     <style>
         * {
@@ -3434,6 +3440,36 @@
     </a>
 
     <!-- MODAL DE PENDÊNCIAS -->
+    <div id="modalFormularioPendente" class="modal-overlay hidden" onclick="if(event.target === this) fecharModalFormulario()">
+        <div class="modal-container">
+            <div class="modal-header">
+                <div class="modal-titulo">
+                    ⚠️ Formulário Não Preenchido
+                </div>
+                <button class="modal-close" onclick="fecharModalFormulario()">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="info-message">
+                    <strong>📋 Você precisa preencher o formulário antes de agendar!</strong>
+                    <p style="margin-top: 15px;" id="mensagemFormularioPendente">
+                        Para agendar uma mentoria sobre este pilar, é necessário preencher o formulário correspondente primeiro.
+                    </p>
+                </div>
+                <div style="margin-top: 20px; text-align: center;">
+                    <a id="linkFormularioPendente" href="#" target="_blank" class="btn-primary" style="display: inline-block; text-decoration: none;">
+                        📝 Preencher Formulário Agora
+                    </a>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-modal" onclick="fecharModalFormulario()">
+                    Fechar
+                </button>
+            </div>
+        </div>
+    </div>
+
+
     <div id="modalPendencias" class="modal-overlay hidden" onclick="if(event.target === this) fecharModalPendencias()">
         <div class="modal-container">
             <div class="modal-header">
@@ -3659,12 +3695,12 @@
         const calendarios = {
             'TURMA 1': [
                 {
-                    nome: 'Influenciador Digital - Leonardo',
-                    link: 'https://calendly.com/leonardomuniz-febracis/suporte-influenciador-digital?month=2025-11'
+                    nome: 'Influenciador Digital - Elyano',
+                    link: 'https://febra.site/suporte_influenciador'
                 },
                 {
-                    nome: 'Escritor Best Seller - Luana',
-                    link: 'https://calendly.com/luanarocha-febracis/suporte_escritor?month=2025-11'
+                    nome: 'Escritor Best Seller - Maggie',
+                    link: 'https://febra.site/suporteebs'
                 },
                 {
                     nome: 'Palestra/Mentoria - Michelle',
@@ -3673,12 +3709,12 @@
             ],
             'TURMA 2': [
                 {
-                    nome: 'Influenciador Digital - Leonardo',
-                    link: 'https://calendar.app.google/aY65WhmjohSAqn3R6'
+                    nome: 'Influenciador Digital - Elyano',
+                    link: 'https://febra.site/suporte_influenciador'
                 },
                 {
-                    nome: 'Escritor Best Seller - Luana',
-                    link: 'https://calendar.app.google/bdA65V5Fy4JKmiAK6'
+                    nome: 'Escritor Best Seller - Ana Agnes',
+                    link: 'https://febra.site/suporteebsaa'
                 },
                 {
                     nome: 'Palestra/Mentoria - Michelle',
@@ -3689,77 +3725,6 @@
 
         // Força da senha
 
-        // === CÓDIGO DE DEBUG - REMOVER DEPOIS ===
-        async function debugAlunosProblematicos() {
-            console.log("🔍 === DEBUG ALUNOS PROBLEMÁTICOS ===");
-            
-            const emailsProblema = [
-                "r.anaflavia@gmail.com",
-                "analice0616@hotmail.com", 
-                "athanael.norberto@outlook.com"
-            ];
-            
-            const url = "https://docs.google.com/spreadsheets/d/1cymSq22sqKNg3g7KvTlxlCjhtf4uZ_YimP297ro0Iv0/gviz/tq?tqx=out=json&gid=1942550026";
-            
-            const response = await fetch(url);
-            const text = await response.text();
-            const json = JSON.parse(text.substring(47).slice(0, -2));
-            const rows = json.table.rows;
-            
-            console.log(`📊 Total linhas na planilha: ${rows.length}`);
-            
-            for (const emailBusca of emailsProblema) {
-                console.log("");
-                console.log(`🔎 Procurando: ${emailBusca}`);
-                let encontrado = false;
-                
-                for (let i = 0; i < rows.length; i++) {
-                    const row = rows[i];
-                    if (!row.c || !row.c[31]) continue;
-                    
-                    const emailPlanilha = row.c[31]?.v || "";
-                    
-                    if (i < 10) {
-                        console.log(`   Linha ${i}: "${emailPlanilha}"`);
-                    }
-                    
-                    if (emailPlanilha === emailBusca) {
-                        console.log(`   ✅ ENCONTRADO (comparação exata) na linha ${i}`);
-                        encontrado = true;
-                        break;
-                    }
-                    
-                    if (emailPlanilha.toLowerCase().trim() === emailBusca.toLowerCase().trim()) {
-                        console.log(`   ✅ ENCONTRADO (com normalize) na linha ${i}`);
-                        console.log(`   Email planilha: "${emailPlanilha}"`);
-                        console.log(`   Email buscado: "${emailBusca}"`);
-                        encontrado = true;
-                        break;
-                    }
-                }
-                
-                if (!encontrado) {
-                    console.log(`   ❌ NÃO ENCONTRADO!`);
-                }
-            }
-        }
-
-        // Executar automaticamente após 2 segundos
-        setTimeout(() => {
-            if (alunoData && [
-                "r.anaflavia@gmail.com",
-                "analice0616@hotmail.com",
-                "athanael.norberto@outlook.com"
-            ].includes(alunoData.email?.toLowerCase().trim())) {
-                debugAlunosProblematicos();
-            }
-        }, 2000);
-        // === FIM DO CÓDIGO DE DEBUG ===
-
-
-        document.getElementById('novaSenhaInput')?.addEventListener('input', (e) => {
-            const senha = e.target.value;
-            const strength = calcularForcaSenha(senha);
             const bar = document.getElementById('strengthBar');
             const text = document.getElementById('strengthText');
             
@@ -5057,35 +5022,25 @@
             console.log('📅 Renderizando agendamento para', alunoData.turma);
             console.log('Mentores:', mentoresTurma);
             
-            // Renderizar cada mentor
+            // Renderizar cada mentor com validação de formulário
             container.innerHTML = mentoresTurma.map(mentor => {
-                // Se for Luana, mostrar card informativo
-                if (mentor.nome.includes('Luana')) {
-                    return `
-                        <div class="agendamento-info-card-mentor">
-                            <div class="mentor-nome">
-                                👤 ${mentor.nome}
-                            </div>
-                            <div class="agendamento-luana-texto">
-                                📱 Os agendamentos com a mentora Luana são realizados diretamente no <strong>grupo exclusivo</strong> que você possui com ela.
-                            </div>
-                            <div class="agendamento-luana-destaque">
-                                💬 Entre em contato pelo grupo para agendar!
-                            </div>
-                        </div>
-                    `;
+                // Extrair o pilar do nome do mentor
+                let pilar = 'Mentoria'; // default
+                if (mentor.nome.includes('Influenciador')) {
+                    pilar = 'Influenciador Digital';
+                } else if (mentor.nome.includes('Escritor')) {
+                    pilar = 'Escritor Best Seller';
+                } else if (mentor.nome.includes('Palestrante') || mentor.nome.includes('Palestra')) {
+                    pilar = 'Palestrante Poderoso';
                 }
                 
-                // Outros mentores: botão normal com link
                 return `
-                    <a href="${mentor.link}" target="_blank" rel="noopener noreferrer" class="btn-mentor">
+                    <button onclick="tentarAgendar('${pilar}', '${mentor.link}', '${mentor.nome}')" class="btn-mentor" style="cursor: pointer;">
                         👤 ${mentor.nome} →
-                    </a>
+                    </button>
                 `;
             }).join('');
         }
-
-        // === RENDERIZAR PODCAST (APENAS TURMA 1) ===
         async function renderizarPodcast() {
             const section = document.getElementById('podcastSection');
             const card = document.getElementById('podcastCard');
@@ -5867,10 +5822,165 @@
         }
 
         function fecharModalPendencias() {
+
+        // === FUNÇÕES DE VALIDAÇÃO DE AGENDAMENTO ===
+        
+        function tentarAgendar(pilar, linkAgendamento, nomeMentor) {
+            console.log('🔍 Tentando agendar:', pilar, 'com', nomeMentor);
+            
+            // Mapeamento de pilares para formulários
+            const mapeamentoPilarFormulario = {
+                'Influenciador Digital': {
+                    formulario: 'Formulário Influenciador Digital',
+                    indice: 3,
+                    emoji: '📱'
+                },
+                'Escritor Best Seller': {
+                    formulario: 'Formulário Escritor Best Seller',
+                    indice: 2,
+                    emoji: '📚'
+                },
+                'Palestrante Poderoso': {
+                    formulario: 'Formulário Palestrante Poderoso',
+                    indice: 4,
+                    emoji: '🎤'
+                },
+                'Mentor High Ticket': {
+                    formulario: 'Formulário Mentor High Ticket',
+                    indice: 5,
+                    emoji: '💼'
+                }
+            };
+            
+            // Se não encontrou mapeamento para o pilar (ex: Mentoria geral), permitir agendamento direto
+            if (!mapeamentoPilarFormulario[pilar]) {
+                console.log('✅ Pilar sem validação de formulário - abrindo link direto');
+                window.open(linkAgendamento, '_blank');
+                return;
+            }
+            
+            const config = mapeamentoPilarFormulario[pilar];
+            const indice = config.indice;
+            
+            // Verificar se o aluno preencheu o formulário
+            const formularioPreenchido = alunoData.formularios && alunoData.formularios[indice] === 'Preenchido';
+            
+            console.log('📋 Status do formulário:', formularioPreenchido ? 'PREENCHIDO' : 'PENDENTE');
+            
+            if (formularioPreenchido) {
+                // Formulário preenchido - pode agendar
+                console.log('✅ Formulário preenchido - abrindo link de agendamento');
+                window.open(linkAgendamento, '_blank');
+            } else {
+                // Formulário NÃO preenchido - mostrar modal de aviso
+                console.log('⚠️ Formulário NÃO preenchido - mostrando modal');
+                mostrarModalFormularioPendente(pilar, config.emoji, config.formulario);
+            }
+        }
+        
+        function mostrarModalFormularioPendente(pilar, emoji, nomeFormulario) {
+            const modal = document.getElementById('modalFormularioPendente');
+            const mensagem = document.getElementById('mensagemFormularioPendente');
+            const link = document.getElementById('linkFormularioPendente');
+            
+            // Atualizar mensagem
+            mensagem.innerHTML = `
+                Para agendar uma mentoria sobre <strong>${emoji} ${pilar}</strong>, 
+                você precisa preencher o <strong>${nomeFormulario}</strong> primeiro.
+                <br><br>
+                Após preencher o formulário, volte aqui para agendar sua mentoria!
+            `;
+            
+            // Link para a seção de formulários
+            link.onclick = () => {
+                fecharModalFormulario();
+                scrollParaSecao('formulariosSection');
+            };
+            
+            // Mostrar modal
+            modal.classList.remove('hidden');
+            modal.classList.add('active');
+        }
+        
+        function fecharModalFormulario() {
+            const modal = document.getElementById('modalFormularioPendente');
+            modal.classList.remove('active');
+            modal.classList.add('hidden');
+        }
+
             const modal = document.getElementById('modalPendencias');
             if (modal) {
                 modal.classList.add('hidden');
             }
+
+        // === VALIDAÇÃO DE FORMULÁRIOS ANTES DE AGENDAMENTO ===
+        function fecharModalFormulario() {
+            document.getElementById('modalFormularioPendente').classList.add('hidden');
+        }
+
+        function validarFormularioPreenchido(pilar) {
+            if (!alunoData || !alunoData.formularios) {
+                console.log('⚠️ Dados de formulários não disponíveis');
+                return false;
+            }
+
+            // Mapeamento de pilar para índice do formulário
+            const mapeamento = {
+                'Influenciador Digital': 3,  // Coluna G = índice 3 em FORMULARIOS (após Anamnese, Jornada, Escritor)
+                'Escritor Best Seller': 2,   // Coluna F = índice 2
+                'Palestrante Poderoso': 4,   // Coluna H = índice 4
+                'Mentoria': 5                // Coluna I = índice 5 (Mentor High Ticket)
+            };
+
+            const indice = mapeamento[pilar];
+            if (indice === undefined) {
+                console.log('⚠️ Pilar não mapeado:', pilar);
+                return true; // Se não conseguir mapear, permite agendar
+            }
+
+            const formulario = alunoData.formularios[indice];
+            const preenchido = formulario?.status === 'Preenchido';
+
+            console.log(`🔍 Validando formulário do pilar "${pilar}":`, {
+                indice,
+                formulario: formulario?.nome,
+                status: formulario?.status,
+                preenchido
+            });
+
+            return preenchido;
+        }
+
+        function tentarAgendar(pilar, link, nomeCompleto) {
+            console.log(`📅 Tentativa de agendamento: ${nomeCompleto}`);
+
+            // Validar se formulário foi preenchido
+            if (!validarFormularioPreenchido(pilar)) {
+                // Buscar link do formulário
+                const mapeamentoFormularios = {
+                    'Influenciador Digital': alunoData.formularios[3],
+                    'Escritor Best Seller': alunoData.formularios[2],
+                    'Palestrante Poderoso': alunoData.formularios[4],
+                    'Mentoria': alunoData.formularios[5]
+                };
+
+                const formulario = mapeamentoFormularios[pilar];
+                const linkFormulario = formulario?.link || '#';
+
+                // Mostrar modal de aviso
+                document.getElementById('mensagemFormularioPendente').innerHTML = `
+                    Para agendar uma mentoria sobre <strong>${pilar}</strong>, 
+                    é necessário preencher o formulário <strong>${formulario?.nome || 'correspondente'}</strong> primeiro.
+                `;
+                document.getElementById('linkFormularioPendente').href = linkFormulario;
+                document.getElementById('modalFormularioPendente').classList.remove('hidden');
+                return;
+            }
+
+            // Se formulário foi preenchido, abrir link de agendamento
+            window.open(link, '_blank', 'noopener,noreferrer');
+        }
+
         }
 
         // Navegar para uma seção a partir das pendências
@@ -6841,6 +6951,13 @@
             document.getElementById('senhaInput').value = '';
             
             mostrarTela('loginScreen');
+        }
+    </script>
+    <script>
+        if ("serviceWorker" in navigator) {
+            navigator.serviceWorker.register("/service-worker.js")
+                .then(() => console.log("Service Worker registrado"))
+                .catch((err) => console.error("Service Worker falhou:", err));
         }
     </script>
 </body>

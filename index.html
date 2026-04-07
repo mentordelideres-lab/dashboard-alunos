@@ -2105,17 +2105,14 @@
         }
         .pilar-item-livro {
             display: flex;
-            flex-direction: column;
+            flex-direction: row;
+            align-items: flex-start;
             align-self: stretch;
         }
-        .pilar-item-livro > .pilar-icon {
-            display: none;
-        }
         .pilar-item-livro > .pilar-content {
-            width: 100%;
+            flex: 1;
             display: flex;
             flex-direction: column;
-            flex: 1;
         }
 
         .pilar-item:hover {

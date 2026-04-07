@@ -3051,35 +3051,35 @@
 
         /* === JORNADA DO LIVRO === */
         .livro-jornada {
-            margin-top: 12px;
-            padding: 14px;
+            margin-top: 10px;
+            padding: 10px;
             background: rgba(13, 202, 240, 0.05);
-            border-radius: 10px;
+            border-radius: 8px;
             border: 1px solid rgba(13, 202, 240, 0.2);
             display: flex;
             flex-direction: column;
-            gap: 6px;
+            gap: 4px;
         }
         .livro-jornada-titulo {
-            font-size: 0.85em;
+            font-size: 0.75em;
             font-weight: 700;
             color: #0dcaf0;
-            margin-bottom: 6px;
+            margin-bottom: 4px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
         .livro-etapa {
             display: flex;
             align-items: center;
-            gap: 8px;
-            padding: 7px 10px;
-            border-radius: 8px;
-            font-size: 0.85em;
-            flex-wrap: wrap;
+            gap: 6px;
+            padding: 5px 8px;
+            border-radius: 6px;
+            font-size: 0.8em;
+            flex-wrap: nowrap;
         }
         .livro-etapa-concluida {
-            opacity: 0.55;
-            background: rgba(52, 199, 89, 0.05);
+            opacity: 0.5;
+            background: rgba(52, 199, 89, 0.04);
         }
         .livro-etapa-atual {
             background: rgba(13, 202, 240, 0.12);
@@ -3090,26 +3090,30 @@
             border: 1px solid rgba(52, 199, 89, 0.4);
         }
         .livro-etapa-proxima {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px dashed rgba(255, 255, 255, 0.15);
-            opacity: 0.7;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px dashed rgba(255, 255, 255, 0.12);
+            opacity: 0.65;
         }
         .livro-etapa-icone {
-            font-size: 1.1em;
-            min-width: 22px;
+            font-size: 0.95em;
+            min-width: 18px;
             text-align: center;
         }
         .livro-etapa-label {
             flex: 1;
             font-weight: 600;
             color: #e4e4e4;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         .livro-etapa-badge {
-            font-size: 0.78em;
+            font-size: 0.72em;
             font-weight: 700;
-            padding: 3px 9px;
-            border-radius: 10px;
+            padding: 2px 7px;
+            border-radius: 8px;
             white-space: nowrap;
+            flex-shrink: 0;
         }
         .livro-badge-entregue {
             background: rgba(52, 199, 89, 0.2);
@@ -3127,15 +3131,16 @@
             border: 1px solid #6c757d;
         }
         .livro-badge-proximo {
-            background: rgba(255, 255, 255, 0.08);
-            color: #b8b8b8;
-            border: 1px solid rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.07);
+            color: #999;
+            border: 1px solid rgba(255, 255, 255, 0.12);
         }
         .livro-etapa-destaque {
-            font-size: 0.78em;
+            font-size: 0.72em;
             color: #0dcaf0;
             font-style: italic;
             white-space: nowrap;
+            flex-shrink: 0;
         }
         .pilar-item-livro {
             /* ocupa apenas sua célula normal no grid */
@@ -4749,8 +4754,20 @@
 
         // === RENDERIZAR JORNADA DO LIVRO ===
         function renderizarJornadaLivro(pilaresData) {
+            // Normaliza o campo escritor (coluna J) para saber se capítulos estão entregues
+            // O campo pode ter valores como "Capítulo 10 Finalizado", "NAO INICIADO", etc.
+            function normalizarEscritor(val) {
+                if (!val || val.trim() === '') return 'nao_iniciado';
+                const v = val.toUpperCase().trim()
+                    .normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+                if (v === 'NAO INICIADO' || v === '') return 'nao_iniciado';
+                if (v.includes('ANDAMENTO') || v.includes('EM PRODUCAO')) return 'andamento';
+                // Qualquer outro valor (ex: "Capítulo 10 Finalizado", "ENTREGUES") = entregue
+                return 'entregue';
+            }
+
             const etapas = [
-                { label: 'Capítulos',             icone: '✍️', valor: pilaresData.escritor },
+                { label: 'Capítulos',             icone: '✍️', valor: pilaresData.escritor,        normFn: normalizarEscritor },
                 { label: 'Capa',                  icone: '🎨', valor: pilaresData.livroCapa },
                 { label: 'Diagramação',            icone: '📐', valor: pilaresData.livroDiagramacao },
                 { label: 'Aprovação',             icone: '✅', valor: pilaresData.livroAprovacao },
@@ -4770,7 +4787,8 @@
 
             let indiceAtual = etapas.length;
             for (let i = 0; i < etapas.length; i++) {
-                if (normalizar(etapas[i].valor) !== 'entregue') {
+                const fn = etapas[i].normFn || normalizar;
+                if (fn(etapas[i].valor) !== 'entregue') {
                     indiceAtual = i;
                     break;
                 }
@@ -4800,7 +4818,7 @@
                     </div>`;
             } else {
                 const atual = etapas[indiceAtual];
-                const statusAtual = normalizar(atual.valor);
+                const statusAtual = (atual.normFn || normalizar)(atual.valor);
                 const badgeAtual = statusAtual === 'andamento'
                     ? '<span class="livro-etapa-badge livro-badge-andamento">🟡 Em Andamento</span>'
                     : '<span class="livro-etapa-badge livro-badge-nao-iniciado">⚪ Não Iniciado</span>';

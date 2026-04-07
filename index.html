@@ -3066,9 +3066,20 @@
             border: 1px solid rgba(13, 202, 240, 0.2);
             display: flex;
             flex-direction: column;
-            gap: 4px;
+            gap: 0;
             flex: 1;
-            justify-content: flex-start;
+            justify-content: space-between;
+        }
+        .livro-etapa {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 0 8px;
+            border-radius: 6px;
+            font-size: 0.8em;
+            flex-wrap: nowrap;
+            min-height: 36px;
         }
         .livro-jornada-titulo {
             font-size: 0.75em;
@@ -3078,15 +3089,7 @@
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
-        .livro-etapa {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            padding: 5px 8px;
-            border-radius: 6px;
-            font-size: 0.8em;
-            flex-wrap: nowrap;
-        }
+        /* .livro-etapa definido acima */
         .livro-etapa-concluida {
             opacity: 0.5;
             background: rgba(52, 199, 89, 0.04);

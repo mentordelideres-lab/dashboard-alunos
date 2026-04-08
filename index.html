@@ -4782,26 +4782,16 @@
 
         // === RENDERIZAR JORNADA DO LIVRO ===
         function renderizarJornadaLivro(pilaresData) {
-            // Normaliza o campo escritor (coluna J) para saber se capítulos estão entregues
-            // O campo pode ter valores como "Capítulo 10 Finalizado", "NAO INICIADO", etc.
-            function normalizarEscritor(val) {
-                if (!val || val.trim() === '') return 'nao_iniciado';
-                const v = val.toUpperCase().trim()
-                    .normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-                if (v === 'NAO INICIADO' || v === '') return 'nao_iniciado';
-                if (v.includes('ANDAMENTO') || v.includes('EM PRODUCAO')) return 'andamento';
-                // Qualquer outro valor (ex: "Capítulo 10 Finalizado", "ENTREGUES") = entregue
-                return 'entregue';
-            }
-
             const etapas = [
-                { label: 'Capítulos',             icone: '✍️', valor: pilaresData.escritor,        normFn: normalizarEscritor },
-                { label: 'Capa',                  icone: '🎨', valor: pilaresData.livroCapa },
-                { label: 'Diagramação',            icone: '📐', valor: pilaresData.livroDiagramacao },
-                { label: 'Aprovação',             icone: '✅', valor: pilaresData.livroAprovacao },
-                { label: 'Registro Oficial',      icone: '📋', valor: pilaresData.livroRegistro },
-                { label: 'Perfil Amazon',         icone: '🛒', valor: pilaresData.livroAmazon },
-                { label: 'Disponível para Venda', icone: '🚀', valor: pilaresData.livroVenda },
+                { label: 'Trilha do Livro Aprovada', icone: '📋', valor: pilaresData.livroTrilha },
+                { label: 'Capítulos',                icone: '✍️', valor: pilaresData.livroCapitulos },
+                { label: 'Apêndices',                icone: '📎', valor: pilaresData.livroApendices },
+                { label: 'Revisão',                  icone: '🔍', valor: pilaresData.livroRevisao },
+                { label: 'Capa',                     icone: '🎨', valor: pilaresData.livroCapa },
+                { label: 'Diagramação',               icone: '📐', valor: pilaresData.livroDiagramacao },
+                { label: 'Registros CBL',            icone: '📝', valor: pilaresData.livroRegistrosCBL },
+                { label: 'Perfil Amazon',            icone: '🛒', valor: pilaresData.livroAmazon },
+                { label: 'Impresso',                 icone: '📗', valor: pilaresData.livroImpresso },
             ];
 
             function normalizar(val) {
@@ -4950,13 +4940,16 @@
                             mentorHighTicket: row.c[25]?.v || '', // Coluna Z (índice 25)
                             podcastAgendado: row.c[29]?.v || '', // Coluna AD (índice 29)
                             podcastData: row.c[30]?.f || row.c[30]?.v || '', // Coluna AE (índice 30) - PRIORIZA .f (formatted)
-                            // === ETAPAS DO LIVRO ===
-                            livroCapa: row.c[32]?.v || '',        // Coluna AG
-                            livroDiagramacao: row.c[33]?.v || '', // Coluna AH
-                            livroAprovacao: row.c[34]?.v || '',   // Coluna AI
-                            livroRegistro: row.c[35]?.v || '',    // Coluna AJ
-                            livroAmazon: row.c[36]?.v || '',      // Coluna AK
-                            livroVenda: row.c[37]?.v || '',       // Coluna AL
+                            // === ETAPAS DO LIVRO (nova trilha AT→BB) ===
+                            livroTrilha: row.c[45]?.v || '',       // Coluna AT - Trilha do Livro Aprovada
+                            livroCapitulos: row.c[46]?.v || '',    // Coluna AU - Capítulos
+                            livroApendices: row.c[47]?.v || '',    // Coluna AV - Apêndices
+                            livroRevisao: row.c[48]?.v || '',      // Coluna AW - Revisão
+                            livroCapa: row.c[49]?.v || '',         // Coluna AX - Capa
+                            livroDiagramacao: row.c[50]?.v || '',  // Coluna AY - Diagramação
+                            livroRegistrosCBL: row.c[51]?.v || '', // Coluna AZ - Registros CBL
+                            livroAmazon: row.c[52]?.v || '',       // Coluna BA - Perfil Amazon
+                            livroImpresso: row.c[53]?.v || '',     // Coluna BB - Impresso
                         };
                         
                         console.log('📊 Status dos pilares:');

@@ -4148,7 +4148,7 @@
         
         async function buscarDadosOrigem(sheetId, email, emailColIndex) {
             try {
-                const range = 'A1:Z200';
+                const range = 'A1:BZ200';
                 const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&range=${range}`;
                 
                 const response = await fetch(url);
@@ -4357,7 +4357,7 @@
             try {
                 console.log(`🔍 Buscando ${emailBusca} na planilha ORIGEM ${turma}...`);
                 
-                const range = 'A1:Z200';
+                const range = 'A1:BZ200';
                 const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&range=${range}`;
                 
                 console.log(`📡 URL ORIGEM: ${url.substring(0, 100)}...`);
@@ -4491,7 +4491,7 @@
             // ⚠️ CORREÇÃO CRÍTICA: Range específico por aba para evitar bug da API
             // Para TURMA 1 e TURMA 2: usar A6:Z200 (planilha DESTINO começa na linha 6)
             // Para outras abas: usar A1:Z200 (estrutura normal)
-            const range = (sheetName === 'TURMA 1' || sheetName === 'TURMA 2') ? 'A6:Z200' : 'A1:Z200';
+            const range = (sheetName === 'TURMA 1' || sheetName === 'TURMA 2') ? 'A6:BZ200' : 'A1:BZ200';
             const url = `${SHEETS_BASE_URL}${encodeURIComponent(sheetName)}&range=${range}`;
             console.log(`🔍 Acessando ${sheetName} com range ${range}:`, url);
             
@@ -4567,7 +4567,7 @@
             try {
                 console.log(`🔍 Buscando dados complementares da ORIGEM para ${turma}...`);
                 
-                const range = 'A1:Z200';
+                const range = 'A1:BZ200';
                 const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&range=${range}`;
                 
                 const response = await fetch(url);

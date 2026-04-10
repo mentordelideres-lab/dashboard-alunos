@@ -3646,6 +3646,7 @@
         // PLANILHAS ORIGEM (dados completos e corretos)
         const SHEET_ORIGEM_T1 = '11ui0ysyuzNTS4Y1QChI_f8cUnFcvPkTgPTosGjBFjlI';
         const SHEET_ORIGEM_T2 = '1U4MD8raoEHnbzEWn5GVJ1h8QgvEpkejD29yjnEKrAUI';
+        const SHEET_ORIGEM_T3 = '1jFv1UhkC5kFqXRVGUHKZMeKAbm6UBUvrYDSsdHnEFtM';
         
         const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxPoJtzkVonMhXxYqA9a886dEAYIIoBD8p4ocjjALn4wJw1zhMzVhATaI-cuyUEdkXw3w/exec';
 
@@ -4085,11 +4086,11 @@
                 // Busca na DESTINO primeiro
                 const turma1Data = await fetchSheetData('TURMA 1');
                 const turma2Data = await fetchSheetData('TURMA 2');
+                const turma3Data = await fetchSheetData('TURMA 3');
                 
                 let encontrado = verificarAlunoSemSenha(turma1Data, email, 'TURMA 1');
-                if (!encontrado) {
-                    encontrado = verificarAlunoSemSenha(turma2Data, email, 'TURMA 2');
-                }
+                if (!encontrado) encontrado = verificarAlunoSemSenha(turma2Data, email, 'TURMA 2');
+                if (!encontrado) encontrado = verificarAlunoSemSenha(turma3Data, email, 'TURMA 3');
                 
                 if (!encontrado) {
                     console.log('⚠️ Aluno não está na DESTINO, está na ORIGEM!');
@@ -4103,6 +4104,9 @@
                         const origemT1 = await buscarDadosOrigem(SHEET_ORIGEM_T1, email, 21);
                         if (origemT1) {
                             dadosAluno = origemT1;
+                        } else {
+                            const origemT3 = await buscarDadosOrigem(SHEET_ORIGEM_T3, email, 16);
+                            if (origemT3) dadosAluno = origemT3;
                         }
                     }
                 }
@@ -4212,8 +4216,10 @@
                     const turma2Data = await fetchSheetData('TURMA 2');
                     
                     let resultado = verificarAluno(turma1Data, email, senha, 'TURMA 1');
+                    if (!resultado) resultado = verificarAluno(turma2Data, email, senha, 'TURMA 2');
                     if (!resultado) {
-                        resultado = verificarAluno(turma2Data, email, senha, 'TURMA 2');
+                        const turma3DataRetry = await fetchSheetData('TURMA 3');
+                        resultado = verificarAluno(turma3DataRetry, email, senha, 'TURMA 3');
                     }
                     
                     if (resultado && !resultado.primeiroAcesso) {
@@ -4330,6 +4336,14 @@
                     console.log('✅ Aluno encontrado na TURMA 2 (DESTINO)');
                     return resultado;
                 }
+
+                const turma3Data = await fetchSheetData('TURMA 3');
+                console.log('✅ TURMA 3 DESTINO carregada:', turma3Data.length, 'linhas');
+                resultado = verificarAluno(turma3Data, email, senha, 'TURMA 3');
+                if (resultado) {
+                    console.log('✅ Aluno encontrado na TURMA 3 (DESTINO)');
+                    return resultado;
+                }
                 
                 // 2. Se não encontrou na DESTINO, buscar na ORIGEM
                 console.log('📍 ETAPA 2: Não encontrado na DESTINO, buscando na ORIGEM...');
@@ -4359,7 +4373,19 @@
                 } catch (errorOrigem2) {
                     console.error('❌ Erro ao buscar TURMA 2 ORIGEM:', errorOrigem2);
                     console.error('Stack:', errorOrigem2.stack);
-                    // Continua
+                }
+
+                // Buscar TURMA 3 ORIGEM
+                console.log('🔎 Verificando TURMA 3 ORIGEM...');
+                try {
+                    resultado = await verificarAlunoOrigem(SHEET_ORIGEM_T3, email, senha, 'TURMA 3', 16); // Coluna Q
+                    if (resultado) {
+                        console.log('✅ Aluno encontrado na TURMA 3 (ORIGEM)');
+                        return resultado;
+                    }
+                } catch (errorOrigem3) {
+                    console.error('❌ Erro ao buscar TURMA 3 ORIGEM:', errorOrigem3);
+                    console.error('Stack:', errorOrigem3.stack);
                 }
                 
                 console.log('❌ Aluno não encontrado em nenhuma planilha (DESTINO ou ORIGEM)');
@@ -4468,12 +4494,18 @@
                     for (let i = 0; i < turma2Data.length; i++) {
                         const row = turma2Data[i];
                         const emailRow = row.c && row.c[1] && row.c[1].v ? row.c[1].v.toLowerCase().trim() : '';
-                        // Pula cabeçalho
                         if (emailRow === 'e-mail' || emailRow === '') continue;
-                        if (emailRow === email) {
-                            alunoEncontrado = true;
-                            break;
-                        }
+                        if (emailRow === email) { alunoEncontrado = true; break; }
+                    }
+                }
+
+                if (!alunoEncontrado) {
+                    const turma3DataRecup = await fetchSheetData('TURMA 3');
+                    for (let i = 0; i < turma3DataRecup.length; i++) {
+                        const row = turma3DataRecup[i];
+                        const emailRow = row.c && row.c[1] && row.c[1].v ? row.c[1].v.toLowerCase().trim() : '';
+                        if (emailRow === 'e-mail' || emailRow === '') continue;
+                        if (emailRow === email) { alunoEncontrado = true; break; }
                     }
                 }
 
@@ -4583,6 +4615,11 @@
                 await complementarDadosOrigem('TURMA 2', SHEET_ORIGEM_T2, 16); // Email na coluna Q (índice 16)
             }
             
+            if (allStudentsData.turma3.length < 16) {
+                console.log('⚠️ TURMA 3: Faltam alunos! Buscando da ORIGEM...');
+                await complementarDadosOrigem('TURMA 3', SHEET_ORIGEM_T3, 16); // Email na coluna Q (índice 16)
+            }
+            
             console.log('🎉 TOTAL FINAL - TURMA 1:', allStudentsData.turma1.length);
             console.log('🎉 TOTAL FINAL - TURMA 2:', allStudentsData.turma2.length);
         }
@@ -4603,9 +4640,13 @@
                 console.log(`📊 ${turma} ORIGEM: ${rows.length} linhas`);
                 
                 // Pegar emails que já existem na DESTINO
+                let alunosTurma;
+                if (turma === 'TURMA 1') alunosTurma = allStudentsData.turma1;
+                else if (turma === 'TURMA 2') alunosTurma = allStudentsData.turma2;
+                else alunosTurma = allStudentsData.turma3;
+
                 const emailsExistentes = new Set(
-                    (turma === 'TURMA 1' ? allStudentsData.turma1 : allStudentsData.turma2)
-                        .map(a => a.email.toLowerCase().trim())
+                    alunosTurma.map(a => a.email.toLowerCase().trim())
                 );
                 
                 let adicionados = 0;
@@ -4647,8 +4688,10 @@
                     
                     if (turma === 'TURMA 1') {
                         allStudentsData.turma1.push(novoAluno);
-                    } else {
+                    } else if (turma === 'TURMA 2') {
                         allStudentsData.turma2.push(novoAluno);
+                    } else {
+                        allStudentsData.turma3.push(novoAluno);
                     }
                     
                     adicionados++;

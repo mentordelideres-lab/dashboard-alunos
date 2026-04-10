@@ -3547,6 +3547,7 @@
             <div class="tabs">
                 <button class="tab active" onclick="trocarAba(event, 'turma1')">Turma 1</button>
                 <button class="tab" onclick="trocarAba(event, 'turma2')">Turma 2</button>
+                <button class="tab" onclick="trocarAba(event, 'turma3')">Turma 3</button>
                 <button class="tab" onclick="trocarAba(event, 'geral')">Visão Geral</button>
             </div>
 
@@ -3654,17 +3655,21 @@
         // === PLANILHAS DE PILARES ===
         const PILARES_TURMA1_ID = '1n1LulOgowy1Evk4-S0k7ReTgM7chqnQy-UCAW0CfZCA';
         const PILARES_TURMA2_ID = '1cymSq22sqKNg3g7KvTlxlCjhtf4uZ_YimP297ro0Iv0';
+        const PILARES_TURMA3_ID = '1hg-LjTAFTxp53KFgLrIJMU3Tj1cJxF-yuC6vfBgrFog';
         const PILARES_GID = '1942550026'; // GID da aba
         
         function getPilaresURL(turma) {
-            const sheetId = turma === 'TURMA 1' ? PILARES_TURMA1_ID : PILARES_TURMA2_ID;
+            let sheetId;
+            if (turma === 'TURMA 1') sheetId = PILARES_TURMA1_ID;
+            else if (turma === 'TURMA 2') sheetId = PILARES_TURMA2_ID;
+            else sheetId = PILARES_TURMA3_ID;
             return `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&gid=${PILARES_GID}`;
         }
 
         let alunoData = null;
         let configData = null;
         let recursosData = [];
-        let allStudentsData = { turma1: [], turma2: [] };
+        let allStudentsData = { turma1: [], turma2: [], turma3: [] };
         let primeiroAcessoEmail = null;
 
         // === CONTROLE DE PAGINAÇÃO DA BIBLIOTECA ===
@@ -3828,6 +3833,20 @@
                 }
             ],
             'TURMA 2': [
+                {
+                    nome: 'Influenciador Digital - Elyano',
+                    link: 'https://febra.site/suporte_influenciador'
+                },
+                {
+                    nome: 'Escritor Best Seller',
+                    link: 'https://febra.site/suporteebsaa'
+                },
+                {
+                    nome: 'Palestra/Mentoria - Michelle',
+                    link: 'https://calendar.app.google/1egzPjhvsj2VRc5W9'
+                }
+            ],
+            'TURMA 3': [
                 {
                     nome: 'Influenciador Digital - Elyano',
                     link: 'https://febra.site/suporte_influenciador'
@@ -4491,7 +4510,7 @@
             // ⚠️ CORREÇÃO CRÍTICA: Range específico por aba para evitar bug da API
             // Para TURMA 1 e TURMA 2: usar A6:Z200 (planilha DESTINO começa na linha 6)
             // Para outras abas: usar A1:Z200 (estrutura normal)
-            const range = (sheetName === 'TURMA 1' || sheetName === 'TURMA 2') ? 'A6:BZ200' : 'A1:BZ200';
+            const range = (sheetName === 'TURMA 1' || sheetName === 'TURMA 2' || sheetName === 'TURMA 3') ? 'A6:BZ200' : 'A1:BZ200';
             const url = `${SHEETS_BASE_URL}${encodeURIComponent(sheetName)}&range=${range}`;
             console.log(`🔍 Acessando ${sheetName} com range ${range}:`, url);
             
@@ -4544,6 +4563,11 @@
             // Processar dados da DESTINO
             allStudentsData.turma1 = processarTurma(turma1Data, 'TURMA 1');
             allStudentsData.turma2 = processarTurma(turma2Data, 'TURMA 2');
+            
+            const turma3Data = await fetchSheetData('TURMA 3');
+            console.log('📊 TURMA 3 DESTINO:', turma3Data.length, 'linhas');
+            allStudentsData.turma3 = processarTurma(turma3Data, 'TURMA 3');
+            console.log('✅ Alunos TURMA 3 (DESTINO):', allStudentsData.turma3.length);
             
             console.log('✅ Alunos TURMA 1 (DESTINO):', allStudentsData.turma1.length);
             console.log('✅ Alunos TURMA 2 (DESTINO):', allStudentsData.turma2.length);
@@ -5109,7 +5133,10 @@
                 
                 // Buscar dados da planilha principal
                 const planilhaId = '1OjxHwWh6kWaNgQrCPP57GB_FMs4LVFH3Orbve3ciylQ';
-                const gidTurma = alunoData.turma === 'TURMA 1' ? '1942550026' : '811800566';
+                let gidTurma;
+                if (alunoData.turma === 'TURMA 1') gidTurma = '1942550026';
+                else if (alunoData.turma === 'TURMA 2') gidTurma = '811800566';
+                else gidTurma = '105881146';
                 const url = `https://docs.google.com/spreadsheets/d/${planilhaId}/gviz/tq?tqx=out:json&gid=${gidTurma}`;
                 
                 console.log('📧 Buscando imersões para:', alunoData.email);
@@ -5294,6 +5321,7 @@
                 section.classList.add('hidden');
                 return;
             }
+            // Turma 2 e Turma 3 não têm podcast
             
             try {
                 // Buscar dados dos pilares (que incluem dados do podcast)
@@ -5526,7 +5554,10 @@
         async function carregarCalendarioAulas() {
             if (!alunoData || !alunoData.turma) return;
 
-            const abaCalendario = alunoData.turma === 'TURMA 1' ? 'CALENDARIO T1' : 'CALENDARIO T2';
+            let abaCalendario;
+            if (alunoData.turma === 'TURMA 1') abaCalendario = 'CALENDARIO T1';
+            else if (alunoData.turma === 'TURMA 2') abaCalendario = 'CALENDARIO T2';
+            else abaCalendario = 'CALENDARIO T3';
             const url = `${SHEETS_BASE_URL}${encodeURIComponent(abaCalendario)}`;
 
             console.log(`📅 Carregando calendário: ${abaCalendario}`);
@@ -6233,7 +6264,7 @@
             if (alunoData.turma === 'TURMA 1') {
                 menuPodcast.style.display = ''; // Mostrar para TURMA 1
             } else {
-                menuPodcast.style.display = 'none'; // Ocultar para TURMA 2
+                menuPodcast.style.display = 'none'; // Ocultar para TURMA 2 e TURMA 3
             }
 
             renderizarPilares(); // 🎯 PILARES
@@ -6426,7 +6457,7 @@
         }
 
         function renderizarEstatisticas() {
-            const todosAlunos = [...allStudentsData.turma1, ...allStudentsData.turma2];
+            const todosAlunos = [...allStudentsData.turma1, ...allStudentsData.turma2, ...allStudentsData.turma3];
             const totalAlunos = todosAlunos.length;
             
             let totalFormularios = 0;
@@ -6453,6 +6484,10 @@
                     <div class="stat-label">Turma 2</div>
                 </div>
                 <div class="stat-card">
+                    <div class="stat-value">${allStudentsData.turma3.length}</div>
+                    <div class="stat-label">Turma 3</div>
+                </div>
+                <div class="stat-card">
                     <div class="stat-value">${percentualGeral}%</div>
                     <div class="stat-label">Conclusão Geral</div>
                 </div>
@@ -6469,6 +6504,8 @@
                 renderizarAlunos(allStudentsData.turma1);
             } else if (aba === 'turma2') {
                 renderizarAlunos(allStudentsData.turma2);
+            } else if (aba === 'turma3') {
+                renderizarAlunos(allStudentsData.turma3);
             } else {
                 renderizarVisaoGeral();
             }
@@ -6540,7 +6577,7 @@
 
         // === RENDERIZAR DISTRIBUIÇÃO DE ARQUÉTIPOS (MASTER) ===
         function renderizarDistribuicaoArquetipos() {
-            const todosAlunos = [...allStudentsData.turma1, ...allStudentsData.turma2];
+            const todosAlunos = [...allStudentsData.turma1, ...allStudentsData.turma2, ...allStudentsData.turma3];
             const turma1 = allStudentsData.turma1;
             const turma2 = allStudentsData.turma2;
 
@@ -6609,7 +6646,7 @@
             const container = document.getElementById('masterContent');
             
             // Calcular métricas estratégicas
-            const todosAlunos = [...allStudentsData.turma1, ...allStudentsData.turma2];
+            const todosAlunos = [...allStudentsData.turma1, ...allStudentsData.turma2, ...allStudentsData.turma3];
             const totalAlunos = todosAlunos.length;
             
             // Alunos com 100%
@@ -6621,6 +6658,7 @@
             // Médias
             const turma1Media = calcularMedia(allStudentsData.turma1);
             const turma2Media = calcularMedia(allStudentsData.turma2);
+            const turma3Media = calcularMedia(allStudentsData.turma3);
             const gap = turma1Media - turma2Media;
             
             // Análise por formulário
@@ -6769,11 +6807,18 @@
                     a.formularios[idx] === 'Preenchido'
                 ).length;
                 const turma2Percent = Math.round((turma2Preenchidos / allStudentsData.turma2.length) * 100);
+
+                // Turma 3
+                const turma3Preenchidos = allStudentsData.turma3.filter(a => 
+                    a.formularios[idx] === 'Preenchido'
+                ).length;
+                const turma3Percent = allStudentsData.turma3.length > 0 
+                    ? Math.round((turma3Preenchidos / allStudentsData.turma3.length) * 100) : 0;
                 
                 // Gap e média
                 const gap = turma1Percent - turma2Percent;
-                const mediaGeral = Math.round(((turma1Preenchidos + turma2Preenchidos) / 
-                    (allStudentsData.turma1.length + allStudentsData.turma2.length)) * 100);
+                const totalAlunos = allStudentsData.turma1.length + allStudentsData.turma2.length + allStudentsData.turma3.length;
+                const mediaGeral = Math.round(((turma1Preenchidos + turma2Preenchidos + turma3Preenchidos) / totalAlunos) * 100);
                 
                 analise.push({
                     turma1Preenchidos,

@@ -4865,8 +4865,11 @@
                 if (!val || val.trim() === '') return 'nao_iniciado';
                 const v = val.toUpperCase().trim()
                     .normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-                if (v === 'ENTREGUE' || v === 'REALIZADO') return 'entregue';
+                // Aceita: Entregue, Realizado, Concluído, Concluido
+                if (v === 'ENTREGUE' || v === 'REALIZADO' || v === 'CONCLUIDO' || v === 'CONCLUÍDA' || v === 'CONCLUIDA') return 'entregue';
+                // Aceita: Em Andamento
                 if (v.includes('ANDAMENTO')) return 'andamento';
+                // Não Iniciado e qualquer outro valor = nao_iniciado
                 return 'nao_iniciado';
             }
 

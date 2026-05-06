@@ -5372,7 +5372,79 @@ body.is-dashboard-screen #brandHeaderTopo { display: none !important; }
     .ml-section-head-row { flex-direction: column; align-items: start; }
     .ml-user-name { display: none; }
 }
-    </style>
+    
+/* ============================================================
+   Explorar todos os arquétipos
+   ============================================================ */
+.ml-arq-explorar {
+    margin-top: 32px;
+    padding-top: 28px;
+    border-top: 1px solid var(--line);
+}
+.ml-arq-explorar-titulo {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 18px;
+}
+.ml-arq-todos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 10px;
+}
+.ml-arq-mini-card {
+    background: var(--bg-2);
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    padding: 14px 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    text-align: center;
+    text-decoration: none;
+    color: var(--text);
+    transition: all 0.2s var(--ease);
+    cursor: pointer;
+}
+.ml-arq-mini-card:hover {
+    border-color: var(--gold);
+    background: var(--bg-3);
+    transform: translateY(-2px);
+}
+.ml-arq-mini-card.ativo {
+    border-color: var(--gold);
+    background: rgba(201, 169, 110, 0.08);
+}
+.ml-arq-mini-emoji {
+    font-size: 26px;
+    line-height: 1;
+}
+.ml-arq-mini-nome {
+    font-family: var(--serif);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.03em;
+    line-height: 1.2;
+}
+.ml-arq-mini-badge {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--gold);
+    background: rgba(201,169,110,0.12);
+    border: 1px solid rgba(201,169,110,0.3);
+    padding: 2px 7px;
+    border-radius: 99px;
+}
+@media (max-width: 600px) {
+    .ml-arq-todos-grid { grid-template-columns: repeat(3, 1fr); }
+}
+</style>
 </head>
 <body class="is-login-screen">
     <div class="container">
@@ -5434,7 +5506,8 @@ body.is-dashboard-screen #brandHeaderTopo { display: none !important; }
                         <span class="login-version">v2.0</span>
                     </div>
                 </div>
-            </section>
+            
+        </section>
         </div>
 
         <!-- Esqueci Senha Screen (split) -->
@@ -5730,10 +5803,17 @@ body.is-dashboard-screen #brandHeaderTopo { display: none !important; }
                         </div>
                         <div class="ml-arq-actions">
                             <a href="#" target="_blank" id="arquetipoLinkPDF" class="btn-download-arquetipo ml-btn ml-btn-gold">Baixar PDF do Arquétipo</a>
+                        
                         </div>
                     </div>
                 </div>
-            </section>
+            
+            <!-- Grade de todos os arquétipos -->
+            <div class="ml-arq-explorar" id="arqExplorarTodos">
+                <div class="ml-arq-explorar-titulo">Explorar todos os arquétipos</div>
+                <div class="ml-arq-todos-grid" id="arqTodosGrid"></div>
+            </div>
+        </section>
 
             <!-- ========== IMERSÕES ========== -->
             <section id="imersoesSection" class="imersoes-section ml-section hidden">
@@ -7184,12 +7264,41 @@ body.is-dashboard-screen #brandHeaderTopo { display: none !important; }
             const card = section.querySelector('.arquetipo-card');
             card.style.borderColor = arquetipoInfo.cor;
             
-            // Link do PDF
+            // Link do PDF — texto mostra nome do arquétipo
             const linkPDF = document.getElementById('arquetipoLinkPDF');
             linkPDF.href = arquetipoInfo.linkPDF;
+            linkPDF.textContent = 'Ver PDF — ' + arquetipoInfo.nome;
             
             console.log('✅ Arquétipo renderizado com sucesso!');
             section.classList.remove('hidden');
+
+            // Renderizar grade de todos os arquétipos
+            renderizarTodosArquetipos(arquetipoKey);
+        }
+
+        function renderizarTodosArquetipos(chaveAtual) {
+            const grid = document.getElementById('arqTodosGrid');
+            if (!grid) return;
+
+            const ORDEM = [
+                'inocente','mago','prestativo','sábio','amante',
+                'bobo da corte','criador','explorador','fora-da-lei',
+                'governante','herói','homem comum'
+            ];
+
+            grid.innerHTML = ORDEM.map(chave => {
+                const arq = ARQUETIPOS_DATA[chave];
+                if (!arq) return '';
+                const isAtivo = chave === chaveAtual;
+                return `
+                    <a href="${arq.linkPDF}" target="_blank" rel="noopener noreferrer"
+                       class="ml-arq-mini-card ${isAtivo ? 'ativo' : ''}"
+                       title="${arq.frase}">
+                        <span class="ml-arq-mini-emoji">${arq.emoji}</span>
+                        <span class="ml-arq-mini-nome">${arq.nome}</span>
+                        ${isAtivo ? '<span class="ml-arq-mini-badge">Seu arquétipo</span>' : ''}
+                    </a>`;
+            }).join('');
         }
 
         // === MAPEAMENTO DE STATUS DOS PILARES ===
@@ -7476,7 +7585,7 @@ body.is-dashboard-screen #brandHeaderTopo { display: none !important; }
                         icone: '📱',
                         nome: 'Influenciador Digital',
                         entregavel: 'Plano de Ação',
-                        mentor: 'com Leonardo',
+                        mentor: 'com Bruno',
                         status: pilaresData.influenciador,
                         isPilarLivro: false
                     },
@@ -7749,33 +7858,50 @@ body.is-dashboard-screen #brandHeaderTopo { display: none !important; }
         function renderizarAgendamento() {
             const container = document.getElementById('mentoresContainer');
             const mentoresTurma = calendarios[alunoData.turma] || [];
-            
-            console.log('📅 Renderizando agendamento para', alunoData.turma);
-            console.log('Mentores:', mentoresTurma);
-            
-            // Renderizar cada mentor com validação de formulário
-            container.innerHTML = mentoresTurma.map(mentor => {
-                let pilar = 'Mentoria';
-                let pilarLabel = 'Mentor';
-                if (mentor.nome.includes('Influenciador')) { pilar = 'Influenciador Digital'; pilarLabel = 'Influenciador Digital'; }
-                else if (mentor.nome.includes('Escritor')) { pilar = 'Escritor Best Seller'; pilarLabel = 'Escritor Best Seller'; }
-                else if (mentor.nome.includes('Palestrante') || mentor.nome.includes('Palestra')) { pilar = 'Palestrante Poderoso'; pilarLabel = 'Palestrante Poderoso'; }
-                else if (mentor.nome.includes('High Ticket') || mentor.nome.includes('Mentor')) { pilar = 'Mentor High Ticket'; pilarLabel = 'Mentor High Ticket'; }
 
-                const nomeLimpo = mentor.nome.replace(/^(Influenciador Digital|Escritor Best Seller|Palestrante Poderoso|Mentor High Ticket)\s*[-–]?\s*/i, '').trim() || mentor.nome;
-                const iniciais = nomeLimpo.split(/\s+/).map(p => p[0]).slice(0,2).join('').toUpperCase();
+            // Agrupar mentores por pilar
+            const PILARES_ORDER = ['Influenciador Digital', 'Escritor Best Seller', 'Palestrante Poderoso', 'Mentor High Ticket'];
+            const grupos = {};
+            PILARES_ORDER.forEach(p => { grupos[p] = []; });
+
+            mentoresTurma.forEach(mentor => {
+                let pilar = 'Influenciador Digital';
+                if (mentor.nome.includes('Escritor')) pilar = 'Escritor Best Seller';
+                else if (mentor.nome.includes('Palestrante') || mentor.nome.includes('Palestra')) pilar = 'Palestrante Poderoso';
+                else if (mentor.nome.includes('High Ticket')) pilar = 'Mentor High Ticket';
+                else if (mentor.nome.includes('Influenciador') || mentor.nome.includes('Elyano') || mentor.nome.includes('Bruno')) pilar = 'Influenciador Digital';
+                if (!grupos[pilar]) grupos[pilar] = [];
+                grupos[pilar].push(mentor);
+            });
+
+            // Renderizar grade agrupada por pilar
+            container.style.cssText = 'display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px;align-items:start';
+            container.innerHTML = PILARES_ORDER.map(pilarNome => {
+                const mentores = grupos[pilarNome];
+                if (!mentores || mentores.length === 0) return '';
+
+                const cards = mentores.map(mentor => {
+                    const nomeLimpo = mentor.nome
+                        .replace(/^(Influenciador Digital|Escritor Best Seller|Palestrante Poderoso|Mentor High Ticket)\s*[-–]?\s*/i, '')
+                        .trim() || mentor.nome;
+                    const iniciais = nomeLimpo.split(/\s+/).map(p => p[0]).slice(0,2).join('').toUpperCase();
+                    return `
+                        <button class="ml-mentor-card" onclick="tentarAgendar('${pilarNome}', '${mentor.link}', '${mentor.nome.replace(/'/g,"\\'")}')">
+                            <span class="ml-mentor-avatar">${iniciais}</span>
+                            <span class="ml-mentor-info">
+                                <span class="ml-mentor-pilar">${pilarNome}</span>
+                                <span class="ml-mentor-nome">${nomeLimpo}</span>
+                                <span class="ml-mentor-cta">Agendar sessão →</span>
+                            </span>
+                        </button>`;
+                }).join('');
 
                 return `
-                    <article class="ml-mentor-card" onclick="tentarAgendar('${pilar}', '${mentor.link}', '${mentor.nome.replace(/'/g,"\\'")}')">
-                        <div class="ml-mentor-avatar" aria-hidden="true">${iniciais}</div>
-                        <div class="ml-mentor-info">
-                            <span class="ml-mentor-pilar">${pilarLabel}</span>
-                            <h4 class="ml-mentor-nome">${nomeLimpo}</h4>
-                            <span class="ml-mentor-cta">Agendar sessão →</span>
-                        </div>
-                    </article>
-                `;
-            }).join('');
+                    <div class="ml-mentor-group-wrap">
+                        <div class="ml-mentor-group-titulo">${pilarNome}</div>
+                        <div class="ml-mentor-group-cards">${cards}</div>
+                    </div>`;
+            }).filter(Boolean).join('');
         }
         async function renderizarPodcast() {
             const section = document.getElementById('podcastSection');
@@ -8376,7 +8502,7 @@ body.is-dashboard-screen #brandHeaderTopo { display: none !important; }
                 });
             }
 
-            // 2. PILARES
+            // 2. PILARES — verificar apenas se dados já carregaram
             if (alunoData.pilares) {
                 const pilaresMap = [
                     { key: 'influenciador', nome: 'Influenciador Digital' },
@@ -8386,13 +8512,14 @@ body.is-dashboard-screen #brandHeaderTopo { display: none !important; }
                 ];
                 pilaresMap.forEach(p => {
                     const v = (alunoData.pilares[p.key] || '').toString().toLowerCase().trim();
+                    const concluido = v === 'entregue' || v === 'realizado' || v === 'concluído' || v === 'concluido';
                     if (!v || v === 'não iniciado' || v === 'nao iniciado') {
                         pendencias.pilares.push({ nome: p.nome, status: alunoData.pilares[p.key] || 'Não Iniciado' });
                     }
                 });
             }
             
-            // 3. IMERSÕES
+            // 3. IMERSÕES — verificar apenas se dados já carregaram
             if (alunoData.imersoes) {
                 const imMap = [
                     { key: 'arquetipos', nome: 'Arquétipos' },
@@ -8481,7 +8608,7 @@ body.is-dashboard-screen #brandHeaderTopo { display: none !important; }
                                 ${pendencias.pilares.map(pilar => `
                                     <div class="pendencia-item" style="cursor: pointer;" onclick="irParaSecao('pilaresSection')">
                                         <span class="pendencia-check">❌</span>
-                                        <span class="pendencia-texto">${pilar}</span>
+                                        <span class="pendencia-texto">${pilar.nome || pilar} — ${pilar.status || 'Não iniciado'}</span>
                                         <span style="margin-left: auto; color: #0dcaf0;">→</span>
                                     </div>
                                 `).join('')}
@@ -8501,7 +8628,7 @@ body.is-dashboard-screen #brandHeaderTopo { display: none !important; }
                                 ${pendencias.imersoes.map(imersao => `
                                     <div class="pendencia-item" style="cursor: pointer;" onclick="irParaSecao('imersoesSection')">
                                         <span class="pendencia-check">❌</span>
-                                        <span class="pendencia-texto">${imersao}</span>
+                                        <span class="pendencia-texto">${imersao.nome || imersao} — Aguardando participação</span>
                                         <span style="margin-left: auto; color: #0dcaf0;">→</span>
                                     </div>
                                 `).join('')}
@@ -8532,6 +8659,9 @@ body.is-dashboard-screen #brandHeaderTopo { display: none !important; }
             }
 
             modal.classList.remove('hidden');
+            modal.style.display = 'flex';
+            modal.style.justifyContent = 'center';
+            modal.style.alignItems = 'center';
             
             } catch (error) {
                 console.error('❌ Erro ao mostrar modal de pendências:', error);
@@ -8553,16 +8683,18 @@ body.is-dashboard-screen #brandHeaderTopo { display: none !important; }
                 if (pendencias.total === 0) {
                     // SEM PENDÊNCIAS
                     banner.classList.add('sem-pendencias');
-                    banner.querySelector('.banner-pendencias-icone').textContent = '🎉';
+                    const _icone0 = banner.querySelector('.banner-pendencias-icone');
+                    if (_icone0) _icone0.textContent = '🎉';
                     titulo.textContent = 'Parabéns!';
                     subtitulo.textContent = 'Você está em dia com todas as atividades';
                     count.textContent = '0';
-                    lista.innerHTML = '';
+                    if (lista) lista.innerHTML = '';
                     banner.style.display = 'flex';
                 } else {
                     // TEM PENDÊNCIAS
                     banner.classList.remove('sem-pendencias');
-                    banner.querySelector('.banner-pendencias-icone').textContent = '⚠️';
+                    const _icone1 = banner.querySelector('.banner-pendencias-icone');
+                    if (_icone1) _icone1.textContent = '⚠️';
                     titulo.textContent = `Você tem ${pendencias.total} pendência${pendencias.total > 1 ? 's' : ''}`;
                     subtitulo.textContent = 'Complete suas atividades para avançar';
                     count.textContent = pendencias.total;

@@ -3070,6 +3070,44 @@
             }
         }
 
+        /* === AGENDAMENTO AGRUPADO === */
+        .agendamento-grupo {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 14px 16px;
+            margin-bottom: 12px;
+        }
+        .agendamento-grupo-titulo {
+            font-size: 0.82em;
+            font-weight: 700;
+            color: #c9a861;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 10px;
+        }
+        .agendamento-grupo-botoes {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .btn-mentor-individual {
+            background: rgba(201, 168, 97, 0.12);
+            border: 1px solid rgba(201, 168, 97, 0.3);
+            color: #f3ece0;
+            border-radius: 8px;
+            padding: 10px 14px;
+            font-size: 0.9em;
+            font-weight: 600;
+            text-align: left;
+            transition: all 0.2s;
+            width: 100%;
+        }
+        .btn-mentor-individual:hover {
+            background: rgba(201, 168, 97, 0.25);
+            border-color: #c9a861;
+        }
+
         /* === PODCAST EM BREVE === */
         .podcast-em-breve {
             display: flex;
@@ -5379,23 +5417,57 @@
             console.log('📅 Renderizando agendamento para', alunoData.turma);
             console.log('Mentores:', mentoresTurma);
             
-            // Renderizar cada mentor com validação de formulário
-            container.innerHTML = mentoresTurma.map(mentor => {
-                // Extrair o pilar do nome do mentor
-                let pilar = 'Mentoria'; // default
+            // Agrupar mentores por pilar
+            const grupos = {};
+            mentoresTurma.forEach(mentor => {
+                let pilar = 'Mentoria';
+                let pilarKey = 'mentoria';
                 if (mentor.nome.includes('Influenciador')) {
                     pilar = 'Influenciador Digital';
+                    pilarKey = 'influenciador';
                 } else if (mentor.nome.includes('Escritor')) {
                     pilar = 'Escritor Best Seller';
+                    pilarKey = 'escritor';
                 } else if (mentor.nome.includes('Palestrante') || mentor.nome.includes('Palestra')) {
                     pilar = 'Palestrante Poderoso';
+                    pilarKey = 'palestrante';
+                } else if (mentor.nome.includes('Mentor') || mentor.nome.includes('High')) {
+                    pilar = 'Mentor High Ticket';
+                    pilarKey = 'mentor';
                 }
-                
+                if (!grupos[pilarKey]) grupos[pilarKey] = { pilar, mentores: [] };
+                grupos[pilarKey].mentores.push(mentor);
+            });
+
+            // Ícones por pilar
+            const iconesPilar = {
+                'influenciador': '📱',
+                'escritor': '📚',
+                'palestrante': '🎤',
+                'mentor': '🏆',
+                'mentoria': '👤'
+            };
+
+            // Renderizar agrupado
+            container.innerHTML = Object.entries(grupos).map(([key, grupo]) => {
+                const icone = iconesPilar[key] || '👤';
+                const botoesHTML = grupo.mentores.map(mentor => {
+                    // Extrair só o nome do mentor (depois do " - ")
+                    const nomeCurto = mentor.nome.includes(' - ')
+                        ? mentor.nome.split(' - ')[1]
+                        : mentor.nome;
+                    return `<button onclick="tentarAgendar('${grupo.pilar}', '${mentor.link}', '${mentor.nome}')" class="btn-mentor-individual" style="cursor: pointer;">
+                        👤 ${nomeCurto} →
+                    </button>`;
+                }).join('');
+
                 return `
-                    <button onclick="tentarAgendar('${pilar}', '${mentor.link}', '${mentor.nome}')" class="btn-mentor" style="cursor: pointer;">
-                        👤 ${mentor.nome} →
-                    </button>
-                `;
+                    <div class="agendamento-grupo">
+                        <div class="agendamento-grupo-titulo">${icone} ${grupo.pilar}</div>
+                        <div class="agendamento-grupo-botoes">
+                            ${botoesHTML}
+                        </div>
+                    </div>`;
             }).join('');
         }
         async function renderizarPodcast() {
@@ -5413,16 +5485,19 @@
 
             // Turma 2: mostrar banner "em breve"
             if (alunoData.turma === 'TURMA 2') {
-                section.innerHTML = `
-                    <h2 class="section-title">🎙️ Podcast Febracis</h2>
-                    <div class="podcast-em-breve">
-                        <div class="podcast-em-breve-icon">🎙️</div>
-                        <div class="podcast-em-breve-titulo">Em Breve!</div>
-                        <div class="podcast-em-breve-texto">
-                            O agendamento do Podcast Febracis será liberado em breve para a Turma 2.<br>
-                            Fique atento às novidades!
-                        </div>
-                    </div>`;
+                section.classList.remove('hidden');
+                const card = document.getElementById('podcastCard');
+                if (card) {
+                    card.innerHTML = `
+                        <div class="podcast-em-breve">
+                            <div class="podcast-em-breve-icon">🎙️</div>
+                            <div class="podcast-em-breve-titulo">Em Breve!</div>
+                            <div class="podcast-em-breve-texto">
+                                O agendamento do Podcast Febracis será liberado em breve para a Turma 2.<br>
+                                Fique atento às novidades!
+                            </div>
+                        </div>`;
+                }
                 return;
             }
             

@@ -3070,6 +3070,37 @@
             }
         }
 
+        /* === PODCAST EM BREVE === */
+        .podcast-em-breve {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 50px 30px;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 16px;
+            border: 2px dashed rgba(255, 255, 255, 0.15);
+            margin: 20px 0;
+        }
+        .podcast-em-breve-icon {
+            font-size: 3.5em;
+            margin-bottom: 15px;
+            opacity: 0.7;
+        }
+        .podcast-em-breve-titulo {
+            font-size: 1.6em;
+            font-weight: 700;
+            color: #c9a861;
+            margin-bottom: 12px;
+        }
+        .podcast-em-breve-texto {
+            font-size: 0.95em;
+            color: rgba(255, 255, 255, 0.6);
+            line-height: 1.6;
+            max-width: 400px;
+        }
+
         /* === JORNADA DO LIVRO === */
         .livro-jornada {
             margin-top: 10px;
@@ -3825,6 +3856,10 @@
                     link: 'https://febra.site/suporte_influenciador'
                 },
                 {
+                    nome: 'Influenciador Digital - Bruno',
+                    link: 'https://febra.site/suporte_influenciador_Bruno'
+                },
+                {
                     nome: 'Escritor Best Seller',
                     link: 'https://febra.site/suporteebs'
                 },
@@ -3839,6 +3874,10 @@
                     link: 'https://febra.site/suporte_influenciador'
                 },
                 {
+                    nome: 'Influenciador Digital - Bruno',
+                    link: 'https://febra.site/suporte_influenciador_Bruno'
+                },
+                {
                     nome: 'Escritor Best Seller',
                     link: 'https://febra.site/suporteebsaa'
                 },
@@ -3851,6 +3890,10 @@
                 {
                     nome: 'Influenciador Digital - Elyano',
                     link: 'https://febra.site/suporte_influenciador'
+                },
+                {
+                    nome: 'Influenciador Digital - Bruno',
+                    link: 'https://febra.site/suporte_influenciador_Bruno'
                 },
                 {
                     nome: 'Escritor Best Seller',
@@ -5079,7 +5122,7 @@
                         icone: '📱',
                         nome: 'Influenciador Digital',
                         entregavel: 'Plano de Ação',
-                        mentor: 'com Leonardo',
+                        mentor: 'com Bruno',
                         status: pilaresData.influenciador,
                         isPilarLivro: false
                     },
@@ -5361,13 +5404,27 @@
             
             console.log('🎙️ === RENDERIZANDO PODCAST ===');
             
-            // Apenas para TURMA 1
-            if (alunoData.turma !== 'TURMA 1') {
-                console.log('⚠️ Podcast disponível apenas para TURMA 1');
+            // Turma 3 não tem podcast
+            if (alunoData.turma === 'TURMA 3') {
+                console.log('⚠️ Podcast não disponível para TURMA 3');
                 section.classList.add('hidden');
                 return;
             }
-            // Turma 2 e Turma 3 não têm podcast
+
+            // Turma 2: mostrar banner "em breve"
+            if (alunoData.turma === 'TURMA 2') {
+                section.innerHTML = `
+                    <h2 class="section-title">🎙️ Podcast Febracis</h2>
+                    <div class="podcast-em-breve">
+                        <div class="podcast-em-breve-icon">🎙️</div>
+                        <div class="podcast-em-breve-titulo">Em Breve!</div>
+                        <div class="podcast-em-breve-texto">
+                            O agendamento do Podcast Febracis será liberado em breve para a Turma 2.<br>
+                            Fique atento às novidades!
+                        </div>
+                    </div>`;
+                return;
+            }
             
             try {
                 // Buscar dados dos pilares (que incluem dados do podcast)
@@ -6307,10 +6364,10 @@
 
             // Controlar visibilidade do menu de podcast
             const menuPodcast = document.getElementById('menuPodcast');
-            if (alunoData.turma === 'TURMA 1') {
-                menuPodcast.style.display = ''; // Mostrar para TURMA 1
+            if (alunoData.turma === 'TURMA 3') {
+                menuPodcast.style.display = 'none'; // Ocultar apenas para TURMA 3
             } else {
-                menuPodcast.style.display = 'none'; // Ocultar para TURMA 2 e TURMA 3
+                menuPodcast.style.display = ''; // Mostrar para TURMA 1 e TURMA 2
             }
 
             renderizarPilares(); // 🎯 PILARES

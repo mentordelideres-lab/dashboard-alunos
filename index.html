@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mentor de Líderes · Painel do Aluno</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter+Tight:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-    <style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mentor de Líderes · Painel do Aluno</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter+Tight:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
 /* ============================================================
    MENTOR DE LÍDERES — Design System Oficial
    Implementação premium completa
@@ -97,7 +97,6 @@ input, button, select, textarea { font-family: inherit; }
   .login-left  { display: none; }
 }
 
-/* Lado esquerdo */
 .login-left {
   position: relative;
   background: radial-gradient(ellipse at 30% 30%, rgba(48,78,156,.25), rgba(36,31,38,1) 60%);
@@ -124,24 +123,25 @@ input, button, select, textarea { font-family: inherit; }
   background: var(--gold); box-shadow: 0 0 16px var(--gold);
 }
 
-.login-lion-hero {
+.login-lion-wrap {
   position: relative; z-index: 1;
   display: grid; place-items: center; flex: 1;
   padding: 40px 0;
 }
-.login-lion-hero::before {
-  content: ''; position: absolute;
-  width: 380px; height: 380px; border-radius: 50%;
-  border: 1px dashed rgba(201,169,110,.2);
+.login-ring {
+  position: absolute; border-radius: 50%; border-style: dashed;
+}
+.login-ring-1 {
+  width: 380px; height: 380px;
+  border-width: 1px; border-color: rgba(201,169,110,.2);
   animation: spin-ring 80s linear infinite;
 }
-.login-lion-hero::after {
-  content: ''; position: absolute;
-  width: 290px; height: 290px; border-radius: 50%;
-  border: 1px dashed rgba(48,78,156,.3);
+.login-ring-2 {
+  width: 290px; height: 290px;
+  border-width: 1px; border-color: rgba(48,78,156,.3);
   animation: spin-ring 60s linear infinite reverse;
 }
-.login-lion-img {
+.login-lion-emoji {
   width: 200px; height: 200px; border-radius: 50%;
   background: var(--bg-elev);
   border: 1px solid rgba(225,228,234,.15);
@@ -165,7 +165,6 @@ input, button, select, textarea { font-family: inherit; }
   color: var(--text-muted); margin-top: 14px;
 }
 
-/* Lado direito */
 .login-right {
   display: flex; align-items: center; justify-content: center;
   padding: 48px; background: var(--bg);
@@ -234,139 +233,118 @@ input, button, select, textarea { font-family: inherit; }
    LAYOUT GERAL DO DASHBOARD
    ============================================================ */
 .container { width: 100%; }
-
-.dashboard-card {
-  width: 100%;
-  min-height: 100vh;
-  background: var(--bg);
-}
+.dashboard-card { width: 100%; min-height: 100vh; background: var(--bg); }
 
 /* Top bar sticky */
-.top-bar {
+.topbar {
   display: flex; justify-content: space-between; align-items: center;
-  padding: 18px 32px;
-  background: rgba(36,31,38,.75);
+  padding: 0 32px;
+  height: 64px;
+  background: rgba(36,31,38,.85);
   backdrop-filter: blur(20px);
   border-bottom: 1px solid var(--line);
   position: sticky; top: 0; z-index: 100;
 }
-.top-bar-brand {
-  display: flex; align-items: center; gap: 14px;
+.topbar-brand { display: flex; align-items: center; gap: 14px; }
+.topbar-logo {
+  width: 38px; height: 38px; border-radius: 50%;
+  background: var(--bg-elev); border: 1px solid rgba(225,228,234,.12);
+  display: grid; place-items: center; font-size: 18px;
 }
-.top-bar-logo {
-  width: 40px; height: 40px; border-radius: 50%;
-  background: var(--bg-elev);
-  border: 1px solid rgba(225,228,234,.12);
-  display: grid; place-items: center;
-  font-size: 20px;
-}
-.top-bar-brand-name {
-  font-family: var(--font-serif); font-size: 17px; letter-spacing: -0.01em; line-height: 1.1;
-}
-.top-bar-brand-sub {
-  font-size: 10px; color: var(--text-muted);
-  letter-spacing: 0.12em; text-transform: uppercase; margin-top: 2px;
-}
-
-/* Nav */
-.top-nav { display: flex; gap: 4px; }
-.top-nav-item {
+.topbar-nav { display: flex; gap: 4px; }
+.topbar-nav button {
   background: transparent; color: var(--text-dim);
   border: none; padding: 8px 14px; border-radius: 8px;
-  font-size: 13px; font-weight: 500; cursor: pointer;
-  transition: all .2s;
+  font-size: 13px; font-weight: 500; cursor: pointer; transition: all .2s;
 }
-.top-nav-item:hover { background: rgba(225,228,234,.05); color: var(--text); }
-.top-nav-item.active { background: rgba(48,78,156,.15); color: #a8bce8; }
-
-/* User badge */
-.user-badge {
+.topbar-nav button:hover { background: rgba(225,228,234,.05); color: var(--text); }
+.topbar-nav button.active { background: rgba(48,78,156,.15); color: #a8bce8; }
+.topbar-user {
   display: flex; align-items: center; gap: 10px;
   padding: 6px 12px 6px 6px;
   background: rgba(225,228,234,.04);
   border-radius: 99px; border: 1px solid var(--line);
+  cursor: pointer; transition: all .2s;
 }
-.user-avatar {
+.topbar-user:hover { border-color: var(--line-hover); }
+.topbar-avatar {
   width: 28px; height: 28px; border-radius: 50%;
   background: linear-gradient(135deg, var(--royal), var(--royal-deep));
-  display: grid; place-items: center;
-  font-size: 11px; font-weight: 600; color: white;
+  display: grid; place-items: center; font-size: 11px; font-weight: 600; color: white;
 }
-.user-name { font-size: 12px; font-weight: 500; }
-.btn-logout {
-  background: rgba(225,228,234,.06); color: var(--text-dim);
-  border: 1px solid var(--line); border-radius: 8px;
-  padding: 6px 12px; font-size: 12px;
-  transition: all .2s;
-}
-.btn-logout:hover { background: rgba(225,228,234,.1); color: var(--text); }
+.topbar-name { font-size: 12px; font-weight: 500; }
 
 /* ============================================================
-   HERO SECTION
+   DASHBOARD HERO
    ============================================================ */
-.hero-section {
-  padding: 48px 40px 32px;
-  position: relative;
-  border-bottom: 1px solid var(--line);
-}
-.hero-section::before {
-  content: ''; position: absolute; inset: 0; pointer-events: none;
-  background: radial-gradient(ellipse at 20% 0%, rgba(48,78,156,.15), transparent 50%);
-}
-.hero-content { position: relative; }
-.hero-eyebrow {
-  font-size: 11px; font-weight: 600;
-  letter-spacing: 0.18em; text-transform: uppercase;
-  color: #8aa6e8; margin-bottom: 16px;
-}
-.hero-title {
-  font-family: var(--font-serif);
-  font-size: clamp(32px, 4vw, 56px);
-  line-height: 1.05; letter-spacing: -0.025em; font-weight: 400;
-  margin-bottom: 12px;
-}
-.hero-title em { font-style: italic; color: var(--gold); }
-.hero-lead { font-size: 16px; color: var(--text-dim); max-width: 540px; line-height: 1.6; }
+.dash-main { max-width: 1440px; margin: 0 auto; }
 
-.hero-ctas { display: flex; gap: 12px; margin-top: 28px; }
-
-/* ============================================================
-   DASHBOARD HEADER (bloco do aluno)
-   ============================================================ */
-.dashboard-header {
-  background: linear-gradient(135deg, rgba(48,78,156,.18), rgba(36,31,38,1) 70%);
-  padding: 32px 32px 24px;
-  border-bottom: 1px solid var(--line);
+.dash-header {
+  display: grid; grid-template-columns: 1fr auto;
+  gap: 40px; align-items: center;
+  padding: 44px 40px 32px;
   position: relative;
 }
-.dashboard-header::before {
+.dash-header::before {
   content: ''; position: absolute; inset: 0; pointer-events: none;
-  background: radial-gradient(ellipse at 10% 50%, rgba(48,78,156,.12), transparent 60%);
+  background: radial-gradient(ellipse at 15% 0%, rgba(48,78,156,.18), transparent 55%);
 }
-
-/* ============================================================
-   SEÇÕES DO DASHBOARD
-   ============================================================ */
-.dashboard-section {
-  padding: 40px 32px;
-  border-bottom: 1px solid var(--line);
-}
-.dashboard-section:last-child { border-bottom: none; }
-
-.section-header { margin-bottom: 28px; }
-.section-eyebrow {
+.dash-header-info { position: relative; }
+.dash-header-turma {
   font-size: 11px; font-weight: 600;
   letter-spacing: 0.18em; text-transform: uppercase;
   color: #8aa6e8; margin-bottom: 10px;
 }
-.section-title {
+.dash-header-nome {
+  font-family: var(--font-serif);
+  font-size: clamp(28px, 4vw, 52px);
+  font-weight: 400; line-height: 1.05;
+  letter-spacing: -0.025em; margin-bottom: 24px;
+}
+.dash-header-nome em { font-style: italic; color: var(--gold); }
+.hero-actions { display: flex; gap: 12px; }
+.hero-ring-wrap {
+  position: relative; flex-shrink: 0;
+  width: 160px; height: 160px;
+}
+.ring-track { stroke: rgba(225,228,234,.1); }
+.ring-fill  { stroke: var(--royal); stroke-linecap: round; transition: stroke-dashoffset .8s var(--ease); }
+
+/* Progress strip */
+.progress-strip {
+  display: flex; align-items: center; gap: 16px;
+  padding: 0 40px 28px;
+}
+.progress-pct {
+  font-family: var(--font-serif); font-size: 32px; font-weight: 400;
+  letter-spacing: -0.03em; white-space: nowrap;
+}
+.progress-track {
+  flex: 1; height: 4px; background: rgba(225,228,234,.06);
+  border-radius: 99px; overflow: hidden;
+}
+.progress-fill-bar {
+  height: 100%; background: linear-gradient(90deg, var(--royal), var(--royal-soft));
+  border-radius: 99px; transition: width .8s var(--ease);
+}
+
+/* ============================================================
+   SEÇÕES
+   ============================================================ */
+.section { padding: 40px 40px; }
+.section:not(:last-child) { border-bottom: 1px solid var(--line); }
+.section-header { margin-bottom: 28px; display: flex; justify-content: space-between; align-items: flex-end; gap: 40px; }
+.section-label {
+  font-size: 11px; font-weight: 600;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--text-muted);
+}
+.section-title-serif {
   font-family: var(--font-serif);
   font-size: 2em; font-weight: 400;
-  letter-spacing: -0.02em; color: var(--text);
-  margin-bottom: 8px;
-  border-bottom: none; padding-bottom: 0;
+  letter-spacing: -0.02em; color: var(--text); margin-bottom: 6px;
 }
-.section-description { font-size: 15px; color: var(--text-dim); max-width: 540px; }
+.section-desc { font-size: 15px; color: var(--text-dim); max-width: 540px; }
 
 /* ============================================================
    CARDS
@@ -378,12 +356,7 @@ input, button, select, textarea { font-family: inherit; }
   padding: 24px;
   transition: all .25s var(--ease);
 }
-.card:hover {
-  border-color: var(--line-hover);
-  background: var(--bg-elev-2);
-  transform: translateY(-2px);
-}
-.card-flat { background: var(--bg-elev); border: 1px solid var(--line); border-radius: var(--radius-lg); padding: 24px; }
+.card:hover { border-color: var(--line-hover); background: var(--bg-elev-2); }
 
 /* ============================================================
    BOTÕES
@@ -393,8 +366,7 @@ input, button, select, textarea { font-family: inherit; }
   padding: 12px 20px; border-radius: 10px;
   font-size: 14px; font-weight: 500; letter-spacing: -0.005em;
   border: 1px solid transparent; cursor: pointer;
-  transition: all .2s var(--ease);
-  text-decoration: none;
+  transition: all .2s var(--ease); text-decoration: none;
 }
 .btn-primary {
   background: var(--royal); color: white; border-color: var(--royal);
@@ -405,7 +377,7 @@ input, button, select, textarea { font-family: inherit; }
 .btn-ghost {
   background: transparent; color: var(--text-dim); border-color: var(--line);
 }
-.btn-ghost:hover { background: rgba(225,228,234,.05); color: var(--text); border-color: var(--neutral); }
+.btn-ghost:hover { background: rgba(225,228,234,.05); color: var(--text); border-color: rgba(225,228,234,.2); }
 .btn-gold {
   background: var(--gold); color: #241f26; border-color: var(--gold);
   box-shadow: 0 4px 16px -4px rgba(201,169,110,.5);
@@ -413,7 +385,7 @@ input, button, select, textarea { font-family: inherit; }
 .btn-gold:hover { filter: brightness(1.05); transform: translateY(-1px); }
 
 /* ============================================================
-   PILLS / BADGES DE STATUS
+   PILLS
    ============================================================ */
 .pill {
   display: inline-flex; align-items: center; gap: 6px;
@@ -426,29 +398,13 @@ input, button, select, textarea { font-family: inherit; }
 .pill-success { background: var(--success-bg); color: var(--success); border: 1px solid var(--success-border); }
 .pill-gold    { background: rgba(201,169,110,.12); color: var(--gold); border: 1px solid rgba(201,169,110,.35); }
 
-/* Aliases para compatibilidade com código existente */
+/* Compatibilidade status badges */
 .status-badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 999px; font-size: 11px; font-weight: 500; letter-spacing: 0.04em; }
 .status-concluido, .status-preenchido { background: var(--success-bg); color: var(--success); border: 1px solid var(--success-border); }
 .status-andamento   { background: rgba(48,78,156,.15); color: #8aa6e8; border: 1px solid rgba(48,78,156,.4); }
 .status-nao-iniciado, .status-pendente { background: rgba(225,228,234,.06); color: var(--text-muted); border: 1px solid rgba(225,228,234,.1); }
 .status-realizado   { background: var(--success-bg); color: var(--success); border: 1px solid var(--success-border); }
 .pilar-badge { display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px; border-radius: 999px; font-size: 11px; font-weight: 600; }
-
-/* ============================================================
-   PROGRESSO
-   ============================================================ */
-.progress-bar {
-  height: 4px; background: rgba(225,228,234,.06);
-  border-radius: 99px; overflow: hidden; width: 100%;
-}
-.progress-fill, .pilar-progresso-fill {
-  height: 100%; border-radius: 99px;
-  background: var(--royal);
-  transition: width .8s var(--ease);
-}
-.pilar-progresso-fill.concluido { background: var(--success); }
-.pilar-progresso-fill.andamento  { background: var(--royal); }
-.progress-fill-gold { background: var(--gold); }
 
 /* ============================================================
    PILARES
@@ -469,41 +425,31 @@ input, button, select, textarea { font-family: inherit; }
   position: relative; overflow: hidden;
 }
 .pilar-item:hover { border-color: var(--line-hover); background: var(--bg-elev-2); transform: translateY(-2px); }
-.pilar-item::before {
-  content: attr(data-index);
-  position: absolute; right: 16px; top: 8px;
-  font-family: var(--font-serif); font-size: 80px; line-height: 1;
-  font-style: italic; color: rgba(225,228,234,.03);
-  pointer-events: none; letter-spacing: -0.05em;
-}
-
 .pilar-icon {
   width: 40px; height: 40px; border-radius: 10px; flex-shrink: 0;
-  background: rgba(225,228,234,.05);
-  border: 1px solid rgba(225,228,234,.08);
+  background: rgba(225,228,234,.05); border: 1px solid rgba(225,228,234,.08);
   display: grid; place-items: center; font-size: 18px;
 }
 .pilar-content { flex: 1; min-width: 0; }
 .pilar-nome {
   font-family: var(--font-serif);
-  font-size: 1.1em; font-weight: 400; letter-spacing: -0.01em;
-  margin-bottom: 4px;
+  font-size: 1.1em; font-weight: 400; letter-spacing: -0.01em; margin-bottom: 4px;
 }
 .pilar-entregavel { font-size: 13px; color: #8aa6e8; margin-bottom: 10px; font-weight: 500; }
 .pilar-status { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; }
 .pilar-detalhes { font-size: 12px; color: var(--text-muted); }
-.pilar-progresso {
-  height: 4px; background: rgba(225,228,234,.06);
-  border-radius: 99px; overflow: hidden; margin-top: 10px;
-}
+.pilar-progresso { height: 4px; background: rgba(225,228,234,.06); border-radius: 99px; overflow: hidden; margin-top: 10px; }
+.pilar-progresso-fill { height: 100%; border-radius: 99px; transition: width .8s var(--ease); }
+.pilar-progresso-fill.concluido { background: var(--success); }
+.pilar-progresso-fill.andamento  { background: var(--royal); }
 
-/* Escritor Best Seller — card especial */
+/* Escritor */
 .pilar-item-livro { align-self: stretch; }
 .pilar-item-livro > .pilar-icon { display: none; }
 .pilar-item-livro > .pilar-content { flex: 1; display: flex; flex-direction: column; }
 .pilar-item-livro .livro-jornada { flex: 1; }
 
-/* Posicionamento no grid para Escritor na coluna direita */
+/* Grid pilares */
 .pilares-lista > .pilar-item:nth-child(1) { grid-column: 1; grid-row: 1; }
 .pilares-lista > .pilar-item:nth-child(2) { grid-column: 2; grid-row: 1 / span 3; }
 .pilares-lista > .pilar-item:nth-child(3) { grid-column: 1; grid-row: 2; }
@@ -514,19 +460,12 @@ input, button, select, textarea { font-family: inherit; }
    ============================================================ */
 .livro-jornada {
   margin-top: 10px; padding: 12px;
-  background: rgba(48,78,156,.05);
-  border-radius: 10px;
+  background: rgba(48,78,156,.05); border-radius: 10px;
   border: 1px solid rgba(48,78,156,.2);
   display: flex; flex-direction: column; gap: 5px;
 }
-.livro-jornada-titulo {
-  font-size: 10px; font-weight: 700; color: #8aa6e8;
-  margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;
-}
-.livro-etapa {
-  display: flex; align-items: center; gap: 8px;
-  padding: 6px 10px; border-radius: 6px; font-size: 0.8em;
-}
+.livro-jornada-titulo { font-size: 10px; font-weight: 700; color: #8aa6e8; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+.livro-etapa { display: flex; align-items: center; gap: 8px; padding: 6px 10px; border-radius: 6px; font-size: 0.8em; }
 .livro-etapa-concluida { opacity: 0.5; background: rgba(72,160,113,.04); }
 .livro-etapa-atual    { background: rgba(48,78,156,.12); border: 1px solid rgba(48,78,156,.4); }
 .livro-etapa-final    { background: rgba(72,160,113,.12); border: 1px solid rgba(72,160,113,.4); }
@@ -544,103 +483,91 @@ input, button, select, textarea { font-family: inherit; }
 /* ============================================================
    FORMULÁRIOS
    ============================================================ */
-.form-list { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.form-item {
+.forms-card { background: var(--bg-elev); border: 1px solid var(--line); border-radius: var(--radius-lg); padding: 28px; }
+.forms-progress-bar { height: 5px; background: rgba(225,228,234,.06); border-radius: 99px; overflow: hidden; margin-bottom: 28px; }
+.forms-progress-fill { height: 100%; background: linear-gradient(90deg, var(--royal), var(--royal-soft)); border-radius: 99px; }
+.forms-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+.formulario-card {
   display: flex; justify-content: space-between; align-items: center;
   padding: 14px 18px; border-radius: 10px;
-  background: rgba(225,228,234,.02);
-  border: 1px solid var(--line);
-  transition: all .2s;
+  background: rgba(225,228,234,.02); border: 1px solid var(--line); transition: all .2s;
 }
-.form-item:hover { background: rgba(225,228,234,.04); }
-.form-check {
-  width: 22px; height: 22px; border-radius: 50%; flex-shrink: 0;
-  display: grid; place-items: center; font-size: 11px;
-}
-.form-check-done { background: var(--success-bg); border: 1px solid var(--success-border); color: var(--success); }
-.form-check-pend { background: rgba(225,228,234,.05); border: 1px solid rgba(225,228,234,.1); color: var(--text-muted); }
-.form-name { font-size: 14px; font-weight: 500; margin-left: 10px; }
-.form-link {
+.formulario-card:hover { border-color: var(--line-hover); }
+.formulario-header { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; }
+.formulario-title { font-size: 14px; font-weight: 500; }
+.btn-formulario {
   display: inline-flex; align-items: center; gap: 6px;
-  padding: 10px 16px; border-radius: 8px;
-  background: var(--royal); color: white; border: none;
-  font-size: 13px; font-weight: 500; text-decoration: none;
-  transition: all .2s;
+  padding: 9px 16px; border-radius: 8px; font-size: 13px; font-weight: 500;
+  cursor: pointer; text-decoration: none; transition: all .2s; font-family: var(--font-sans); border: none;
 }
-.form-link:hover { background: var(--royal-soft); }
-.form-link-done {
-  background: rgba(225,228,234,.06); color: var(--text-muted);
-  border: 1px solid var(--line); cursor: default;
-}
+.btn-preencher { background: var(--royal); color: white; box-shadow: 0 2px 8px -2px rgba(48,78,156,.5); }
+.btn-preencher:hover { background: var(--royal-soft); transform: translateY(-1px); }
+.btn-concluido { background: var(--success-bg); color: var(--success); border: 1px solid var(--success-border); cursor: default; }
 
 /* ============================================================
    IMERSÕES
    ============================================================ */
 .imersoes-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
 .imersao-card {
-  background: var(--bg-elev);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-lg); padding: 24px;
-  transition: all .25s var(--ease);
+  background: var(--bg-elev); border: 1px solid var(--line);
+  border-radius: var(--radius-lg); padding: 24px; transition: all .25s var(--ease);
 }
 .imersao-card:hover { border-color: var(--line-hover); background: var(--bg-elev-2); transform: translateY(-2px); }
-.imersao-code { font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); letter-spacing: 0.08em; margin-bottom: 20px; }
-.imersao-nome { font-family: var(--font-serif); font-size: 22px; line-height: 1.15; letter-spacing: -0.02em; margin-bottom: 8px; }
-.imersao-desc { font-size: 14px; color: var(--text-dim); margin-bottom: 20px; }
-.imersao-footer {
-  padding-top: 16px; border-top: 1px solid var(--line);
-  display: flex; justify-content: space-between; align-items: center;
-}
-.imersao-data { font-size: 11px; color: var(--text-muted); }
-.imersao-data-value { font-family: var(--font-mono); font-size: 13px; margin-top: 2px; }
+.imersao-icon { font-size: 2em; margin-bottom: 12px; }
+.imersao-titulo { font-family: var(--font-serif); font-size: 20px; letter-spacing: -0.02em; margin-bottom: 8px; line-height: 1.2; }
+.imersao-status { margin-bottom: 10px; }
+.imersao-data { font-family: var(--font-mono); font-size: 12px; color: var(--text-muted); margin-top: 6px; }
+.imersao-participou { font-size: 13px; color: var(--text-dim); margin-top: 6px; }
+.imersao-em-breve { font-size: 13px; color: var(--gold); margin-top: 6px; }
 
 /* ============================================================
    AGENDAMENTO
    ============================================================ */
-.agendamento-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
 .agendamento-grupo {
-  background: var(--bg-elev);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-lg); padding: 20px;
+  background: var(--bg-elev); border: 1px solid var(--line);
+  border-radius: var(--radius-lg); padding: 20px; margin-bottom: 12px;
 }
 .agendamento-grupo-titulo {
-  font-size: 10px; font-weight: 700; color: var(--text-muted);
-  letter-spacing: 0.12em; text-transform: uppercase;
-  margin-bottom: 14px;
+  font-size: 10px; font-weight: 700; color: var(--gold);
+  letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 12px;
 }
 .agendamento-grupo-botoes { display: flex; flex-direction: column; gap: 8px; }
 .btn-mentor-individual {
   display: flex; align-items: center; justify-content: space-between;
   padding: 12px 14px; border-radius: 10px;
-  background: rgba(225,228,234,.03);
-  border: 1px solid var(--line); color: var(--text);
-  font-size: 14px; font-weight: 500; text-align: left;
-  transition: all .2s; width: 100%;
+  background: rgba(225,228,234,.03); border: 1px solid var(--line);
+  color: var(--text); font-size: 14px; font-weight: 500;
+  text-align: left; transition: all .2s; width: 100%;
 }
 .btn-mentor-individual:hover { background: rgba(225,228,234,.07); border-color: var(--line-hover); }
-.mentor-avatar {
-  width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0;
-  background: linear-gradient(135deg, var(--royal), var(--royal-deep));
-  display: grid; place-items: center; font-size: 11px; font-weight: 700; color: white;
-}
 
 /* ============================================================
    PODCAST
    ============================================================ */
-.podcast-section { padding: 32px; }
-.podcast-card {
-  background: var(--bg-elev); border: 1px solid var(--line);
-  border-radius: var(--radius-lg); padding: 24px;
-}
+.podcast-section-wrap { padding: 40px 40px; border-bottom: 1px solid var(--line); }
 .podcast-em-breve {
   display: flex; align-items: center; gap: 16px;
-  padding: 18px 24px;
-  background: rgba(255,255,255,.03);
-  border-radius: 12px; border: 1px dashed rgba(255,255,255,.15); margin: 10px 0;
+  padding: 18px 24px; background: rgba(255,255,255,.03);
+  border-radius: 12px; border: 1px dashed rgba(255,255,255,.15);
 }
 .podcast-em-breve-icon { font-size: 2em; opacity: 0.7; flex-shrink: 0; }
 .podcast-em-breve-titulo { font-size: 1em; font-weight: 700; color: var(--gold); margin-bottom: 4px; }
-.podcast-em-breve-texto { font-size: 0.85em; color: rgba(255,255,255,.6); line-height: 1.5; }
+.podcast-em-breve-texto { font-size: .875em; color: rgba(255,255,255,.6); line-height: 1.5; }
+.podcast-info { font-size: 14px; color: var(--text-dim); line-height: 1.6; }
+.podcast-status { margin-bottom: 14px; }
+.podcast-badge { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 999px; font-size: 11px; font-weight: 600; }
+.podcast-pendente { background: rgba(255,193,7,.1); color: #ffc107; border: 1px solid rgba(255,193,7,.3); }
+.podcast-agendado { background: var(--success-bg); color: var(--success); border: 1px solid var(--success-border); }
+.podcast-agendado-data { background: rgba(48,78,156,.15); color: #8aa6e8; border: 1px solid rgba(48,78,156,.4); }
+.podcast-data { font-family: var(--font-mono); font-size: 12px; margin-top: 8px; color: var(--text-dim); }
+.btn-agendar-podcast {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 12px 20px; border-radius: 10px; margin-top: 16px;
+  background: var(--royal); color: white; border: none;
+  font-size: 14px; font-weight: 500; cursor: pointer; transition: all .2s;
+  box-shadow: 0 4px 16px -4px rgba(48,78,156,.5);
+}
+.btn-agendar-podcast:hover { background: var(--royal-soft); transform: translateY(-1px); }
 
 /* ============================================================
    ARQUÉTIPO
@@ -648,72 +575,96 @@ input, button, select, textarea { font-family: inherit; }
 .arquetipo-card {
   background: linear-gradient(180deg, var(--bg-elev), var(--bg));
   border: 1px solid rgba(201,169,110,.2); border-radius: var(--radius-xl);
-  padding: 40px; position: relative; overflow: hidden;
+  overflow: hidden; position: relative;
 }
-.arquetipo-nome {
-  font-family: var(--font-serif); font-size: 3em; font-weight: 400;
-  letter-spacing: -0.025em; color: var(--gold); margin: 12px 0;
+.arquetipo-grid { display: grid; grid-template-columns: 1fr 1.2fr; min-height: 400px; }
+.arquetipo-left {
+  position: relative;
+  background: radial-gradient(circle at 50% 40%, rgba(48,78,156,.25), rgba(36,31,38,1) 70%);
+  display: grid; place-items: center; padding: 48px;
+  border-right: 1px solid var(--line);
 }
-.arquetipo-mantra { font-family: var(--font-serif); font-style: italic; color: var(--text-dim); font-size: 15px; }
-
-/* ============================================================
-   CALENDÁRIO
-   ============================================================ */
-.calendar-grid-days {
-  display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px;
-}
-.calendar-day {
-  aspect-ratio: 1; display: grid; place-items: center;
-  font-size: 12px; font-family: var(--font-mono);
-  border-radius: 8px; transition: all .15s;
-}
-.calendar-day-today { background: var(--royal); color: white; font-weight: 600; }
-.calendar-day-event { border: 1px solid var(--royal); color: #a8bce8; font-weight: 600; }
-.calendar-day-normal { color: var(--text-muted); }
+.arquetipo-rings { position: absolute; width: 100%; height: 100%; display: grid; place-items: center; pointer-events: none; }
+.arquetipo-right { padding: 40px; display: flex; flex-direction: column; justify-content: center; gap: 18px; }
+.arquetipo-trait { padding: 16px 20px; border-left: 2px solid; background: rgba(225,228,234,.02); border-radius: 0 8px 8px 0; }
 
 /* ============================================================
    BIBLIOTECA
    ============================================================ */
 .biblioteca-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
-.biblioteca-item {
+.recurso-card {
   background: var(--bg-elev); border: 1px solid var(--line);
   border-radius: var(--radius-lg); padding: 22px;
-  display: flex; flex-direction: column; gap: 14px;
-  transition: all .25s var(--ease);
+  display: flex; flex-direction: column; gap: 14px; transition: all .25s var(--ease);
 }
-.biblioteca-item:hover { border-color: var(--line-hover); background: var(--bg-elev-2); transform: translateY(-2px); }
-.biblioteca-cover {
+.recurso-card:hover { border-color: var(--line-hover); background: var(--bg-elev-2); transform: translateY(-2px); }
+.recurso-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
+.recurso-icon {
   width: 40px; height: 48px; border-radius: 4px;
   background: linear-gradient(135deg, rgba(48,78,156,.3), rgba(48,78,156,.1));
   border: 1px solid rgba(225,228,234,.1);
-  display: grid; place-items: center;
-  font-size: 9px; font-weight: 700; color: #a8bce8; letter-spacing: 0.05em;
+  display: grid; place-items: center; font-size: 9px; font-weight: 700; color: #a8bce8;
 }
-.biblioteca-titulo { font-size: 14px; font-weight: 500; line-height: 1.35; letter-spacing: -0.01em; flex: 1; }
-.biblioteca-link {
-  color: #8aa6e8; font-size: 12px; font-weight: 500; background: none;
-  border: none; text-align: left; display: flex; align-items: center; gap: 6px; padding: 0;
+.recurso-title { font-size: 14px; font-weight: 500; line-height: 1.4; letter-spacing: -.01em; flex: 1; }
+.recurso-descricao { font-size: 13px; color: var(--text-dim); line-height: 1.5; }
+.btn-download {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 9px 16px; border-radius: 8px; font-size: 13px; font-weight: 500;
+  cursor: pointer; font-family: var(--font-sans); background: transparent;
+  border: 1px solid rgba(225,228,234,.15); color: var(--text-dim); transition: all .2s; text-decoration: none;
 }
-.biblioteca-link:hover { color: var(--bone); }
+.btn-download:hover { border-color: rgba(225,228,234,.3); color: var(--text); }
 
 /* ============================================================
-   INPUTS / FORMS INTERNOS
+   CTA FINAL
    ============================================================ */
-.input-group { margin-bottom: 20px; }
+.cta-footer {
+  margin: 0 40px 48px;
+  padding: 52px 48px; border-radius: var(--radius-xl);
+  background: linear-gradient(135deg, rgba(48,78,156,.22), rgba(36,31,38,1) 70%);
+  border: 1px solid rgba(48,78,156,.3);
+  display: grid; grid-template-columns: 1fr auto;
+  align-items: center; gap: 40px; position: relative; overflow: hidden;
+}
+.cta-lion-mark {
+  position: absolute; right: -30px; top: -40px; opacity: .04;
+  font-size: 280px; pointer-events: none; line-height: 1;
+}
+
+/* PAGE FOOTER */
+.page-footer {
+  padding: 28px 40px; border-top: 1px solid var(--line);
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 12px; color: var(--text-muted);
+}
+
+/* ============================================================
+   BANNER PENDÊNCIAS
+   ============================================================ */
+.banner-pendencias {
+  margin: 16px 40px 0;
+  padding: 14px 20px; border-radius: var(--radius);
+  background: rgba(201,169,110,.08); border: 1px solid rgba(201,169,110,.25);
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  cursor: pointer; transition: all .2s;
+}
+.banner-pendencias:hover { background: rgba(201,169,110,.14); }
+
+/* ============================================================
+   INPUTS / FORMS
+   ============================================================ */
+.input-group { margin-bottom: 18px; }
 .input-group label {
   display: block; margin-bottom: 8px; color: var(--text-dim);
   font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
 }
-.input-group input, .input-group select {
+.input-group input {
   width: 100%; padding: 13px 15px;
-  background: rgba(225,228,234,.03);
-  border: 1px solid rgba(225,228,234,.08);
-  border-radius: 10px; font-size: 14px; color: var(--text); outline: none;
-  transition: all .2s;
+  background: rgba(225,228,234,.03); border: 1px solid rgba(225,228,234,.08);
+  border-radius: 10px; font-size: 14px; color: var(--text); outline: none; transition: all .2s;
 }
-.input-group input:focus, .input-group select:focus {
-  border-color: var(--royal);
-  background: rgba(48,78,156,.08);
+.input-group input:focus {
+  border-color: var(--royal); background: rgba(48,78,156,.08);
   box-shadow: 0 0 0 4px rgba(48,78,156,.15);
 }
 .input-group input::placeholder { color: var(--text-muted); }
@@ -728,50 +679,48 @@ input, button, select, textarea { font-family: inherit; }
 /* ============================================================
    MENSAGENS
    ============================================================ */
-.error-message, .success-message, .info-message { padding: 14px 16px; border-radius: 10px; margin-bottom: 16px; font-size: 14px; }
-.error-message   { background: rgba(220,53,69,.12); color: #f08090; border: 1px solid rgba(220,53,69,.3); }
-.success-message { background: var(--success-bg); color: var(--success); border: 1px solid var(--success-border); }
-.info-message    { background: rgba(48,78,156,.12); color: #8aa6e8; border: 1px solid rgba(48,78,156,.3); }
+.msg-box { margin-bottom: 16px; }
+.error-message   { background: rgba(220,53,69,.12); color: #f08090; border: 1px solid rgba(220,53,69,.3); padding: 12px 16px; border-radius: 10px; font-size: 14px; }
+.success-message { background: var(--success-bg); color: var(--success); border: 1px solid var(--success-border); padding: 12px 16px; border-radius: 10px; font-size: 14px; }
+.info-message    { background: rgba(48,78,156,.12); color: #8aa6e8; border: 1px solid rgba(48,78,156,.3); padding: 12px 16px; border-radius: 10px; font-size: 14px; }
 
 /* ============================================================
-   MODAL EDITAR NOME
+   MODAIS
    ============================================================ */
 .modal-overlay {
-  display: none; position: fixed;
-  top: 0; left: 0; width: 100%; height: 100%;
-  background: rgba(0,0,0,.7); z-index: 10000;
-  align-items: center; justify-content: center;
+  display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0,0,0,.75); z-index: 10000; align-items: center; justify-content: center;
 }
 .modal-overlay.active { display: flex; }
 .modal-overlay.hidden  { display: none; }
 .modal-content {
   background: var(--bg-elev); border: 1px solid var(--line-hover);
-  border-radius: var(--radius-lg); padding: 32px;
-  max-width: 420px; width: 90%;
+  border-radius: var(--radius-lg); padding: 32px; max-width: 420px; width: 90%;
   box-shadow: 0 24px 60px rgba(0,0,0,.6);
 }
-.modal-content h3 {
-  font-family: var(--font-serif); font-size: 1.6em; font-weight: 400;
-  letter-spacing: -0.02em; margin-bottom: 20px;
+.modal-title { font-family: var(--font-serif); font-size: 1.5em; font-weight: 400; letter-spacing: -0.02em; margin-bottom: 18px; }
+.modal-input {
+  width: 100%; padding: 13px 15px; background: rgba(225,228,234,.04);
+  border: 1px solid var(--line); border-radius: 10px; font-size: 14px;
+  color: var(--text); outline: none; transition: all .2s; margin-bottom: 12px;
 }
+.modal-input:focus { border-color: var(--royal); box-shadow: 0 0 0 3px rgba(48,78,156,.15); }
+.modal-actions { display: flex; gap: 10px; }
 
-/* Modal pendências */
 #modalPendencias, #modalFormularioPendente {
   position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-  background: rgba(0,0,0,.8);
-  display: flex; align-items: center; justify-content: center;
+  background: rgba(0,0,0,.8); display: flex; align-items: center; justify-content: center;
   z-index: 10000; animation: fadeIn .3s ease;
 }
 #modalPendencias.hidden, #modalFormularioPendente.hidden { display: none; }
 .modal-container {
   background: var(--bg-elev); border: 1px solid var(--line-hover);
-  border-radius: var(--radius-lg); padding: 32px;
-  max-width: 480px; width: 90%;
+  border-radius: var(--radius-lg); padding: 32px; max-width: 480px; width: 90%;
   box-shadow: 0 24px 60px rgba(0,0,0,.6);
 }
 
 /* ============================================================
-   LINK BUTTONS (esqueci senha etc)
+   LINK BUTTONS
    ============================================================ */
 .link-button { text-align: center; margin-top: 16px; }
 .link-button a { color: #8aa6e8; font-size: 14px; cursor: pointer; text-decoration: none; }
@@ -780,626 +729,522 @@ input, button, select, textarea { font-family: inherit; }
 /* ============================================================
    MASTER DASHBOARD
    ============================================================ */
+.master-wrapper { padding: 32px 40px; }
+.master-tabs { display: flex; gap: 8px; margin-bottom: 24px; flex-wrap: wrap; }
+.master-tab {
+  padding: 10px 20px; border: 1px solid var(--line);
+  background: var(--bg-elev); border-radius: 8px;
+  cursor: pointer; font-weight: 500; font-size: 13px; color: var(--text-dim); transition: all .2s;
+}
+.master-tab:hover { color: var(--text); border-color: var(--line-hover); }
+.master-tab.active { background: var(--royal); color: white; border-color: var(--royal); }
+
+.stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin-bottom: 28px; }
+.stat-card {
+  background: var(--bg-elev); padding: 22px; border-radius: var(--radius-lg);
+  text-align: center; border: 1px solid var(--line);
+}
+.stat-value { font-family: var(--font-serif); font-size: 2.6em; font-weight: 400; color: #8aa6e8; letter-spacing: -0.03em; line-height: 1; }
+.stat-label { color: var(--text-muted); margin-top: 6px; font-size: 12px; text-transform: uppercase; letter-spacing: 0.1em; }
+
+.aluno-card {
+  background: var(--bg-elev); border: 1px solid var(--line);
+  border-radius: var(--radius); padding: 16px; margin-bottom: 10px; transition: all .2s;
+}
+.aluno-card:hover { border-color: var(--line-hover); background: var(--bg-elev-2); }
+.aluno-nome { font-weight: 600; font-size: 15px; }
+.aluno-email { color: var(--text-muted); font-size: 13px; }
+.mini-progress { font-size: 13px; color: #8aa6e8; font-weight: 600; }
+
+/* Tabs compat */
 .tabs { display: flex; gap: 8px; margin-bottom: 24px; flex-wrap: wrap; }
 .tab {
-  padding: 10px 20px; border: none;
-  background: rgba(225,228,234,.05); border-radius: 8px;
-  cursor: pointer; font-weight: 500; font-size: 13px;
+  padding: 10px 20px; border: none; background: rgba(225,228,234,.05);
+  border-radius: 8px; cursor: pointer; font-weight: 500; font-size: 13px;
   color: var(--text-dim); transition: all .2s;
 }
 .tab:hover { background: rgba(225,228,234,.08); color: var(--text); }
 .tab.active { background: linear-gradient(135deg, var(--royal), var(--royal-deep)); color: white; }
 
-.stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 28px; }
-.stat-card {
-  background: var(--bg-elev); padding: 22px;
-  border-radius: var(--radius-lg); text-align: center;
-  border: 1px solid var(--line);
+/* Seção título compat */
+.section-title {
+  font-family: var(--font-serif); font-size: 1.8em; font-weight: 400;
+  letter-spacing: -0.02em; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--line);
 }
-.stat-value { font-family: var(--font-serif); font-size: 2.8em; font-weight: 400; color: #8aa6e8; letter-spacing: -0.03em; line-height: 1; }
-.stat-label { color: var(--text-muted); margin-top: 6px; font-size: 12px; text-transform: uppercase; letter-spacing: 0.1em; }
-
-.aluno-card {
-  background: var(--bg-elev); border: 1px solid var(--line);
-  border-radius: var(--radius); padding: 16px; margin-bottom: 12px;
-  transition: all .2s;
-}
-.aluno-card:hover { border-color: var(--line-hover); background: var(--bg-elev-2); }
-.aluno-nome { font-weight: 600; font-size: 15px; }
-.aluno-email { color: var(--text-muted); font-size: 13px; }
-
-/* ============================================================
-   MENU DE NAVEGAÇÃO (tabs do aluno)
-   ============================================================ */
-.dashboard-nav {
-  display: flex; gap: 4px; padding: 0 32px;
-  border-bottom: 1px solid var(--line);
-  overflow-x: auto;
-}
-.menu-item {
-  padding: 12px 16px; cursor: pointer;
-  font-size: 13px; font-weight: 500; color: var(--text-muted);
-  border-bottom: 2px solid transparent; white-space: nowrap;
-  transition: all .2s;
-}
-.menu-item:hover { color: var(--text); border-bottom-color: var(--line-hover); }
-.menu-item.active { color: #8aa6e8; border-bottom-color: var(--royal); }
-
-/* ============================================================
-   HEADER INTERNO DO MENU (topo do painel aluno)
-   ============================================================ */
-.dashboard-main-header {
-  display: flex; justify-content: space-between; align-items: center;
-  padding: 16px 32px; border-bottom: 1px solid var(--line);
-  position: sticky; top: 0; z-index: 50;
-  background: rgba(36,31,38,.85); backdrop-filter: blur(20px);
-}
-.header-logo-area {
-  display: flex; align-items: center; gap: 12px;
-}
-.header-logo-icon {
-  width: 36px; height: 36px; border-radius: 50%;
-  background: var(--bg-elev-2); border: 1px solid var(--line-hover);
-  display: grid; place-items: center; font-size: 18px;
-}
-.header-brand-name {
-  font-family: var(--font-serif); font-size: 16px; letter-spacing: -0.01em;
-}
-.header-brand-sub {
-  font-size: 10px; color: var(--text-muted);
-  letter-spacing: 0.12em; text-transform: uppercase;
-}
-.header-user-area { display: flex; align-items: center; gap: 12px; }
-.header-username { font-size: 13px; color: var(--text-dim); font-weight: 500; }
-
-/* ============================================================
-   MISC / COMPAT
-   ============================================================ */
-/* Container geral */
-.dashboard-content { padding: 0; }
-#masterContent { width: 100%; }
-.badge-master {
-  background: rgba(225,228,234,.08); padding: 8px 16px;
-  border-radius: 20px; font-size: 13px; font-weight: 600;
-  border: 1px solid var(--line-hover);
-}
-
-/* NPS e outros */
-.nps-score { font-family: var(--font-serif); font-size: 3em; font-weight: 400; color: #8aa6e8; }
-
-/* Agendamento grupo títulos */
-.agendamento-grupo-titulo { color: #8aa6e8; }
 
 /* Comparison table */
 .comparison-table { border-collapse: collapse; width: 100%; }
-.comparison-table th, .comparison-table td {
-  padding: 12px 16px; border-bottom: 1px solid var(--line);
-  font-size: 13px; text-align: left;
-}
+.comparison-table th, .comparison-table td { padding: 12px 16px; border-bottom: 1px solid var(--line); font-size: 13px; text-align: left; }
 .comparison-table th { font-weight: 600; color: var(--text-muted); font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; }
 
-/* Mini progress */
-.mini-progress { font-size: 13px; color: #8aa6e8; font-weight: 600; }
-
-/* Botão de logout */
-.logout-btn {
-  background: rgba(225,228,234,.06); color: var(--text-dim);
-  border: 1px solid var(--line); border-radius: 8px;
-  padding: 10px 18px; font-size: 13px; cursor: pointer;
-  transition: all .2s; margin-top: 24px;
+/* Tooltip calendário */
+#tooltipCalendarioFixo {
+  position: fixed; z-index: 200;
+  background: var(--bg-elev-2); border: 1px solid var(--line-hover);
+  border-radius: var(--radius); padding: 12px 16px;
+  box-shadow: 0 16px 40px rgba(0,0,0,.5); max-width: 260px; font-size: 13px; pointer-events: none;
 }
+.tooltip-fixo-tema { font-size: 14px; font-weight: 500; margin-bottom: 4px; }
+.tooltip-fixo-data { font-size: 12px; color: var(--text-dim); }
+.tooltip-fixo-horario { font-size: 12px; color: var(--text-muted); font-family: var(--font-mono); }
+.tooltip-fixo-separador { border: none; border-top: 1px solid var(--line); margin: 8px 0; }
+
+/* Calendário */
+.calendario-dia { width: 32px; height: 32px; border-radius: 8px; display: grid; place-items: center; font-size: 12px; font-family: var(--font-mono); cursor: pointer; transition: all .15s; }
+.calendario-dia-vazio { visibility: hidden; }
+.calendario-dia-numero { color: var(--text-dim); }
+.calendario-dia-numero:hover { background: rgba(225,228,234,.08); }
+.calendario-dia-hoje { background: var(--royal) !important; color: white !important; font-weight: 600; }
+.calendario-dia-evento { border: 1px solid var(--royal); color: #a8bce8; font-weight: 600; }
+.calendario-dia-passado { opacity: .4; }
+
+/* Misc */
+.logout-btn { background: rgba(225,228,234,.06); color: var(--text-dim); border: 1px solid var(--line); border-radius: 8px; padding: 10px 18px; font-size: 13px; cursor: pointer; transition: all .2s; margin-top: 20px; }
 .logout-btn:hover { background: rgba(225,228,234,.1); color: var(--text); }
-
-/* Botão primário legado */
-.btn-primary-legacy {
-  width: 100%; padding: 14px;
-  background: var(--royal); color: white;
-  border: none; border-radius: 10px;
-  font-size: 14px; font-weight: 500; cursor: pointer;
-  transition: all .2s;
-  box-shadow: 0 4px 16px -4px rgba(48,78,156,.5);
-}
-.btn-primary-legacy:hover { background: var(--royal-soft); transform: translateY(-1px); }
+.badge-master { background: rgba(225,228,234,.08); padding: 8px 16px; border-radius: 20px; font-size: 13px; font-weight: 600; border: 1px solid var(--line-hover); }
+#masterContent { width: 100%; }
+.empty-list { text-align: center; padding: 32px 20px; color: var(--text-muted); font-size: 14px; }
+.kpi-card { background: var(--bg-elev); border: 1px solid var(--line); border-radius: var(--radius-lg); padding: 22px; }
+.kpi-value { font-family: var(--font-serif); font-size: 38px; font-weight: 400; letter-spacing: -0.03em; line-height: 1; margin-bottom: 8px; }
+.kpi-label { font-size: 11px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--text-muted); }
+.kpi-sublabel { font-size: 12px; color: var(--text-dim); margin-top: 4px; }
+.kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 14px; margin-bottom: 24px; }
+.insight-box { background: rgba(48,78,156,.08); border: 1px solid rgba(48,78,156,.2); border-radius: var(--radius); padding: 16px; font-size: 14px; color: var(--text-dim); line-height: 1.6; margin-bottom: 10px; }
+.gap-indicator { font-size: 12px; color: var(--gold); font-weight: 600; font-family: var(--font-mono); }
+.pendencia-item { display: flex; align-items: center; gap: 12px; padding: 10px 14px; border-radius: 10px; background: rgba(225,228,234,.03); border: 1px solid var(--line); margin-bottom: 8px; }
+.pendencia-check { width: 20px; height: 20px; border-radius: 50%; flex-shrink: 0; display: grid; place-items: center; font-size: 10px; background: rgba(255,193,7,.1); border: 1px solid rgba(255,193,7,.3); color: #ffc107; }
+.pendencia-texto { font-size: 13px; flex: 1; }
+.pendencias-grupo { margin-bottom: 18px; }
+.pendencias-grupo-titulo { font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 8px; }
+.mensagem-sucesso { text-align: center; padding: 32px 20px; }
+.mensagem-sucesso-icone { font-size: 3em; margin-bottom: 16px; }
+.mensagem-sucesso-texto { font-size: 18px; font-weight: 600; margin-bottom: 8px; }
+.mensagem-sucesso-sub { font-size: 14px; color: var(--text-dim); }
+.pw-strength { height: 4px; background: rgba(225,228,234,.08); border-radius: 3px; margin-top: 6px; overflow: hidden; }
+.pw-strength-bar { height: 100%; width: 0%; transition: all .3s; border-radius: 3px; }
+.turmas-comparison { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px,1fr)); gap: 16px; }
+.turma-alunos-box { background: var(--bg-elev); border: 1px solid var(--line); border-radius: var(--radius-lg); padding: 22px; }
+.turma-alunos-title { font-family: var(--font-serif); font-size: 17px; font-weight: 400; margin-bottom: 14px; }
+.alunos-section { margin-bottom: 16px; }
+.alunos-section-title { font-size: 12px; font-weight: 600; margin-bottom: 8px; }
+.aluno-item { font-size: 13px; color: var(--text-dim); padding: 6px 0; border-bottom: 1px solid var(--line); }
+.preenchidos { color: var(--success); }
+.pendentes { color: #ffc107; }
+.progress-bar-mini { height: 3px; background: rgba(225,228,234,.06); border-radius: 99px; overflow: hidden; margin-top: 8px; }
+.progress-fill-mini { height: 100%; background: var(--royal); border-radius: 99px; }
+.expand-icon, .expand-icon-table { font-size: 11px; color: var(--text-muted); transition: transform .2s; }
+.modal-aula-tema { font-size: 15px; font-weight: 500; margin-bottom: 6px; }
+.modal-aula-data { font-size: 13px; color: var(--text-dim); margin-bottom: 4px; }
+.modal-aula-horario { font-size: 12px; color: var(--text-muted); font-family: var(--font-mono); }
+.strategic-section { margin-bottom: 28px; }
+.strategic-title { font-family: var(--font-serif); font-size: 20px; font-weight: 400; margin-bottom: 14px; letter-spacing: -0.01em; }
+.arquetipos-stats-section { margin-bottom: 28px; }
+.arquetipos-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px,1fr)); gap: 14px; }
+.arquetipo-turma-card { background: var(--bg-elev); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px; }
+.arquetipo-item-stat { font-size: 13px; color: var(--text-dim); margin: 8px 0; }
+.arquetipo-bar { height: 3px; background: rgba(225,228,234,.06); border-radius: 99px; margin-top: 6px; overflow: hidden; }
+.arquetipo-fill { height: 100%; background: var(--gold); border-radius: 99px; }
+.formulario-row { cursor: pointer; }
+.formulario-details { display: none; }
+.formulario-details.active { display: table-row; }
+.formulario-details-content { padding: 16px; }
+.status-icon { font-size: 1em; }
 
 /* Responsivo */
 @media (max-width: 768px) {
   .pilares-lista { grid-template-columns: 1fr; }
   .pilares-lista > .pilar-item:nth-child(n) { grid-column: 1; grid-row: auto; }
   .imersoes-grid { grid-template-columns: 1fr; }
-  .agendamento-grid { grid-template-columns: repeat(2, 1fr); }
-  .form-list { grid-template-columns: 1fr; }
+  .forms-grid { grid-template-columns: 1fr; }
   .biblioteca-grid { grid-template-columns: 1fr; }
-  .dashboard-section { padding: 24px 16px; }
-  .top-bar { padding: 14px 20px; }
+  .section { padding: 24px 20px; }
+  .topbar { padding: 0 20px; }
+  .topbar-nav { display: none; }
+  .dash-header { grid-template-columns: 1fr; padding: 28px 20px; }
+  .hero-ring-wrap { display: none; }
+  .progress-strip { padding: 0 20px 20px; }
+  .cta-footer { margin: 0 20px 40px; grid-template-columns: 1fr; padding: 32px 24px; }
+  .page-footer { padding: 20px; flex-direction: column; gap: 8px; text-align: center; }
+  .arquetipo-grid { grid-template-columns: 1fr; }
+  .banner-pendencias { margin: 12px 20px 0; }
 }
 
-</style>
+    </style>
 </head>
 <body>
 
 <!-- ================================================================
-     TELA DE LOGIN
+     LOGIN
 ================================================================ -->
 <div id="loginScreen" class="login-shell">
-    <div class="login-left">
-        <div class="login-brand">
-            <span class="login-brand-dot"></span>
-            <div>
-                <div style="font-family:var(--font-serif);font-size:17px;letter-spacing:-0.01em;line-height:1.1">Mentor de Líderes</div>
-                <div style="font-size:10px;color:var(--text-muted);letter-spacing:0.15em;text-transform:uppercase;margin-top:3px">Painel do Aluno · T2 · 2026</div>
-            </div>
-        </div>
-
-        <div class="login-lion-wrap">
-            <div class="login-ring login-ring-1"></div>
-            <div class="login-ring login-ring-2"></div>
-            <div class="login-lion-emoji">🦁</div>
-        </div>
-
-        <div class="login-quote">
-            <div class="login-quote-mark">"</div>
-            <p>Liderar é, antes de tudo, conhecer-se. O resto vem do alinhamento entre essência e ação.</p>
-            <div class="login-quote-attr">— Princípio da mentoria</div>
-        </div>
+  <div class="login-left">
+    <div class="brand-mark">
+      <span class="brand-dot"></span>
+      <div>
+        <div class="serif" style="font-size:17px;letter-spacing:-.01em;line-height:1.1">Mentor de Líderes</div>
+        <div style="font-size:10px;color:var(--text-muted);letter-spacing:.15em;text-transform:uppercase;margin-top:3px">Painel do Aluno · T2 · 2026</div>
+      </div>
     </div>
-
-    <div class="login-right">
-        <div class="login-form-wrap fade-in">
-            <span class="login-turma-badge">● Turma 02 · 2026</span>
-            <h1 class="login-title">Bem-vindo,<br><em>líder.</em></h1>
-            <p class="login-lead">Acesse seu painel para continuar a jornada.</p>
-
-            <div id="messageBox" class="msg-box"></div>
-
-            <form id="loginForm">
-                <div class="login-field">
-                    <label for="emailInput">E-mail</label>
-                    <input type="email" id="emailInput" class="login-input" placeholder="seu@email.com" autocomplete="email" required>
-                </div>
-                <div class="login-field">
-                    <label for="senhaInput">Senha</label>
-                    <input type="password" id="senhaInput" class="login-input" placeholder="••••••••" required>
-                </div>
-                <button type="submit" class="login-btn">
-                    Entrar no painel
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
-                </button>
-            </form>
-
-            <div class="login-footer-links">
-                <a onclick="mostrarEsqueciSenha()">Esqueci minha senha</a>
-                <span style="font-family:var(--font-mono);font-size:11px">v3.0</span>
-            </div>
-        </div>
+    <div class="lion-hero">
+      <div class="lion-ring lion-ring-1"></div>
+      <div class="lion-ring lion-ring-2"></div>
+      <div class="lion-hero-inner">🦁</div>
     </div>
+    <div class="quote">
+      <div class="quote-mark">"</div>
+      <p>Liderar é, antes de tudo, conhecer-se. O resto vem do alinhamento entre essência e ação.</p>
+      <div class="quote-attr">— Princípio da mentoria</div>
+    </div>
+  </div>
+  <div class="login-right">
+    <div class="login-form fade-in-up">
+      <span class="turma-badge">● Turma 02 · 2026</span>
+      <h1 class="login-h1">Bem-vindo,<br><em>líder.</em></h1>
+      <p class="login-lead">Acesse seu painel para continuar a jornada.</p>
+      <div id="messageBox" class="msg-box"></div>
+      <form id="loginForm">
+        <div class="field"><label for="emailInput">E-mail</label><input type="email" id="emailInput" placeholder="seu@email.com" autocomplete="email" required></div>
+        <div class="field"><label for="senhaInput">Senha</label><input type="password" id="senhaInput" placeholder="••••••••" required></div>
+        <button type="submit" class="submit-btn">Entrar no painel<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg></button>
+      </form>
+      <div class="login-footer">
+        <a onclick="mostrarEsqueciSenha()">Esqueci minha senha</a>
+        <span style="font-family:var(--font-mono);font-size:11px">v3.0</span>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- ================================================================
-     TELA ESQUECI SENHA
+     ESQUECI SENHA
 ================================================================ -->
 <div id="esqueciSenhaScreen" class="login-shell hidden">
-    <div class="login-left">
-        <div class="login-brand">
-            <span class="login-brand-dot"></span>
-            <div>
-                <div style="font-family:var(--font-serif);font-size:17px;letter-spacing:-0.01em">Mentor de Líderes</div>
-                <div style="font-size:10px;color:var(--text-muted);letter-spacing:0.15em;text-transform:uppercase;margin-top:3px">Painel do Aluno · T2 · 2026</div>
-            </div>
-        </div>
-        <div class="login-lion-wrap">
-            <div class="login-ring login-ring-1"></div>
-            <div class="login-ring login-ring-2"></div>
-            <div class="login-lion-emoji">🦁</div>
-        </div>
-        <div class="login-quote">
-            <div class="login-quote-mark">"</div>
-            <p>Liderar é, antes de tudo, conhecer-se. O resto vem do alinhamento entre essência e ação.</p>
-            <div class="login-quote-attr">— Princípio da mentoria</div>
-        </div>
+  <div class="login-left">
+    <div class="brand-mark"><span class="brand-dot"></span><div><div class="serif" style="font-size:17px;letter-spacing:-.01em">Mentor de Líderes</div><div style="font-size:10px;color:var(--text-muted);letter-spacing:.15em;text-transform:uppercase;margin-top:3px">Painel do Aluno · T2 · 2026</div></div></div>
+    <div class="lion-hero"><div class="lion-ring lion-ring-1"></div><div class="lion-ring lion-ring-2"></div><div class="lion-hero-inner">🦁</div></div>
+    <div class="quote"><div class="quote-mark">"</div><p>Liderar é, antes de tudo, conhecer-se. O resto vem do alinhamento entre essência e ação.</p><div class="quote-attr">— Princípio da mentoria</div></div>
+  </div>
+  <div class="login-right">
+    <div class="login-form fade-in-up">
+      <h1 class="login-h1" style="font-size:38px">Recuperar<br><em>acesso.</em></h1>
+      <p class="login-lead">Enviaremos um link de recuperação para seu e-mail.</p>
+      <div id="messageBoxEsqueci" class="msg-box"></div>
+      <form id="esqueciSenhaForm">
+        <div class="field"><label for="emailEsqueciInput">E-mail cadastrado</label><input type="email" id="emailEsqueciInput" placeholder="seu@email.com" required></div>
+        <button type="submit" class="submit-btn">Enviar link de recuperação</button>
+      </form>
+      <div class="login-footer"><a onclick="voltarLogin()">← Voltar ao login</a></div>
     </div>
-    <div class="login-right">
-        <div class="login-form-wrap fade-in">
-            <h1 class="login-title" style="font-size:36px">Recuperar<br><em>acesso.</em></h1>
-            <p class="login-lead">Enviaremos um link de recuperação para seu e-mail.</p>
-
-            <div id="messageBoxEsqueci" class="msg-box"></div>
-
-            <form id="esqueciSenhaForm">
-                <div class="login-field">
-                    <label for="emailEsqueciInput">E-mail cadastrado</label>
-                    <input type="email" id="emailEsqueciInput" class="login-input" placeholder="seu@email.com" required>
-                </div>
-                <button type="submit" class="login-btn">Enviar link de recuperação</button>
-            </form>
-
-            <div class="login-footer-links">
-                <a onclick="voltarLogin()">← Voltar para o login</a>
-            </div>
-        </div>
-    </div>
+  </div>
 </div>
 
 <!-- ================================================================
-     TELA CRIAR SENHA (primeiro acesso)
+     CRIAR SENHA
 ================================================================ -->
 <div id="criarSenhaScreen" class="login-shell hidden">
-    <div class="login-left">
-        <div class="login-brand">
-            <span class="login-brand-dot"></span>
-            <div>
-                <div style="font-family:var(--font-serif);font-size:17px;letter-spacing:-0.01em">Mentor de Líderes</div>
-                <div style="font-size:10px;color:var(--text-muted);letter-spacing:0.15em;text-transform:uppercase;margin-top:3px">Primeiro Acesso</div>
-            </div>
+  <div class="login-left">
+    <div class="brand-mark"><span class="brand-dot"></span><div><div class="serif" style="font-size:17px;letter-spacing:-.01em">Mentor de Líderes</div><div style="font-size:10px;color:var(--text-muted);letter-spacing:.15em;text-transform:uppercase;margin-top:3px">Primeiro Acesso</div></div></div>
+    <div class="lion-hero"><div class="lion-ring lion-ring-1"></div><div class="lion-ring lion-ring-2"></div><div class="lion-hero-inner">🦁</div></div>
+    <div class="quote"><div class="quote-mark">"</div><p>Sua jornada começa agora. Crie sua senha e acesse o painel.</p><div class="quote-attr">— Mentor de Líderes</div></div>
+  </div>
+  <div class="login-right">
+    <div class="login-form fade-in-up">
+      <span class="turma-badge">● Primeiro acesso</span>
+      <h1 class="login-h1">Olá, <em><span id="nomeAlunoCriar"></span>!</em></h1>
+      <p class="login-lead">Crie uma senha segura para acessar seu painel.</p>
+      <div id="messageBoxCriar" class="msg-box"></div>
+      <form id="criarSenhaForm">
+        <div class="field">
+          <label for="novaSenhaInput">Nova senha</label>
+          <input type="password" id="novaSenhaInput" placeholder="Mínimo 6 caracteres" required minlength="6">
+          <div class="pw-strength"><div class="pw-bar" id="strengthBar"></div></div>
+          <div style="font-size:11px;color:var(--text-muted);margin-top:6px" id="strengthText">Digite uma senha</div>
         </div>
-        <div class="login-lion-wrap">
-            <div class="login-ring login-ring-1"></div>
-            <div class="login-ring login-ring-2"></div>
-            <div class="login-lion-emoji">🦁</div>
-        </div>
-        <div class="login-quote">
-            <div class="login-quote-mark">"</div>
-            <p>Sua jornada começa agora. Crie sua senha e acesse o painel.</p>
-            <div class="login-quote-attr">— Mentor de Líderes</div>
-        </div>
+        <div class="field"><label for="confirmarSenhaInput">Confirmar senha</label><input type="password" id="confirmarSenhaInput" placeholder="Repita a senha" required minlength="6"></div>
+        <button type="submit" class="submit-btn" id="btnCriarSenha">Criar senha e entrar</button>
+      </form>
     </div>
-    <div class="login-right">
-        <div class="login-form-wrap fade-in">
-            <span class="login-turma-badge">● Primeiro acesso</span>
-            <h1 class="login-title">Olá, <em><span id="nomeAlunoCriar"></span>!</em></h1>
-            <p class="login-lead">Crie uma senha segura para acessar seu painel.</p>
-
-            <div id="messageBoxCriar" class="msg-box"></div>
-
-            <form id="criarSenhaForm">
-                <div class="login-field">
-                    <label for="novaSenhaInput">Nova senha</label>
-                    <input type="password" id="novaSenhaInput" class="login-input" placeholder="Mínimo 6 caracteres" required minlength="6">
-                    <div class="pw-strength"><div class="pw-strength-bar" id="strengthBar"></div></div>
-                    <div style="font-size:11px;color:var(--text-muted);margin-top:6px" id="strengthText">Digite uma senha</div>
-                </div>
-                <div class="login-field">
-                    <label for="confirmarSenhaInput">Confirmar senha</label>
-                    <input type="password" id="confirmarSenhaInput" class="login-input" placeholder="Repita a senha" required minlength="6">
-                </div>
-                <button type="submit" class="login-btn" id="btnCriarSenha">Criar senha e entrar</button>
-            </form>
-        </div>
-    </div>
+  </div>
 </div>
 
 <!-- ================================================================
      DASHBOARD DO ALUNO
 ================================================================ -->
 <div id="dashboardScreen" class="hidden">
-
-    <!-- Top Bar -->
-    <header class="topbar">
-        <div class="topbar-brand">
-            <div class="topbar-logo">🦁</div>
-            <div>
-                <div style="font-family:var(--font-serif);font-size:16px;letter-spacing:-0.01em;line-height:1.1">Mentor de Líderes</div>
-                <div style="font-size:10px;color:var(--text-muted);letter-spacing:0.12em;text-transform:uppercase;margin-top:2px">Painel do Aluno</div>
-            </div>
-        </div>
-
-        <nav class="topbar-nav">
-            <button class="active" onclick="scrollParaSecao('heroSection')">Início</button>
-            <button onclick="scrollParaSecao('pilaresSection')">Pilares</button>
-            <button onclick="scrollParaSecao('imersoesSection')">Imersões</button>
-            <button onclick="scrollParaSecao('bibliotecaSection')">Biblioteca</button>
-            <button onclick="scrollParaSecao('agendaSection')">Agenda</button>
-        </nav>
-
-        <div class="topbar-user" onclick="abrirModalEditarNome()">
-            <div class="topbar-avatar" id="topbarAvatar">?</div>
-            <div class="topbar-name" id="topbarNome">Carregando...</div>
-        </div>
-    </header>
-
-    <div class="dash-main">
-        <!-- Banner pendências -->
-        <div id="bannerPendencias" class="banner-pendencias hidden" onclick="abrirModalPendencias()">
-            <div>
-                <div style="font-weight:600;font-size:14px;color:var(--gold)" id="bannerTitulo"></div>
-                <div style="font-size:12px;color:var(--text-dim);margin-top:2px" id="bannerSubtitulo"></div>
-            </div>
-            <div style="display:flex;align-items:center;gap:8px">
-                <span class="pill pill-gold" id="bannerCount"></span>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
-            </div>
-        </div>
-
-        <!-- Hero / Saudação -->
-        <div id="heroSection" class="dash-header">
-            <div class="dash-header-info">
-                <div class="dash-header-turma section-label" id="alunoTurma">Turma</div>
-                <h1 class="dash-header-nome" id="alunoNome">Carregando...</h1>
-                <div class="hero-actions">
-                    <button class="btn btn-primary" onclick="scrollParaSecao('pilaresSection')">
-                        Continuar jornada
-                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
-                    </button>
-                    <button class="btn btn-ghost" onclick="scrollParaSecao('agendaSection')">Agendar com mentor</button>
-                </div>
-            </div>
-            <!-- Progress Ring -->
-            <div class="hero-ring-wrap" id="heroRingWrap" style="display:none">
-                <svg width="160" height="160" viewBox="0 0 160 160" style="transform:rotate(-90deg)">
-                    <circle cx="80" cy="80" r="62" fill="none" class="ring-track" stroke-width="6"/>
-                    <circle cx="80" cy="80" r="62" fill="none" class="ring-fill" stroke-width="6"
-                        stroke-dasharray="389.56" stroke-dashoffset="389.56" id="heroRingFill"/>
-                </svg>
-                <div style="position:absolute;inset:0;display:grid;place-items:center;text-align:center">
-                    <div>
-                        <div style="font-family:var(--font-serif);font-size:38px;line-height:1;letter-spacing:-0.03em;font-weight:400">
-                            <span id="heroRingPct">0</span><span style="font-size:18px;color:var(--text-muted)">%</span>
-                        </div>
-                        <div class="section-label" style="margin-top:6px;font-size:9px">Jornada</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Barra de progresso geral -->
-        <div class="progress-strip">
-            <div class="progress-pct"><span id="progressPercentage">0</span>%</div>
-            <div class="progress-track">
-                <div class="progress-fill-bar" id="progressFill" style="width:0%"></div>
-            </div>
-            <div style="font-size:12px;color:var(--text-muted);white-space:nowrap" id="progressText">0/0 formulários</div>
-        </div>
-
-        <!-- Stats strip -->
-        <div class="stats-strip" id="statsStrip">
-            <!-- preenchido pelo JS quando for master; para alunos fica vazio -->
-        </div>
-
-        <!-- PILARES -->
-        <section id="pilaresSection" class="section">
-            <div class="section-header">
-                <div>
-                    <div class="section-label" style="color:#8aa6e8;margin-bottom:10px">01 · Pilares</div>
-                    <h2 class="section-title-serif">Seus quatro caminhos</h2>
-                    <p class="section-desc">Cada pilar é uma frente da sua liderança. Avance no seu ritmo, com seu mentor dedicado.</p>
-                </div>
-            </div>
-            <div class="pilares-grid" id="pilaresLista"></div>
-        </section>
-
-        <!-- ARQUÉTIPO -->
-        <section id="arquetipoSection" class="section" style="padding-top:0">
-            <div class="section-header">
-                <div>
-                    <div class="section-label" style="color:#8aa6e8;margin-bottom:10px">02 · Arquétipo</div>
-                    <h2 class="section-title-serif">Sua essência de líder</h2>
-                </div>
-            </div>
-            <div class="arquetipo-card card">
-                <div class="arquetipo-grid">
-                    <div class="arquetipo-left">
-                        <div class="arquetipo-rings">
-                            <svg width="340" height="340" viewBox="0 0 340 340" style="opacity:.25;position:absolute">
-                                <circle cx="170" cy="170" r="60"  fill="none" stroke="var(--gold)" stroke-width=".5" stroke-dasharray="2 6"/>
-                                <circle cx="170" cy="170" r="100" fill="none" stroke="var(--gold)" stroke-width=".5" stroke-dasharray="2 6"/>
-                                <circle cx="170" cy="170" r="145" fill="none" stroke="var(--gold)" stroke-width=".5" stroke-dasharray="2 6"/>
-                            </svg>
-                        </div>
-                        <div style="position:relative;text-align:center">
-                            <div style="font-size:64px;margin-bottom:12px;filter:drop-shadow(0 0 30px rgba(201,169,110,.4))" id="arquetipoEmoji">✨</div>
-                            <div class="section-label" style="color:var(--gold);margin-bottom:8px">Seu Arquétipo</div>
-                            <h3 style="font-family:var(--font-serif);font-size:52px;line-height:1;letter-spacing:-0.03em;font-weight:400" id="arquetipoNome">—</h3>
-                            <p style="font-size:14px;color:var(--text-dim);margin-top:14px;max-width:260px;font-style:italic;font-family:var(--font-serif)" id="arquetipoFrase"></p>
-                        </div>
-                    </div>
-                    <div class="arquetipo-right">
-                        <div class="arquetipo-trait" style="border-color:#8aa6e8">
-                            <div class="section-label" style="color:#8aa6e8;margin-bottom:6px">Sua Força</div>
-                            <p style="font-size:15px;line-height:1.5" id="arquetipoForca">—</p>
-                        </div>
-                        <div class="arquetipo-trait" style="border-color:var(--gold)">
-                            <div class="section-label" style="color:var(--gold);margin-bottom:6px">Seu Desafio</div>
-                            <p style="font-size:15px;line-height:1.5" id="arquetipoDesafio">—</p>
-                        </div>
-                        <div class="arquetipo-trait" style="border-color:var(--text-muted)">
-                            <div class="section-label" style="color:var(--text-muted);margin-bottom:6px">Sua Missão</div>
-                            <p style="font-size:15px;line-height:1.5" id="arquetipoMissao">—</p>
-                        </div>
-                        <div style="display:flex;gap:12px;margin-top:8px">
-                            <a id="arquetipoLinkPDF" href="#" target="_blank" class="btn btn-gold" style="display:none">Baixar PDF do Arquétipo</a>
-                            <button class="btn btn-ghost">Ver todos os arquétipos</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- IMERSÕES -->
-        <section id="imersoesSection" class="section" style="padding-top:0">
-            <div class="section-header">
-                <div>
-                    <div class="section-label" style="color:#8aa6e8;margin-bottom:10px">03 · Imersões</div>
-                    <h2 class="section-title-serif">Encontros que transformam</h2>
-                    <p class="section-desc">Imersões presenciais que marcam cada fase da sua evolução.</p>
-                </div>
-            </div>
-            <div class="imersoes-grid" id="imersoesGrid"></div>
-        </section>
-
-        <!-- PODCAST -->
-        <section id="podcastSection" class="podcast-section-wrap hidden">
-            <div class="section-header">
-                <div>
-                    <div class="section-label" style="color:#8aa6e8;margin-bottom:10px">04 · Podcast</div>
-                    <h2 class="section-title-serif">Podcast "O Mentor"</h2>
-                </div>
-            </div>
-            <div id="podcastCard"></div>
-        </section>
-
-        <!-- BIBLIOTECA -->
-        <section id="bibliotecaSection" class="section" style="padding-top:0">
-            <div class="section-header">
-                <div>
-                    <div class="section-label" style="color:#8aa6e8;margin-bottom:10px">05 · Biblioteca</div>
-                    <h2 class="section-title-serif">Recursos da mentoria</h2>
-                    <p class="section-desc">Templates, mapas mentais e materiais curados para sua jornada.</p>
-                </div>
-                <button class="btn btn-ghost" id="btnCarregarMais">
-                    <span id="btnCarregarMaisTexto">Ver todos</span>
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
-                </button>
-            </div>
-            <div class="biblioteca-grid" id="recursosContainer"></div>
-        </section>
-
-        <!-- AGENDA MENTORES -->
-        <section id="agendaSection" class="section" style="padding-top:0">
-            <div class="section-header">
-                <div>
-                    <div class="section-label" style="color:#8aa6e8;margin-bottom:10px">06 · Mentores</div>
-                    <h2 class="section-title-serif">Agende com seu mentor</h2>
-                    <p class="section-desc">Cada pilar tem mentores dedicados prontos para te apoiar.</p>
-                </div>
-            </div>
-            <div id="mentoresContainer"></div>
-        </section>
-
-        <!-- FORMULÁRIOS -->
-        <section id="formulariosSection" class="section" style="padding-top:0">
-            <div class="section-header">
-                <div>
-                    <div class="section-label" style="color:#8aa6e8;margin-bottom:10px">07 · Formulários</div>
-                    <h2 class="section-title-serif">Seu mapa interno</h2>
-                    <p class="section-desc">Cada formulário aprofunda o autoconhecimento e direciona seu caminho.</p>
-                </div>
-            </div>
-            <div class="card forms-card">
-                <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px">
-                    <div class="section-label">Progresso geral</div>
-                    <div style="display:flex;align-items:baseline;gap:8px">
-                        <span style="font-family:var(--font-serif);font-size:32px;letter-spacing:-0.02em" id="progressPercentage2"></span>
-                        <span style="font-family:var(--font-mono);font-size:12px;color:var(--text-muted)" id="progressText2"></span>
-                    </div>
-                </div>
-                <div class="forms-progress-bar"><div class="forms-progress-fill" id="progressFill2" style="width:0%"></div></div>
-                <div class="forms-grid" id="formulariosContainer"></div>
-            </div>
-        </section>
-
-        <!-- CTA PLATAFORMA -->
-        <section style="padding:0 0 60px">
-            <div class="cta-footer">
-                <div class="cta-lion-mark" aria-hidden="true">🦁</div>
-                <div style="position:relative">
-                    <div class="section-label" style="color:#a8bce8;margin-bottom:12px">Acesso completo</div>
-                    <h2 style="font-family:var(--font-serif);font-size:36px;letter-spacing:-0.025em;font-weight:400;margin-bottom:8px">Plataforma de aulas</h2>
-                    <p style="font-size:15px;color:var(--text-dim);max-width:460px">Todo o conteúdo da mentoria — aulas, replays e materiais — em um só lugar.</p>
-                </div>
-                <button class="btn btn-primary" style="padding:16px 28px;font-size:15px">
-                    Acessar plataforma
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
-                </button>
-            </div>
-        </section>
-
-        <!-- Botão sair -->
-        <div style="padding:0 40px 40px">
-            <button class="btn btn-ghost" onclick="logout()">Sair da conta</button>
-        </div>
-
-        <footer class="page-footer">
-            <div style="display:flex;align-items:center;gap:12px">
-                <div style="font-size:20px">🦁</div>
-                <span>Mentor de Líderes · Turma 02 · 2026</span>
-            </div>
-            <div>Painel de acompanhamento do aluno</div>
-        </footer>
+  <header class="topbar">
+    <div class="topbar-brand">
+      <div class="topbar-logo">🦁</div>
+      <div>
+        <div class="serif" style="font-size:16px;letter-spacing:-.01em;line-height:1.1">Mentor de Líderes</div>
+        <div style="font-size:10px;color:var(--text-muted);letter-spacing:.12em;text-transform:uppercase;margin-top:2px">Painel do Aluno</div>
+      </div>
     </div>
+    <nav class="topbar-nav">
+      <button class="active" onclick="scrollParaSecao('heroSection')">Início</button>
+      <button onclick="scrollParaSecao('pilaresSection')">Pilares</button>
+      <button onclick="scrollParaSecao('imersoesSection')">Imersões</button>
+      <button onclick="scrollParaSecao('bibliotecaSection')">Biblioteca</button>
+      <button onclick="scrollParaSecao('agendaSection')">Agenda</button>
+      <button id="menuPodcast" onclick="scrollParaSecao('podcastSection')" style="display:none">🎙️ Podcast</button>
+    </nav>
+    <div class="topbar-user" onclick="abrirModalEditarNome()">
+      <div class="topbar-avatar" id="topbarAvatar">?</div>
+      <div style="font-size:13px;font-weight:500" id="topbarNome">Carregando...</div>
+    </div>
+  </header>
+
+  <main>
+    <!-- Banner pendências -->
+    <div id="bannerPendencias" class="banner-pend hidden" onclick="abrirModalPendencias()">
+      <div>
+        <div style="font-weight:600;font-size:14px;color:var(--gold)" id="bannerTitulo"></div>
+        <div style="font-size:12px;color:var(--text-dim);margin-top:2px" id="bannerSubtitulo"></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span class="pill pill-gold" id="bannerCount"></span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+      </div>
+    </div>
+
+    <!-- Hero -->
+    <section id="heroSection" class="hero">
+      <div class="hero-content">
+        <div class="section-label hero-eyebrow" id="alunoTurma">Turma</div>
+        <h1 class="hero-title" id="alunoNome">Carregando...</h1>
+        <div class="hero-actions">
+          <button class="btn btn-primary" onclick="scrollParaSecao('pilaresSection')">Continuar jornada<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg></button>
+          <button class="btn btn-ghost" onclick="scrollParaSecao('agendaSection')">Agendar com mentor</button>
+        </div>
+      </div>
+      <!-- Progress ring -->
+      <div class="prog-ring">
+        <svg width="180" height="180" viewBox="0 0 180 180" style="transform:rotate(-90deg)">
+          <circle cx="90" cy="90" r="70" fill="none" class="ring-track" stroke-width="6"/>
+          <circle cx="90" cy="90" r="70" fill="none" class="ring-fill" stroke-width="6" stroke-dasharray="439.82" stroke-dashoffset="439.82"/>
+        </svg>
+        <div class="prog-ring-inner">
+          <div>
+            <div class="prog-ring-val"><span id="progressPercentage">0</span><span style="font-size:22px;color:var(--text-muted)">%</span></div>
+            <div class="section-label" style="margin-top:6px;font-size:10px">Jornada</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Barra de progresso linear -->
+    <div class="prog-strip">
+      <div class="prog-track"><div class="prog-fill" id="progressFill" style="width:0%"></div></div>
+      <div style="font-size:12px;color:var(--text-muted);white-space:nowrap" id="progressText">0/0</div>
+    </div>
+
+    <!-- Pilares -->
+    <section id="pilaresSection" class="section">
+      <div class="sec-header">
+        <div>
+          <div class="section-label" style="color:#8aa6e8;margin-bottom:10px">01 · Pilares</div>
+          <h2 class="sec-title">Seus quatro caminhos</h2>
+          <p class="sec-desc">Cada pilar é uma frente da sua liderança. Avance no seu ritmo, com seu mentor dedicado.</p>
+        </div>
+      </div>
+      <div class="pilares-grid" id="pilaresLista"></div>
+    </section>
+
+    <!-- Arquétipo -->
+    <section id="arquetipoSection" class="section" style="padding-top:0">
+      <div class="sec-header">
+        <div>
+          <div class="section-label" style="color:#8aa6e8;margin-bottom:10px">02 · Arquétipo</div>
+          <h2 class="sec-title">Sua essência de líder</h2>
+        </div>
+      </div>
+      <div class="arq-card">
+        <div class="arq-grid">
+          <div class="arq-left">
+            <svg width="340" height="340" viewBox="0 0 340 340" style="position:absolute;opacity:.25">
+              <circle cx="170" cy="170" r="60" fill="none" stroke="var(--gold)" stroke-width=".5" stroke-dasharray="2 6"/>
+              <circle cx="170" cy="170" r="100" fill="none" stroke="var(--gold)" stroke-width=".5" stroke-dasharray="2 6"/>
+              <circle cx="170" cy="170" r="145" fill="none" stroke="var(--gold)" stroke-width=".5" stroke-dasharray="2 6"/>
+            </svg>
+            <div style="position:relative;text-align:center">
+              <div style="font-size:64px;margin-bottom:12px;filter:drop-shadow(0 0 30px rgba(201,169,110,.4))" id="arquetipoEmoji">✨</div>
+              <div class="section-label" style="color:var(--gold);margin-bottom:8px">Seu Arquétipo</div>
+              <h3 class="serif" style="font-size:52px;line-height:1;letter-spacing:-.03em" id="arquetipoNome">—</h3>
+              <p style="font-size:14px;color:var(--text-dim);margin-top:14px;max-width:260px;font-style:italic;font-family:var(--font-serif)" id="arquetipoFrase"></p>
+            </div>
+          </div>
+          <div class="arq-right">
+            <div class="arq-trait" style="border-color:#8aa6e8"><div class="section-label" style="color:#8aa6e8;margin-bottom:6px">Sua Força</div><p style="font-size:15px;line-height:1.5" id="arquetipoForca">—</p></div>
+            <div class="arq-trait" style="border-color:var(--gold)"><div class="section-label" style="color:var(--gold);margin-bottom:6px">Seu Desafio</div><p style="font-size:15px;line-height:1.5" id="arquetipoDesafio">—</p></div>
+            <div class="arq-trait" style="border-color:var(--text-muted)"><div class="section-label" style="color:var(--text-muted);margin-bottom:6px">Sua Missão</div><p style="font-size:15px;line-height:1.5" id="arquetipoMissao">—</p></div>
+            <div style="margin-top:8px;display:flex;gap:12px">
+              <a id="arquetipoLinkPDF" href="#" target="_blank" class="btn btn-gold" style="display:none">Baixar PDF do Arquétipo</a>
+              <button class="btn btn-ghost">Ver outros arquétipos</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Imersões -->
+    <section id="imersoesSection" class="section" style="padding-top:0">
+      <div class="sec-header">
+        <div>
+          <div class="section-label" style="color:#8aa6e8;margin-bottom:10px">03 · Imersões</div>
+          <h2 class="sec-title">Encontros que transformam</h2>
+          <p class="sec-desc">Imersões presenciais que marcam cada fase da sua evolução.</p>
+        </div>
+      </div>
+      <div class="im-grid" id="imersoesGrid"></div>
+    </section>
+
+    <!-- Podcast -->
+    <section id="podcastSection" class="section hidden" style="padding-top:0">
+      <div class="sec-header">
+        <div>
+          <div class="section-label" style="color:#8aa6e8;margin-bottom:10px">04 · Podcast</div>
+          <h2 class="sec-title">Podcast "O Mentor"</h2>
+        </div>
+      </div>
+      <div id="podcastCard"></div>
+    </section>
+
+    <!-- Biblioteca -->
+    <section id="bibliotecaSection" class="section" style="padding-top:0">
+      <div class="sec-header">
+        <div>
+          <div class="section-label" style="color:#8aa6e8;margin-bottom:10px">05 · Biblioteca</div>
+          <h2 class="sec-title">Recursos da mentoria</h2>
+          <p class="sec-desc">Templates, mapas mentais e materiais curados para sua jornada.</p>
+        </div>
+        <button class="btn btn-ghost" id="btnCarregarMais"><span id="btnCarregarMaisTexto">Ver todos</span><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></button>
+      </div>
+      <div class="bib-grid" id="recursosContainer"></div>
+    </section>
+
+    <!-- Agenda -->
+    <section id="agendaSection" class="section" style="padding-top:0">
+      <div class="sec-header">
+        <div>
+          <div class="section-label" style="color:#8aa6e8;margin-bottom:10px">06 · Mentores</div>
+          <h2 class="sec-title">Agende com seu mentor</h2>
+          <p class="sec-desc">Cada pilar tem mentores dedicados prontos para te apoiar.</p>
+        </div>
+      </div>
+      <div id="mentoresContainer"></div>
+    </section>
+
+    <!-- Formulários -->
+    <section id="formulariosSection" class="section" style="padding-top:0">
+      <div class="sec-header">
+        <div>
+          <div class="section-label" style="color:#8aa6e8;margin-bottom:10px">07 · Formulários</div>
+          <h2 class="sec-title">Seu mapa interno</h2>
+          <p class="sec-desc">Cada formulário aprofunda o autoconhecimento e direciona seu caminho.</p>
+        </div>
+      </div>
+      <div class="card forms-card">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px">
+          <div class="section-label">Progresso geral</div>
+          <div style="display:flex;align-items:baseline;gap:8px">
+            <span class="serif" style="font-size:32px;letter-spacing:-.02em" id="progressPercentage2"></span>
+            <span class="mono" style="font-size:12px;color:var(--text-muted)" id="progressText2"></span>
+          </div>
+        </div>
+        <div class="forms-prog-bar"><div class="forms-prog-fill" id="progressFill2" style="width:0%"></div></div>
+        <div class="forms-grid" id="formulariosContainer"></div>
+      </div>
+    </section>
+
+    <!-- CTA plataforma -->
+    <section style="padding:0 0 60px">
+      <div class="cta-banner">
+        <div class="cta-mark">🦁</div>
+        <div style="position:relative">
+          <div class="section-label" style="color:#a8bce8;margin-bottom:12px">Acesso completo</div>
+          <h2 class="serif" style="font-size:38px;line-height:1.1;letter-spacing:-.025em;margin-bottom:8px">Plataforma de aulas</h2>
+          <p style="font-size:15px;color:var(--text-dim);max-width:460px">Todo o conteúdo da mentoria — aulas, replays e materiais — em um só lugar.</p>
+        </div>
+        <button class="btn btn-primary" style="padding:16px 28px;font-size:15px">Acessar plataforma<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg></button>
+      </div>
+    </section>
+
+    <div style="padding:0 40px 40px">
+      <button class="btn btn-ghost" onclick="logout()">Sair da conta</button>
+    </div>
+
+    <footer class="page-footer">
+      <div style="display:flex;align-items:center;gap:12px"><span style="font-size:20px">🦁</span><span>Mentor de Líderes · Turma 02 · 2026</span></div>
+      <div>Painel de acompanhamento do aluno</div>
+    </footer>
+  </main>
 </div>
 
 <!-- ================================================================
      MASTER DASHBOARD
 ================================================================ -->
 <div id="masterDashboard" class="hidden">
-    <header class="topbar">
-        <div class="topbar-brand">
-            <div class="topbar-logo">🦁</div>
-            <div>
-                <div style="font-family:var(--font-serif);font-size:16px;letter-spacing:-0.01em">Mentor de Líderes</div>
-                <div style="font-size:10px;color:var(--text-muted);letter-spacing:0.12em;text-transform:uppercase;margin-top:2px">Painel Administrativo</div>
-            </div>
-        </div>
-        <div>
-            <span class="pill pill-gold">👑 MASTER</span>
-        </div>
-    </header>
-
-    <div class="master-wrapper">
-        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:32px" id="statsGrid"></div>
-
-        <div class="master-tabs">
-            <button class="master-tab active" onclick="trocarAba(event, 'turma1')">Turma 1</button>
-            <button class="master-tab" onclick="trocarAba(event, 'turma2')">Turma 2</button>
-            <button class="master-tab" onclick="trocarAba(event, 'turma3')">Turma 3</button>
-            <button class="master-tab" onclick="trocarAba(event, 'geral')">Visão Geral</button>
-        </div>
-
-        <div id="masterContent"></div>
-
-        <div style="margin-top:32px">
-            <button class="btn btn-ghost" onclick="logout()">Sair</button>
-        </div>
+  <header class="topbar">
+    <div class="topbar-brand">
+      <div class="topbar-logo">🦁</div>
+      <div><div class="serif" style="font-size:16px;letter-spacing:-.01em">Mentor de Líderes</div><div style="font-size:10px;color:var(--text-muted);letter-spacing:.12em;text-transform:uppercase;margin-top:2px">Painel Administrativo</div></div>
     </div>
+    <span class="pill pill-gold">👑 MASTER</span>
+  </header>
+  <div class="master-wrap">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:32px" id="statsGrid"></div>
+    <div class="master-tabs">
+      <button class="master-tab active" onclick="trocarAba(event,'turma1')">Turma 1</button>
+      <button class="master-tab" onclick="trocarAba(event,'turma2')">Turma 2</button>
+      <button class="master-tab" onclick="trocarAba(event,'turma3')">Turma 3</button>
+      <button class="master-tab" onclick="trocarAba(event,'geral')">Visão Geral</button>
+    </div>
+    <div id="masterContent"></div>
+    <div style="margin-top:32px"><button class="btn btn-ghost" onclick="logout()">Sair</button></div>
+  </div>
 </div>
 
 <!-- ================================================================
      MODAIS
 ================================================================ -->
-
-<!-- Modal editar nome -->
 <div id="modalEditarNome" class="modal-overlay">
-    <div class="modal-content">
-        <h3 class="modal-title">Como prefere ser chamado?</h3>
-        <input type="text" id="nomePreferidoInput" class="modal-input" placeholder="Seu nome preferido">
-        <div class="modal-actions">
-            <button class="btn btn-primary" onclick="salvarNomePreferido()">Salvar</button>
-            <button class="btn btn-ghost" onclick="fecharModalEditarNome()">Cancelar</button>
-        </div>
+  <div class="modal-box">
+    <h3 class="modal-title">Como prefere ser chamado?</h3>
+    <input type="text" id="nomePreferidoInput" class="modal-input" placeholder="Seu nome preferido">
+    <div class="modal-actions">
+      <button class="btn btn-primary" onclick="salvarNomePreferido()">Salvar</button>
+      <button class="btn btn-ghost" onclick="fecharModalEditarNome()">Cancelar</button>
     </div>
+  </div>
 </div>
 
-<!-- Modal pendências -->
 <div id="modalPendencias" class="hidden">
-    <div class="modal-container">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
-            <h3 class="modal-title" style="margin-bottom:0">Formulários pendentes</h3>
-            <button class="btn btn-ghost" style="padding:8px 14px" onclick="fecharModalPendencias()">✕</button>
-        </div>
-        <div id="modalPendenciasBody"></div>
+  <div class="modal-container">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+      <h3 class="modal-title" style="margin-bottom:0">Formulários pendentes <span id="pendenciasCount" style="font-family:var(--font-mono);font-size:14px;color:var(--text-muted)"></span></h3>
+      <button class="btn btn-ghost" style="padding:8px 14px" onclick="fecharModalPendencias()">✕</button>
     </div>
+    <div id="bannerLista"></div>
+    <div id="modalPendenciasBody"></div>
+  </div>
 </div>
 
-<!-- Modal formulário pendente -->
 <div id="modalFormularioPendente" class="hidden">
-    <div class="modal-container">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
-            <h3 class="modal-title" style="margin-bottom:0" id="modalAulaInfo"></h3>
-            <button class="btn btn-ghost" style="padding:8px 14px" onclick="fecharModalFormularioPendente()">✕</button>
-        </div>
-        <p style="color:var(--text-dim);font-size:14px;margin-bottom:24px" id="mensagemFormularioPendente"></p>
-        <div id="modalAulaBody"></div>
-        <a id="linkFormularioPendente" href="#" target="_blank" class="btn btn-primary" style="margin-top:16px;width:100%;justify-content:center">
-            Preencher formulário →
-        </a>
+  <div class="modal-container">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+      <h3 class="modal-title" style="margin-bottom:0" id="modalAulaInfo"></h3>
+      <button class="btn btn-ghost" style="padding:8px 14px" onclick="fecharModalFormularioPendente()">✕</button>
     </div>
+    <p style="color:var(--text-dim);font-size:14px;margin-bottom:24px" id="mensagemFormularioPendente"></p>
+    <div id="modalAulaBody"></div>
+    <a id="linkFormularioPendente" href="#" target="_blank" class="btn btn-primary" style="margin-top:16px;width:100%;justify-content:center">Preencher formulário →</a>
+  </div>
 </div>
 
-<!-- Tooltip calendário -->
 <div id="tooltipCalendarioFixo" class="hidden">
-    <div id="tooltipFixoConteudo"></div>
+  <div id="tooltipFixoConteudo"></div>
 </div>
 
-<!-- JAVASCRIPT FUNCIONAL -->
+<!-- JS funcional (injetado abaixo) -->
 <script>
 console.log('✅ Dashboard script iniciado');
         
@@ -3872,7 +3717,7 @@ console.log('✅ Dashboard script iniciado');
                                     <div class="pendencia-item" style="cursor: pointer;" onclick="irParaFormulario(${form.numero})">
                                         <span class="pendencia-check">❌</span>
                                         <span class="pendencia-texto">${form.texto}</span>
-                                        <span style="margin-left: auto; color: var(--royal-soft);">→</span>
+                                        <span style="margin-left: auto; color: #0dcaf0;">→</span>
                                     </div>
                                 `).join('')}
                             </div>
@@ -3892,7 +3737,7 @@ console.log('✅ Dashboard script iniciado');
                                     <div class="pendencia-item" style="cursor: pointer;" onclick="irParaSecao('pilaresSection')">
                                         <span class="pendencia-check">❌</span>
                                         <span class="pendencia-texto">${pilar}</span>
-                                        <span style="margin-left: auto; color: var(--royal-soft);">→</span>
+                                        <span style="margin-left: auto; color: #0dcaf0;">→</span>
                                     </div>
                                 `).join('')}
                             </div>
@@ -3912,7 +3757,7 @@ console.log('✅ Dashboard script iniciado');
                                     <div class="pendencia-item" style="cursor: pointer;" onclick="irParaSecao('imersoesSection')">
                                         <span class="pendencia-check">❌</span>
                                         <span class="pendencia-texto">${imersao}</span>
-                                        <span style="margin-left: auto; color: var(--royal-soft);">→</span>
+                                        <span style="margin-left: auto; color: #0dcaf0;">→</span>
                                     </div>
                                 `).join('')}
                             </div>
@@ -3931,7 +3776,7 @@ console.log('✅ Dashboard script iniciado');
                                 <div class="pendencia-item" style="cursor: pointer;" onclick="irParaSecao('podcastSection')">
                                     <span class="pendencia-check">❌</span>
                                     <span class="pendencia-texto">${pendencias.podcast}</span>
-                                    <span style="margin-left: auto; color: var(--royal-soft);">→</span>
+                                    <span style="margin-left: auto; color: #0dcaf0;">→</span>
                                 </div>
                             </div>
                         </div>
@@ -4140,7 +3985,7 @@ console.log('✅ Dashboard script iniciado');
                         const formularioCard = document.querySelector(`[data-form="${numeroFormulario}"]`);
                         if (formularioCard) {
                             // Adicionar destaque temporário
-                            formularioCard.style.border = '2px solid var(--royal-soft)';
+                            formularioCard.style.border = '2px solid #0dcaf0';
                             formularioCard.style.boxShadow = '0 0 20px rgba(13, 202, 240, 0.5)';
                             
                             // Remover destaque após 3 segundos
@@ -4159,6 +4004,11 @@ console.log('✅ Dashboard script iniciado');
 
             const nomeParaExibir = alunoData.nomeExibicao || alunoData.nome;
             document.getElementById('alunoNome').innerHTML = `Bem-vindo de volta, <em style="font-style:italic;color:var(--gold);">${nomeParaExibir}.</em>`;
+            // Atualizar topbar
+            const av = document.getElementById('topbarAvatar');
+            const nm = document.getElementById('topbarNome');
+            if (av) av.textContent = nomeParaExibir.charAt(0).toUpperCase();
+            if (nm) nm.textContent = nomeParaExibir;
             document.getElementById('alunoTurma').textContent = alunoData.turma + ' · 2026';
 
             const preenchidos = alunoData.formularios.filter(f => f === 'Preenchido').length;
@@ -4167,19 +4017,21 @@ console.log('✅ Dashboard script iniciado');
 
             document.getElementById('progressPercentage').textContent = `${percentual}%`;
             document.getElementById('progressFill').style.width = `${percentual}%`;
-            document.getElementById('progressText').textContent = `${preenchidos}/${total} formulários`;
-            // Animar progress ring no hero
-            const _ringWrap = document.getElementById('heroRingWrap');
-            const _ringFill = document.getElementById('heroRingFill');
-            const _ringPct = document.getElementById('heroRingPct');
-            if (_ringWrap && _ringFill) {
-                _ringWrap.style.display = 'block';
-                const _circ = 2 * Math.PI * 62;
-                const _offset = _circ - (percentual / 100) * _circ;
-                _ringFill.setAttribute('stroke-dasharray', _circ.toFixed(2));
-                setTimeout(() => { _ringFill.setAttribute('stroke-dashoffset', _offset.toFixed(2)); }, 150);
-                if (_ringPct) _ringPct.textContent = percentual;
+            // Atualizar progress ring SVG
+            const ringFill = document.querySelector('.ring-fill');
+            if (ringFill) {
+                const c = 2 * Math.PI * 70;
+                ringFill.style.strokeDasharray = c;
+                ringFill.style.strokeDashoffset = c - (percentual / 100) * c;
             }
+            // Sincronizar seção de formulários
+            const pf2 = document.getElementById('progressFill2');
+            const pp2 = document.getElementById('progressPercentage2');
+            const pt2 = document.getElementById('progressText2');
+            if (pf2) pf2.style.width = `${percentual}%`;
+            if (pp2) pp2.textContent = `${percentual}%`;
+            if (pt2) pt2.textContent = `${preenchidos}/${total}`;
+            document.getElementById('progressText').textContent = `${preenchidos}/${total} formulários`;
             // Sincronizar segundo progress bar (seção formulários)
             const pf2 = document.getElementById('progressFill2');
             const pp2 = document.getElementById('progressPercentage2');

@@ -5451,7 +5451,7 @@ body.is-dashboard-screen #brandHeaderTopo { display: none !important; }
         <!-- Brand Header (apenas quando logado; oculto nas telas de login/cadastro) -->
         <div class="brand-header" id="brandHeaderTopo" style="display:none;">
             <div class="logo-container">
-                <div class="logo-lion"><img src="assets/lion-logo.png" alt="Mentor de Líderes" /></div>
+                <div class="logo-lion"><img src="assets/lion-logo.png" alt="Mentor de Líderes" / onerror="this.style.display='none';this.parentElement.insertAdjacentText('beforeend','🦁')" loading="eager"></div>
             </div>
             <h1 class="brand-title">Mentor de Líderes</h1>
             <p class="brand-subtitle">Painel de Acompanhamento</p>
@@ -5472,7 +5472,7 @@ body.is-dashboard-screen #brandHeaderTopo { display: none !important; }
                     <span class="login-left-aura login-left-aura-2"></span>
                     <span class="login-left-aura login-left-aura-1"></span>
                     <div class="login-left-logo">
-                        <img src="assets/lion-logo.png" alt="" />
+                        <img src="assets/lion-logo.png" alt="" / onerror="this.style.display='none';this.parentElement.insertAdjacentText('beforeend','🦁')" loading="eager">
                     </div>
                 </div>
                 <div class="login-left-quote">
@@ -5523,7 +5523,7 @@ body.is-dashboard-screen #brandHeaderTopo { display: none !important; }
                 <div class="login-left-stage">
                     <span class="login-left-aura login-left-aura-2"></span>
                     <span class="login-left-aura login-left-aura-1"></span>
-                    <div class="login-left-logo"><img src="assets/lion-logo.png" alt="" /></div>
+                    <div class="login-left-logo"><img src="assets/lion-logo.png" alt="" / onerror="this.style.display='none';this.parentElement.insertAdjacentText('beforeend','🦁')" loading="eager"></div>
                 </div>
                 <div class="login-left-quote">
                     <p>Toda jornada tem desvios. O importante é retomar o caminho.</p>
@@ -5565,7 +5565,7 @@ body.is-dashboard-screen #brandHeaderTopo { display: none !important; }
                 <div class="login-left-stage">
                     <span class="login-left-aura login-left-aura-2"></span>
                     <span class="login-left-aura login-left-aura-1"></span>
-                    <div class="login-left-logo"><img src="assets/lion-logo.png" alt="" /></div>
+                    <div class="login-left-logo"><img src="assets/lion-logo.png" alt="" / onerror="this.style.display='none';this.parentElement.insertAdjacentText('beforeend','🦁')" loading="eager"></div>
                 </div>
                 <div class="login-left-quote">
                     <p>Comece pela base. Sua senha protege sua jornada.</p>
@@ -5622,7 +5622,7 @@ body.is-dashboard-screen #brandHeaderTopo { display: none !important; }
             <header class="ml-topbar">
                 <div class="ml-topbar-inner">
                     <a href="#" class="ml-brand" onclick="event.preventDefault(); window.scrollTo({top:0, behavior:'smooth'});">
-                        <span class="ml-brand-mark"><img src="assets/lion-logo.png" alt="" /></span>
+                        <span class="ml-brand-mark"><img src="assets/lion-logo.png" alt="" / onerror="this.style.display='none';this.parentElement.insertAdjacentText('beforeend','🦁')" loading="eager"></span>
                         <span class="ml-brand-text">
                             <span class="ml-brand-name">Mentor de Líderes</span>
                             <span class="ml-brand-tagline">PAINEL DO ALUNO</span>
@@ -5801,24 +5801,19 @@ body.is-dashboard-screen #brandHeaderTopo { display: none !important; }
                             <strong>SUA MISSÃO</strong>
                             <p id="arquetipoMissao">Criar sistemas e estruturas que beneficiem a todos.</p>
                         </div>
-                        <div class="ml-arq-actions">
-                            <a href="#" target="_blank" id="arquetipoLinkPDF" class="btn-download-arquetipo ml-btn ml-btn-gold">Baixar PDF do Arquétipo</a>
-                        
+                        <div class="ml-arq-actions" style="flex-direction:column;align-items:flex-start;gap:12px">
+                            <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+                                <a href="#" target="_blank" id="arquetipoLinkPDF" class="btn-download-arquetipo ml-btn ml-btn-gold">Baixar PDF do Arquétipo</a>
+                                <button class="ml-arq-outros-btn" onclick="toggleOutrosArquetipos(this)" aria-expanded="false">
+                                    Outros arquétipos
+                                    <svg class="ml-arq-outros-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+                                </button>
+                            </div>
+                            <div class="ml-arq-outros-grid hidden" id="arqTodosGrid"></div>
                         </div>
                     </div>
                 </div>
             
-            <!-- Outros arquétipos — dropdown -->
-            <div class="ml-arq-outros-wrap" id="arqExplorarTodos">
-                <button class="ml-arq-outros-btn" onclick="toggleOutrosArquetipos(this)" aria-expanded="false">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
-                    Outros arquétipos
-                    <svg class="ml-arq-outros-chevron" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
-                </button>
-                <div class="ml-arq-outros-grid hidden" id="arqTodosGrid">
-                    <!-- preenchido via JS -->
-                </div>
-            </div>
         </section>
 
             <!-- ========== IMERSÕES ========== -->
@@ -5907,14 +5902,14 @@ body.is-dashboard-screen #brandHeaderTopo { display: none !important; }
                     </a>
                 </div>
                 <div class="ml-platform-lion" aria-hidden="true">
-                    <img src="assets/lion-logo.png" alt="" />
+                    <img src="assets/lion-logo.png" alt="" / onerror="this.style.display='none';this.parentElement.insertAdjacentText('beforeend','🦁')" loading="eager">
                 </div>
             </section>
 
             <!-- ========== FOOTER ========== -->
             <footer class="ml-footer">
                 <div class="ml-footer-left">
-                    <span class="ml-brand-mark ml-brand-mark-sm"><img src="assets/lion-logo.png" alt="" /></span>
+                    <span class="ml-brand-mark ml-brand-mark-sm"><img src="assets/lion-logo.png" alt="" / onerror="this.style.display='none';this.parentElement.insertAdjacentText('beforeend','🦁')" loading="eager"></span>
                     <span class="ml-footer-text">Mentor de Líderes · <span id="ml-footer-turma">Turma · 2026</span></span>
                 </div>
                 <div class="ml-footer-right">Painel de acompanhamento do aluno</div>
@@ -7927,6 +7922,7 @@ body.is-dashboard-screen #brandHeaderTopo { display: none !important; }
                         <button class="ml-mentor-card" onclick="tentarAgendar('${pilarNome}', '${mentor.link}', '${mentor.nome.replace(/'/g,"\\'")}')">
                             <span class="ml-mentor-avatar">${iniciais}</span>
                             <span class="ml-mentor-info">
+                                <span class="ml-mentor-pilar">${pilarNome}</span>
                                 <span class="ml-mentor-nome">${nomeLimpo}</span>
                                 <span class="ml-mentor-cta">Agendar sessão →</span>
                             </span>

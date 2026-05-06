@@ -1063,16 +1063,10 @@ input, button, select, textarea { font-family: inherit; }
 
     /* Pilares grid */
     .pilares-grid {
-        display: grid; grid-template-columns: 1fr 1fr;
-        grid-template-rows: auto auto auto; gap: 14px;
-        align-items: start;
+        display: grid; grid-template-columns: repeat(2, 1fr);
+        gap: 16px; margin-top: 0;
     }
-    .pilares-grid > .pilar-item:nth-child(1) { grid-column: 1; grid-row: 1; }
-    .pilares-grid > .pilar-item:nth-child(2) { grid-column: 2; grid-row: 1 / span 3; align-self: stretch; }
-    .pilares-grid > .pilar-item:nth-child(3) { grid-column: 1; grid-row: 2; }
-    .pilares-grid > .pilar-item:nth-child(4) { grid-column: 1; grid-row: 3; }
-    @media (max-width: 768px) {
-        .pilares-grid { grid-template-columns: 1fr; }
+    @media (max-width: 768px) { .pilares-grid { grid-template-columns: 1fr; } }
         .pilares-grid > .pilar-item:nth-child(n) { grid-column: 1; grid-row: auto; align-self: auto; }
     }
 
@@ -3048,24 +3042,46 @@ console.log('✅ Dashboard script iniciado');
                         ? renderizarJornadaLivro(pilaresData)
                         : '';
 
+                    const accentMap = {
+                        'Influenciador Digital': '#4a6bbd',
+                        'Escritor Best Seller': '#c9a96e',
+                        'Palestrante Poderoso': '#8aa6e8',
+                        'Mentor High Ticket': '#bfbab7'
+                    };
+                    const accent = accentMap[pilar.nome] || 'var(--royal)';
+                    const isHighlight = pilar.isPilarLivro;
+                    const indexPilar = pilares.indexOf(pilar);
                     const pilarHTML = `
-                        <div class="pilar-item ${pilar.isPilarLivro ? 'pilar-item-livro' : ''}">
-                            <div class="pilar-icon">${pilar.icone}</div>
-                            <div class="pilar-content">
-                                <div class="pilar-nome">${pilar.nome}</div>
-                                <div class="pilar-entregavel">${pilar.entregavel}</div>
-                                <div class="pilar-status">
-                                    <span class="pilar-badge ${statusInfo.badge}">
-                                        ${statusInfo.emoji} ${statusInfo.texto}
-                                    </span>
-                                    <span class="pilar-detalhes">${pilar.mentor}</span>
-                                </div>
-                                <div class="pilar-progresso">
-                                    <div class="pilar-progresso-fill ${statusInfo.classe}" style="width: ${statusInfo.percentual}%"></div>
-                                </div>
-                                ${jornadaLivroHTML}
+                        <article class="card card-hover pilar-item ${pilar.isPilarLivro ? 'pilar-item-livro' : ''}" style="padding:28px;position:relative;overflow:hidden;background:${isHighlight ? 'linear-gradient(135deg,rgba(48,78,156,.18),rgba(36,31,38,1) 60%)' : 'var(--bg-elev)'};border-color:${isHighlight ? 'rgba(48,78,156,.4)' : ''}">
+                            <div class="serif" style="position:absolute;right:24px;top:12px;font-size:120px;line-height:1;font-style:italic;color:rgba(225,228,234,.04);letter-spacing:-.05em;pointer-events:none">0${indexPilar+1}</div>
+                            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:28px">
+                                <div style="width:44px;height:44px;border-radius:12px;background:rgba(225,228,234,.05);border:1px solid rgba(225,228,234,.08);display:grid;place-items:center;font-size:18px;color:${accent}">${pilar.icone}</div>
+                                <span class="pill ${statusInfo.badge === 'status-andamento' ? 'pill-royal' : statusInfo.badge === 'status-concluido' ? 'pill-success' : 'pill-muted'}">${statusInfo.badge === 'status-andamento' ? '● Em andamento' : statusInfo.badge === 'status-concluido' ? '✓ Concluído' : '○ Não iniciado'}</span>
                             </div>
-                        </div>
+                            <div class="section-label" style="margin-bottom:8px;font-size:10px">Pilar</div>
+                            <h3 class="serif" style="font-size:28px;line-height:1.1;letter-spacing:-.02em;margin-bottom:6px">${pilar.nome}</h3>
+                            <p style="font-size:14px;color:var(--text-dim);margin-bottom:24px">Etapa atual: <span style="color:var(--text)">${pilar.entregavel}</span></p>
+                            <div style="margin-bottom:20px">
+                                <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px">
+                                    <span class="section-label" style="font-size:10px">Progresso</span>
+                                    <span class="mono" style="font-size:13px">${statusInfo.percentual}%</span>
+                                </div>
+                                <div style="height:4px;background:rgba(225,228,234,.06);border-radius:99px;overflow:hidden">
+                                    <div style="width:${statusInfo.percentual}%;height:100%;background:${accent};border-radius:99px;transition:width .8s ease"></div>
+                                </div>
+                            </div>
+                            ${jornadaLivroHTML}
+                            <div style="display:flex;justify-content:space-between;align-items:center;padding-top:20px;border-top:1px solid rgba(225,228,234,.06)">
+                                <div style="display:flex;align-items:center;gap:10px">
+                                    <div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,${accent},var(--royal-deep));display:grid;place-items:center;font-size:10px;font-weight:600;color:white">${pilar.mentor.replace('com ','').charAt(0)}</div>
+                                    <div>
+                                        <div style="font-size:11px;color:var(--text-muted)">Mentor</div>
+                                        <div style="font-size:13px;font-weight:500">${pilar.mentor.replace('com ','')}</div>
+                                    </div>
+                                </div>
+                                <button style="background:transparent;border:none;color:var(--text);font-size:13px;font-weight:500;cursor:pointer;display:flex;align-items:center;gap:6px;font-family:var(--font-sans)" onclick="scrollParaSecao('agendaSection')">Acessar <svg width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.5'><path d='M5 12h14M13 5l7 7-7 7'/></svg></button>
+                            </div>
+                        </article>
                     `;
                     
                     lista.innerHTML += pilarHTML;
@@ -3184,12 +3200,25 @@ console.log('✅ Dashboard script iniciado');
                         `;
                     }
                     
+                    const statusClass = dataImersao ? 'pill-success' : 'pill-gold';
+                    const statusLabel = dataImersao ? '✓ Concluída' : '⏱ Em breve';
+                    const dataFormatada = dataImersao ? formatarDataImersao(dataImersao) : 'Em breve';
                     const imersaoHTML = `
-                        <div class="imersao-card">
-                            <div class="imersao-icon">${imersao.icone}</div>
-                            <div class="imersao-titulo">${imersao.titulo}</div>
-                            ${statusHTML}
-                        </div>
+                        <article class="card card-hover" style="padding:28px;position:relative">
+                            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:24px">
+                                <div class="mono" style="font-size:11px;color:var(--text-muted);letter-spacing:.08em">IM·0${imersoes.indexOf(imersao)+1}</div>
+                                <span class="pill ${statusClass}">${statusLabel}</span>
+                            </div>
+                            <h3 class="serif" style="font-size:24px;line-height:1.15;letter-spacing:-.02em;margin-bottom:8px">${imersao.titulo}</h3>
+                            <p style="font-size:14px;color:var(--text-dim);margin-bottom:24px">${imersao.titulo === 'Arquétipos' ? 'Reconheça sua essência de líder.' : imersao.titulo === 'Personal Branding' ? 'Identidade e posicionamento.' : 'Presença e oratória de palco.'}</p>
+                            <div style="padding-top:20px;border-top:1px solid rgba(225,228,234,.06);display:flex;justify-content:space-between;align-items:center">
+                                <div>
+                                    <div style="font-size:11px;color:var(--text-muted)">Data</div>
+                                    <div class="mono" style="font-size:13px;margin-top:2px">${dataFormatada}</div>
+                                </div>
+                                ${dataImersao ? '<button style="background:transparent;border:none;color:#8aa6e8;font-size:12px;font-weight:500;cursor:pointer;font-family:var(--font-sans)">Ver registros →</button>' : ''}
+                            </div>
+                        </article>
                     `;
                     
                     grid.innerHTML += imersaoHTML;
@@ -3298,6 +3327,7 @@ console.log('✅ Dashboard script iniciado');
             };
 
             // Renderizar agrupado
+            container.style.cssText = 'display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:32px';
             container.innerHTML = Object.entries(grupos).map(([key, grupo]) => {
                 const icone = iconesPilar[key] || '👤';
                 const botoesHTML = grupo.mentores.map(mentor => {
@@ -3305,15 +3335,19 @@ console.log('✅ Dashboard script iniciado');
                     const nomeCurto = mentor.nome.includes(' - ')
                         ? mentor.nome.split(' - ')[1]
                         : mentor.nome;
-                    return `<button onclick="tentarAgendar('${grupo.pilar}', '${mentor.link}', '${mentor.nome}')" class="btn-mentor-individual" style="cursor: pointer;">
-                        👤 ${nomeCurto} →
+                    return `<button onclick="tentarAgendar('${grupo.pilar}', '${mentor.link}', '${mentor.nome}')" style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-radius:10px;background:rgba(225,228,234,.03);border:1px solid rgba(225,228,234,.08);color:var(--text);cursor:pointer;font-family:var(--font-sans);font-size:14px;width:100%">
+                        <div style="display:flex;align-items:center;gap:10px">
+                            <div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--royal),var(--royal-deep));display:grid;place-items:center;font-size:11px;font-weight:600;color:white">${nomeCurto.charAt(0)}</div>
+                            ${nomeCurto}
+                        </div>
+                        <span style="color:var(--text-muted)">→</span>
                     </button>`;
                 }).join('');
 
                 return `
-                    <div class="agendamento-grupo">
-                        <div class="agendamento-grupo-titulo">${icone} ${grupo.pilar}</div>
-                        <div class="agendamento-grupo-botoes">
+                    <div class="card" style="padding:24px">
+                        <div class="section-label" style="margin-bottom:16px;font-size:10px">${grupo.pilar}</div>
+                        <div style="display:flex;flex-direction:column;gap:8px">
                             ${botoesHTML}
                         </div>
                     </div>`;
@@ -4336,6 +4370,7 @@ console.log('✅ Dashboard script iniciado');
         function renderizarBiblioteca() {
             const section = document.getElementById('bibliotecaSection');
             const container = document.getElementById('recursosContainer');
+            container.style.cssText = 'display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:32px';
             const btnCarregarMais = document.getElementById('btnCarregarMais');
 
             // Filtrar recursos pela turma do aluno
@@ -4407,17 +4442,17 @@ console.log('✅ Dashboard script iniciado');
                     linkFinal = linkFinal.replace('/edit', '/view');
                 }
                 
+                card.className = 'card card-hover';
+                card.style.cssText = 'padding:24px;display:flex;flex-direction:column;gap:16px';
                 card.innerHTML = `
-                    <div class="recurso-header">
-                        <span class="recurso-icon">${recurso.icone}</span>
-                        <div class="recurso-info">
-                            <h3 class="recurso-title">${recurso.nome}</h3>
-                        </div>
+                    <div style="display:flex;justify-content:space-between;align-items:flex-start">
+                        <div style="width:40px;height:48px;border-radius:4px;background:linear-gradient(135deg,rgba(48,78,156,.3),rgba(48,78,156,.1));border:1px solid rgba(225,228,234,.1);display:grid;place-items:center;font-size:9px;font-weight:600;color:#a8bce8;letter-spacing:.05em">${recurso.icone || 'PDF'}</div>
+                        ${recurso.categoria ? `<span class="pill pill-muted" style="font-size:10px">${recurso.categoria}</span>` : ''}
                     </div>
-                    ${recurso.categoria ? `<span class="recurso-categoria">${recurso.categoria}</span>` : ''}
-                    <p class="recurso-descricao">${recurso.descricao}</p>
-                    <a href="${linkFinal}" target="_blank" rel="noopener noreferrer" class="btn-download" onclick="console.log('Abrindo PDF:', '${linkFinal}')">
-                        📥 Abrir PDF
+                    <h4 style="font-size:15px;font-weight:500;line-height:1.35;letter-spacing:-.01em;flex:1">${recurso.nome}</h4>
+                    <a href="${linkFinal}" target="_blank" rel="noopener noreferrer" style="background:transparent;border:none;color:#a8bce8;font-size:13px;font-weight:500;cursor:pointer;display:flex;align-items:center;gap:6px;padding:0;text-decoration:none;font-family:var(--font-sans)">
+                        Abrir documento
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H8M17 7V16"/></svg>
                     </a>
                 `;
                 container.appendChild(card);
@@ -5074,6 +5109,7 @@ console.log('✅ Dashboard script iniciado');
         function renderizarFormularios() {
             const container = document.getElementById('formulariosContainer');
             container.innerHTML = '';
+            container.style.cssText = 'display:grid;grid-template-columns:repeat(2,1fr);gap:10px';
 
             const linksFormularios = buscarLinksConfig(alunoData.turma);
 
@@ -5086,20 +5122,17 @@ console.log('✅ Dashboard script iniciado');
                 const card = document.createElement('div');
                 card.className = 'formulario-card';
                 card.setAttribute('data-form', numeroFormulario);
+                card.style.cssText = `display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-radius:10px;background:rgba(225,228,234,.02);border:1px solid rgba(225,228,234,.06)`;
                 card.innerHTML = `
-                    <div class="formulario-header">
-                        <div class="formulario-title">${form.nome}</div>
-                        <span class="status-badge ${isPendente ? 'status-pendente' : 'status-preenchido'}">
-                            ${isPendente ? '⏳ Pendente' : '✅ Preenchido'}
-                        </span>
+                    <div style="display:flex;align-items:center;gap:12px;flex:1;min-width:0">
+                        <div style="width:22px;height:22px;border-radius:50%;background:${!isPendente ? 'rgba(72,160,113,.15)' : 'rgba(225,228,234,.05)'};border:1px solid ${!isPendente ? 'rgba(72,160,113,.4)' : 'rgba(225,228,234,.1)'};display:grid;place-items:center;color:${!isPendente ? '#6fc594' : 'var(--text-muted)'};font-size:11px;flex-shrink:0">${!isPendente ? '✓' : '○'}</div>
+                        <span style="font-size:14px;font-weight:500">${form.nome}</span>
                     </div>
-                    ${isPendente && link ? 
-                        `<a href="${link}" target="_blank" class="btn-formulario btn-preencher">
-                            📝 Preencher Agora
-                        </a>` :
-                        `<button class="btn-formulario btn-concluido" disabled>
-                            ✓ Concluído
-                        </button>`
+                    ${!isPendente 
+                        ? `<span class="pill pill-success" style="font-size:10px;flex-shrink:0">Preenchido</span>`
+                        : link 
+                            ? `<a href="${link}" target="_blank" class="btn btn-primary" style="padding:8px 14px;font-size:12px;flex-shrink:0">Preencher</a>`
+                            : `<span class="pill pill-muted" style="font-size:10px;flex-shrink:0">Pendente</span>`
                     }
                 `;
                 container.appendChild(card);

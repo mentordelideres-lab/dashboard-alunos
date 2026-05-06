@@ -4646,7 +4646,27 @@ body.is-dashboard-screen #brandHeaderTopo { display: none !important; }
     padding: 6px !important; min-width: 160px !important; display: none !important; flex-direction: column !important; gap: 2px !important;
     box-shadow: var(--shadow-2) !important; z-index: 200 !important;
 }
-.ml-user-chip:hover .ml-user-menu, .aluno-header-actions:hover .ml-user-menu { display: flex !important; }
+.ml-user-chip.is-open .ml-user-menu, .aluno-header-actions.is-open .ml-user-menu { display: flex !important; }
+.ml-user-chip { cursor: pointer !important; }
+.ml-user-menu { display: none; }
+
+/* Logo footer — leão dourado original */
+.ml-footer-left .ml-brand-mark { background: transparent !important; box-shadow: none !important; }
+.ml-footer-left .ml-brand-mark img { filter: none !important; opacity: 1 !important; }
+
+/* Pilar — título ao lado do emoji */
+.ml-pilar-top { align-items: flex-start !important; }
+.ml-pilar .ml-pilar-content { margin-top: 12px !important; }
+.ml-pilar-headline {
+    display: flex !important;
+    align-items: center !important;
+    gap: 14px !important;
+    margin-bottom: 4px !important;
+}
+.ml-pilar-headline .ml-pilar-icon { margin: 0 !important; flex-shrink: 0 !important; }
+.ml-pilar-headline .ml-pilar-title-block { display: flex !important; flex-direction: column !important; gap: 2px !important; }
+.ml-pilar-headline .ml-pilar-eyebrow { margin: 0 !important; }
+.ml-pilar-headline .ml-pilar-nome { margin: 0 !important; font-size: 22px !important; line-height: 1.15 !important; }
 .ml-menu-link {
     background: transparent !important; border: none !important; text-align: left !important;
     font-family: var(--sans) !important; font-size: 13px !important; color: var(--text) !important;
@@ -4664,7 +4684,8 @@ body.is-dashboard-screen #brandHeaderTopo { display: none !important; }
     text-align: left !important;
 }
 .pilar-item *, .ml-pilar * { text-align: left !important; }
-.ml-pilar-top { display: flex !important; align-items: center !important; justify-content: space-between !important; gap: 12px !important; }
+.ml-pilar-top { display: flex !important; align-items: flex-start !important; justify-content: space-between !important; gap: 12px !important; }
+.ml-pilar-num { display: none !important; }
 .ml-pilar-icon, .pilar-icon {
     width: 40px !important; height: 40px !important; min-width: 40px !important;
     border-radius: 10px !important; background: var(--bg-3) !important; border: 1px solid var(--line) !important;
@@ -5549,7 +5570,7 @@ body.is-dashboard-screen #brandHeaderTopo { display: none !important; }
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
                             <span class="ml-bell-dot" id="ml-bell-dot" style="display:none;"></span>
                         </button>
-                        <div class="ml-user-chip aluno-header-actions">
+                        <div class="ml-user-chip aluno-header-actions" onclick="event.stopPropagation(); this.classList.toggle('is-open');">
                             <span class="ml-avatar" id="ml-avatar-iniciais">CB</span>
                             <span class="ml-user-name" id="ml-user-name">Aluno</span>
                             <div class="ml-user-menu">
@@ -6020,7 +6041,13 @@ body.is-dashboard-screen #brandHeaderTopo { display: none !important; }
         // === CONTROLE DO MINI CALENDÁRIO ===
         let calendarioAulas = []; // Armazena as aulas do calendário
         let calendarioMesAtual = new Date(); // Mês sendo exibido no calendário
-        const calendarioLimiteMaximo = new Date(2026, 5, 30); // Junho 2026
+        const calendarioLimiteMaximo = new Date(2030, 11, 31); // Sem limite efetivo
+
+        // Fechar menu de usuário ao clicar fora
+        document.addEventListener('click', (e) => {
+            const open = document.querySelector('.ml-user-chip.is-open, .aluno-header-actions.is-open');
+            if (open && !open.contains(e.target)) open.classList.remove('is-open');
+        });
 
         const FORMULARIOS = [
             { nome: 'Formulário Anamnese Geral + Visão de Futuro', coluna: 'D' },
@@ -6173,6 +6200,10 @@ body.is-dashboard-screen #brandHeaderTopo { display: none !important; }
                 {
                     nome: 'Palestra/Mentoria - Michelle',
                     link: 'https://calendly.com/michellecastro-febracis/30min?month=2025-12'
+                },
+                {
+                    nome: 'Mentor High Ticket - Michelle',
+                    link: 'https://calendly.com/michellecastro-febracis/30min?month=2025-12'
                 }
             ],
             'TURMA 2': [
@@ -6181,11 +6212,19 @@ body.is-dashboard-screen #brandHeaderTopo { display: none !important; }
                     link: 'https://febra.site/suporte_influenciador'
                 },
                 {
+                    nome: 'Influenciador Digital - Bruno',
+                    link: 'https://febra.site/suporte_influenciador_Bruno'
+                },
+                {
                     nome: 'Escritor Best Seller',
                     link: 'https://febra.site/suporteebsaa'
                 },
                 {
                     nome: 'Palestra/Mentoria - Michelle',
+                    link: 'https://calendar.app.google/ReYshN96dnDGxpmm9'
+                },
+                {
+                    nome: 'Mentor High Ticket - Michelle',
                     link: 'https://calendar.app.google/ReYshN96dnDGxpmm9'
                 }
             ],
@@ -6195,11 +6234,19 @@ body.is-dashboard-screen #brandHeaderTopo { display: none !important; }
                     link: 'https://febra.site/suporte_influenciador'
                 },
                 {
+                    nome: 'Influenciador Digital - Bruno',
+                    link: 'https://febra.site/suporte_influenciador_Bruno'
+                },
+                {
                     nome: 'Escritor Best Seller',
                     link: 'https://febra.site/suporteebsaa'
                 },
                 {
                     nome: 'Palestra/Mentoria - Michelle',
+                    link: 'https://calendar.app.google/ReYshN96dnDGxpmm9'
+                },
+                {
+                    nome: 'Mentor High Ticket - Michelle',
                     link: 'https://calendar.app.google/ReYshN96dnDGxpmm9'
                 }
             ]
@@ -7415,6 +7462,14 @@ body.is-dashboard-screen #brandHeaderTopo { display: none !important; }
                 
                 console.log('✅ Dados dos pilares encontrados:', pilaresData);
                 
+                // Persistir no alunoData para cálculo de jornada e pendências
+                alunoData.pilares = {
+                    influenciador: pilaresData.influenciador,
+                    escritor: pilaresData.escritor,
+                    palestrante: pilaresData.palestrante,
+                    mentorHighTicket: pilaresData.mentorHighTicket
+                };
+                
                 // Definir os 4 pilares
                 const pilares = [
                     {
@@ -7466,15 +7521,18 @@ body.is-dashboard-screen #brandHeaderTopo { display: none !important; }
                     const pilarHTML = `
                         <article class="pilar-item ml-pilar" data-status="${statusInfo.classe || ''}">
                             <div class="ml-pilar-top">
-                                <div class="pilar-icon ml-pilar-icon">${pilar.icone}</div>
+                                <div class="ml-pilar-headline">
+                                    <div class="pilar-icon ml-pilar-icon">${pilar.icone}</div>
+                                    <div class="ml-pilar-title-block">
+                                        <div class="ml-pilar-eyebrow">PILAR ${numero}</div>
+                                        <h3 class="pilar-nome ml-pilar-nome">${pilar.nome}</h3>
+                                    </div>
+                                </div>
                                 <span class="pilar-badge ml-pilar-badge ${statusInfo.badge}">
                                     <span class="ml-pilar-dot"></span>${statusInfo.texto}
                                 </span>
                             </div>
-                            <div class="ml-pilar-num">${numero}</div>
                             <div class="pilar-content ml-pilar-content">
-                                <div class="ml-pilar-eyebrow">PILAR</div>
-                                <h3 class="pilar-nome ml-pilar-nome">${pilar.nome}</h3>
                                 <div class="pilar-entregavel ml-pilar-entregavel">Etapa atual: <strong>${pilar.entregavel}</strong></div>
                                 <div class="ml-pilar-progress-row">
                                     <span class="ml-pilar-progress-label">PROGRESSO</span>
@@ -7568,6 +7626,24 @@ body.is-dashboard-screen #brandHeaderTopo { display: none !important; }
                 }
                 
                 console.log('✅ Aluno encontrado! Renderizando imersões...');
+                
+                // Persistir no alunoData para cálculo de jornada e stat-card
+                alunoData.imersoes = {
+                    arquetipos: alunoRow.c[12]?.f || alunoRow.c[12]?.v || null,
+                    personalBranding: alunoRow.c[13]?.f || alunoRow.c[13]?.v || null,
+                    comunicacao: alunoRow.c[14]?.f || alunoRow.c[14]?.v || null
+                };
+
+                // Atualizar stat-card de imersões (data preenchida = concluída)
+                try {
+                    const totalIm = 3;
+                    const okIm = [alunoData.imersoes.arquetipos, alunoData.imersoes.personalBranding, alunoData.imersoes.comunicacao]
+                                  .filter(v => v && v.toString().trim()).length;
+                    const stat = document.getElementById('ml-stat-imersoes');
+                    const statFoot = document.getElementById('ml-stat-imersoes-foot');
+                    if (stat) stat.textContent = String(okIm).padStart(2, '0');
+                    if (statFoot) statFoot.textContent = `de ${totalIm} concluídas`;
+                } catch(e) {}
                 
                 grid.innerHTML = '';
                 imersoes.forEach((imersao, idx) => {
@@ -8170,50 +8246,17 @@ body.is-dashboard-screen #brandHeaderTopo { display: none !important; }
         function navegarMes(direcao) {
             const novoMes = new Date(calendarioMesAtual);
             novoMes.setMonth(novoMes.getMonth() + direcao);
-
-            // Verificar limites
-            const hoje = new Date();
-            hoje.setDate(1);
-            hoje.setHours(0, 0, 0, 0);
-
-            const limite = new Date(calendarioLimiteMaximo);
-            limite.setDate(1);
-
-            if (novoMes < hoje) return; // Não pode voltar antes de hoje
-            if (novoMes > limite) return; // Não pode passar de junho/2026
-
             calendarioMesAtual = novoMes;
             renderizarCalendario();
         }
 
         // Atualizar estado dos botões de navegação
         function atualizarBotoesNavegacaoCalendario() {
+            // Sem limites — navegação livre
             const btnAnterior = document.querySelectorAll('.btn-calendario-nav')[0];
             const btnProximo = document.querySelectorAll('.btn-calendario-nav')[1];
-
-            if (!btnAnterior || !btnProximo) return;
-
-            const hoje = new Date();
-            hoje.setDate(1);
-            hoje.setHours(0, 0, 0, 0);
-
-            const limite = new Date(calendarioLimiteMaximo);
-            limite.setDate(1);
-
-            const mesAtual = new Date(calendarioMesAtual);
-            mesAtual.setDate(1);
-
-            const mesAnterior = new Date(mesAtual);
-            mesAnterior.setMonth(mesAnterior.getMonth() - 1);
-
-            const mesProximo = new Date(mesAtual);
-            mesProximo.setMonth(mesProximo.getMonth() + 1);
-
-            // Desabilitar botão anterior se estiver no mês atual
-            btnAnterior.disabled = mesAnterior < hoje;
-
-            // Desabilitar botão próximo se estiver no limite
-            btnProximo.disabled = mesProximo > limite;
+            if (btnAnterior) btnAnterior.disabled = false;
+            if (btnProximo) btnProximo.disabled = false;
         }
 
         // Mostrar tooltip flutuante fixo
@@ -8333,11 +8376,34 @@ body.is-dashboard-screen #brandHeaderTopo { display: none !important; }
                 });
             }
 
-            // 2. PILARES (vamos considerar "NAO INICIADO" como pendência)
-            // Nota: Isso será preenchido após carregar os dados dos pilares
+            // 2. PILARES
+            if (alunoData.pilares) {
+                const pilaresMap = [
+                    { key: 'influenciador', nome: 'Influenciador Digital' },
+                    { key: 'escritor', nome: 'Escritor Best Seller' },
+                    { key: 'palestrante', nome: 'Palestrante Poderoso' },
+                    { key: 'mentorHighTicket', nome: 'Mentor High Ticket' }
+                ];
+                pilaresMap.forEach(p => {
+                    const v = (alunoData.pilares[p.key] || '').toString().toLowerCase().trim();
+                    if (!v || v === 'não iniciado' || v === 'nao iniciado') {
+                        pendencias.pilares.push({ nome: p.nome, status: alunoData.pilares[p.key] || 'Não Iniciado' });
+                    }
+                });
+            }
             
-            // 3. IMERSÕES (sem data = pendência)
-            // Nota: Isso será preenchido após carregar os dados das imersões
+            // 3. IMERSÕES
+            if (alunoData.imersoes) {
+                const imMap = [
+                    { key: 'arquetipos', nome: 'Arquétipos' },
+                    { key: 'personalBranding', nome: 'Personal Branding' },
+                    { key: 'comunicacao', nome: 'Comunicação Eficaz e Oratória' }
+                ];
+                imMap.forEach(im => {
+                    const v = (alunoData.imersoes[im.key] || '').toString().trim();
+                    if (!v) pendencias.imersoes.push({ nome: im.nome });
+                });
+            }
 
             // 4. PODCAST (TURMA 1 apenas)
             if (alunoData.turma === 'TURMA 1' && alunoData.podcast && alunoData.podcast !== 'SIM') {

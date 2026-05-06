@@ -5808,10 +5808,16 @@ body.is-dashboard-screen #brandHeaderTopo { display: none !important; }
                     </div>
                 </div>
             
-            <!-- Grade de todos os arquétipos -->
-            <div class="ml-arq-explorar" id="arqExplorarTodos">
-                <div class="ml-arq-explorar-titulo">Explorar todos os arquétipos</div>
-                <div class="ml-arq-todos-grid" id="arqTodosGrid"></div>
+            <!-- Outros arquétipos — dropdown -->
+            <div class="ml-arq-outros-wrap" id="arqExplorarTodos">
+                <button class="ml-arq-outros-btn" onclick="toggleOutrosArquetipos(this)" aria-expanded="false">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+                    Outros arquétipos
+                    <svg class="ml-arq-outros-chevron" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+                </button>
+                <div class="ml-arq-outros-grid hidden" id="arqTodosGrid">
+                    <!-- preenchido via JS -->
+                </div>
             </div>
         </section>
 
@@ -6278,7 +6284,7 @@ body.is-dashboard-screen #brandHeaderTopo { display: none !important; }
                     link: 'https://febra.site/suporteebs'
                 },
                 {
-                    nome: 'Palestra/Mentoria - Michelle',
+                    nome: 'Michelle',
                     link: 'https://calendly.com/michellecastro-febracis/30min?month=2025-12'
                 },
                 {
@@ -6300,7 +6306,7 @@ body.is-dashboard-screen #brandHeaderTopo { display: none !important; }
                     link: 'https://febra.site/suporteebsaa'
                 },
                 {
-                    nome: 'Palestra/Mentoria - Michelle',
+                    nome: 'Michelle',
                     link: 'https://calendar.app.google/ReYshN96dnDGxpmm9'
                 },
                 {
@@ -6322,7 +6328,7 @@ body.is-dashboard-screen #brandHeaderTopo { display: none !important; }
                     link: 'https://febra.site/suporteebsaa'
                 },
                 {
-                    nome: 'Palestra/Mentoria - Michelle',
+                    nome: 'Michelle',
                     link: 'https://calendar.app.google/ReYshN96dnDGxpmm9'
                 },
                 {
@@ -7286,6 +7292,7 @@ body.is-dashboard-screen #brandHeaderTopo { display: none !important; }
                 'governante','herói','homem comum'
             ];
 
+            // Renderizar todos exceto o arquétipo atual (que já está em destaque)
             grid.innerHTML = ORDEM.map(chave => {
                 const arq = ARQUETIPOS_DATA[chave];
                 if (!arq) return '';
@@ -7299,6 +7306,22 @@ body.is-dashboard-screen #brandHeaderTopo { display: none !important; }
                         ${isAtivo ? '<span class="ml-arq-mini-badge">Seu arquétipo</span>' : ''}
                     </a>`;
             }).join('');
+        }
+
+        function toggleOutrosArquetipos(btn) {
+            const grid = document.getElementById('arqTodosGrid');
+            const chevron = btn.querySelector('.ml-arq-outros-chevron');
+            const aberto = !grid.classList.contains('hidden');
+            if (aberto) {
+                grid.classList.add('hidden');
+                btn.setAttribute('aria-expanded', 'false');
+                if (chevron) chevron.style.transform = '';
+            } else {
+                grid.classList.remove('hidden');
+                btn.setAttribute('aria-expanded', 'true');
+                if (chevron) chevron.style.transform = 'rotate(180deg)';
+                grid.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
         }
 
         // === MAPEAMENTO DE STATUS DOS PILARES ===
@@ -7592,7 +7615,22 @@ body.is-dashboard-screen #brandHeaderTopo { display: none !important; }
                     {
                         icone: '📚',
                         nome: 'Escritor Best Seller',
-                        entregavel: 'Capítulos do Livro',
+                        entregavel: (() => {
+                            const etapas = [
+                                { label: 'Trilha do Livro Aprovada', val: pilaresData.livroTrilha },
+                                { label: 'Capítulos', val: pilaresData.livroCapitulos },
+                                { label: 'Apêndices', val: pilaresData.livroApendices },
+                                { label: 'Revisão', val: pilaresData.livroRevisao },
+                                { label: 'Capa', val: pilaresData.livroCapa },
+                                { label: 'Diagramação', val: pilaresData.livroDiagramacao },
+                                { label: 'Registros CBL', val: pilaresData.livroRegistrosCBL },
+                                { label: 'Perfil Amazon', val: pilaresData.livroAmazon },
+                                { label: 'Impresso', val: pilaresData.livroImpresso },
+                            ];
+                            const ok = v => { if (!v) return false; const u = v.toString().toUpperCase().trim().normalize('NFD').replace(/[̀-ͯ]/g,''); return u==='ENTREGUE'||u==='REALIZADO'||u==='CONCLUIDO'||u==='CONCLUIDA'; };
+                            const atual = etapas.find(e => !ok(e.val));
+                            return atual ? atual.label : 'Livro Concluído';
+                        })(),
                         mentor: 'com Luana',
                         status: pilaresData.escritor,
                         isPilarLivro: true
@@ -7889,7 +7927,6 @@ body.is-dashboard-screen #brandHeaderTopo { display: none !important; }
                         <button class="ml-mentor-card" onclick="tentarAgendar('${pilarNome}', '${mentor.link}', '${mentor.nome.replace(/'/g,"\\'")}')">
                             <span class="ml-mentor-avatar">${iniciais}</span>
                             <span class="ml-mentor-info">
-                                <span class="ml-mentor-pilar">${pilarNome}</span>
                                 <span class="ml-mentor-nome">${nomeLimpo}</span>
                                 <span class="ml-mentor-cta">Agendar sessão →</span>
                             </span>

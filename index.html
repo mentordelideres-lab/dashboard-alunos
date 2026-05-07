@@ -430,7 +430,7 @@ body.is-login-screen .container {
 .input-group input {
     width: 100%;
     padding: 14px 16px;
-    background: var(--bg);
+    background: var(--bg-3);
     border: 1px solid var(--line-strong);
     border-radius: var(--r-md);
     font-size: 0.98em;
@@ -5444,6 +5444,23 @@ body.is-dashboard-screen #brandHeaderTopo { display: none !important; }
 @media (max-width: 600px) {
     .ml-arq-todos-grid { grid-template-columns: repeat(3, 1fr); }
 }
+
+/* Grade arquétipos — compacta */
+.ml-arq-outros-grid {
+    margin-top: 14px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+}
+@media (max-width: 700px) { .ml-arq-outros-grid { grid-template-columns: repeat(3, 1fr); } }
+.ml-arq-outros-grid.hidden { display: none !important; }
+.ml-arq-mini-card { padding: 10px 8px; gap: 5px; }
+.ml-arq-mini-emoji { font-size: 20px; }
+.ml-arq-mini-nome { font-size: 10px; letter-spacing: 0.04em; }
+.ml-arq-mini-badge { font-size: 8px; padding: 1px 5px; }
+/* Botão toggle estilizado */
+.ml-arq-outros-toggle { border-color: var(--line-strong) !important; }
+.ml-arq-outros-toggle:hover { border-color: var(--gold) !important; color: var(--gold) !important; }
 </style>
 </head>
 <body class="is-login-screen">
@@ -5451,7 +5468,7 @@ body.is-dashboard-screen #brandHeaderTopo { display: none !important; }
         <!-- Brand Header (apenas quando logado; oculto nas telas de login/cadastro) -->
         <div class="brand-header" id="brandHeaderTopo" style="display:none;">
             <div class="logo-container">
-                <div class="logo-lion"><img src="assets/lion-logo.png" alt="Mentor de Líderes"  onerror="this.style.display='none';this.parentElement.insertAdjacentText('beforeend','🦁')" loading="eager"></div>
+                <div class="logo-lion"><img src="assets/lion-logo.png" alt="Mentor de Líderes"  onerror="this.style.display='none';var s=document.createElement('span');s.textContent='🦁';s.style.cssText='font-size:80px;line-height:1;display:grid;place-items:center;width:100%;height:100%';this.parentElement.appendChild(s)" loading="eager"></div>
             </div>
             <h1 class="brand-title">Mentor de Líderes</h1>
             <p class="brand-subtitle">Painel de Acompanhamento</p>
@@ -5472,7 +5489,7 @@ body.is-dashboard-screen #brandHeaderTopo { display: none !important; }
                     <span class="login-left-aura login-left-aura-2"></span>
                     <span class="login-left-aura login-left-aura-1"></span>
                     <div class="login-left-logo">
-                        <img src="assets/lion-logo.png" alt=""  onerror="this.style.display='none';this.parentElement.insertAdjacentText('beforeend','🦁')" loading="eager">
+                        <img src="assets/lion-logo.png" alt=""  onerror="this.style.display='none';var s=document.createElement('span');s.textContent='🦁';s.style.cssText='font-size:80px;line-height:1;display:grid;place-items:center;width:100%;height:100%';this.parentElement.appendChild(s)" loading="eager">
                     </div>
                 </div>
                 <div class="login-left-quote">
@@ -5523,7 +5540,7 @@ body.is-dashboard-screen #brandHeaderTopo { display: none !important; }
                 <div class="login-left-stage">
                     <span class="login-left-aura login-left-aura-2"></span>
                     <span class="login-left-aura login-left-aura-1"></span>
-                    <div class="login-left-logo"><img src="assets/lion-logo.png" alt=""  onerror="this.style.display='none';this.parentElement.insertAdjacentText('beforeend','🦁')" loading="eager"></div>
+                    <div class="login-left-logo"><img src="assets/lion-logo.png" alt=""  onerror="this.style.display='none';var s=document.createElement('span');s.textContent='🦁';s.style.cssText='font-size:80px;line-height:1;display:grid;place-items:center;width:100%;height:100%';this.parentElement.appendChild(s)" loading="eager"></div>
                 </div>
                 <div class="login-left-quote">
                     <p>Toda jornada tem desvios. O importante é retomar o caminho.</p>
@@ -5565,7 +5582,7 @@ body.is-dashboard-screen #brandHeaderTopo { display: none !important; }
                 <div class="login-left-stage">
                     <span class="login-left-aura login-left-aura-2"></span>
                     <span class="login-left-aura login-left-aura-1"></span>
-                    <div class="login-left-logo"><img src="assets/lion-logo.png" alt=""  onerror="this.style.display='none';this.parentElement.insertAdjacentText('beforeend','🦁')" loading="eager"></div>
+                    <div class="login-left-logo"><img src="assets/lion-logo.png" alt=""  onerror="this.style.display='none';var s=document.createElement('span');s.textContent='🦁';s.style.cssText='font-size:80px;line-height:1;display:grid;place-items:center;width:100%;height:100%';this.parentElement.appendChild(s)" loading="eager"></div>
                 </div>
                 <div class="login-left-quote">
                     <p>Comece pela base. Sua senha protege sua jornada.</p>
@@ -5622,7 +5639,7 @@ body.is-dashboard-screen #brandHeaderTopo { display: none !important; }
             <header class="ml-topbar">
                 <div class="ml-topbar-inner">
                     <a href="#" class="ml-brand" onclick="event.preventDefault(); window.scrollTo({top:0, behavior:'smooth'});">
-                        <span class="ml-brand-mark"><img src="assets/lion-logo.png" alt=""  onerror="this.style.display='none';this.parentElement.insertAdjacentText('beforeend','🦁')" loading="eager"></span>
+                        <span class="ml-brand-mark"><img src="assets/lion-logo.png" alt=""  onerror="this.style.display='none';var s=document.createElement('span');s.textContent='🦁';s.style.cssText='font-size:80px;line-height:1;display:grid;place-items:center;width:100%;height:100%';this.parentElement.appendChild(s)" loading="eager"></span>
                         <span class="ml-brand-text">
                             <span class="ml-brand-name">Mentor de Líderes</span>
                             <span class="ml-brand-tagline">PAINEL DO ALUNO</span>
@@ -5804,9 +5821,10 @@ body.is-dashboard-screen #brandHeaderTopo { display: none !important; }
                         <div class="ml-arq-actions" style="flex-direction:column;align-items:flex-start;gap:12px">
                             <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
                                 <a href="#" target="_blank" id="arquetipoLinkPDF" class="btn-download-arquetipo ml-btn ml-btn-gold">Baixar PDF do Arquétipo</a>
-                                <button class="ml-arq-outros-btn" onclick="toggleOutrosArquetipos(this)" aria-expanded="false">
+                                <button class="ml-btn ml-btn-ghost ml-arq-outros-toggle" onclick="toggleOutrosArquetipos(this)" aria-expanded="false" style="font-size:13px;padding:10px 16px;gap:8px">
+                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
                                     Outros arquétipos
-                                    <svg class="ml-arq-outros-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+                                    <svg class="ml-arq-outros-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="transition:transform .25s"><path d="M6 9l6 6 6-6"/></svg>
                                 </button>
                             </div>
                             <div class="ml-arq-outros-grid hidden" id="arqTodosGrid"></div>
@@ -5902,14 +5920,14 @@ body.is-dashboard-screen #brandHeaderTopo { display: none !important; }
                     </a>
                 </div>
                 <div class="ml-platform-lion" aria-hidden="true">
-                    <img src="assets/lion-logo.png" alt=""  onerror="this.style.display='none';this.parentElement.insertAdjacentText('beforeend','🦁')" loading="eager">
+                    <img src="assets/lion-logo.png" alt=""  onerror="this.style.display='none';var s=document.createElement('span');s.textContent='🦁';s.style.cssText='font-size:80px;line-height:1;display:grid;place-items:center;width:100%;height:100%';this.parentElement.appendChild(s)" loading="eager">
                 </div>
             </section>
 
             <!-- ========== FOOTER ========== -->
             <footer class="ml-footer">
                 <div class="ml-footer-left">
-                    <span class="ml-brand-mark ml-brand-mark-sm"><img src="assets/lion-logo.png" alt=""  onerror="this.style.display='none';this.parentElement.insertAdjacentText('beforeend','🦁')" loading="eager"></span>
+                    <span class="ml-brand-mark ml-brand-mark-sm"><img src="assets/lion-logo.png" alt=""  onerror="this.style.display='none';var s=document.createElement('span');s.textContent='🦁';s.style.cssText='font-size:80px;line-height:1;display:grid;place-items:center;width:100%;height:100%';this.parentElement.appendChild(s)" loading="eager"></span>
                     <span class="ml-footer-text">Mentor de Líderes · <span id="ml-footer-turma">Turma · 2026</span></span>
                 </div>
                 <div class="ml-footer-right">Painel de acompanhamento do aluno</div>
@@ -6305,7 +6323,7 @@ body.is-dashboard-screen #brandHeaderTopo { display: none !important; }
                     link: 'https://febra.site/suporteebs'
                 },
                 {
-                    nome: 'Michelle',
+                    nome: 'Palestrante Poderoso - Michelle',
                     link: 'https://calendly.com/michellecastro-febracis/30min?month=2025-12'
                 },
                 {
@@ -6327,7 +6345,7 @@ body.is-dashboard-screen #brandHeaderTopo { display: none !important; }
                     link: 'https://febra.site/suporteebsaa'
                 },
                 {
-                    nome: 'Michelle',
+                    nome: 'Palestrante Poderoso - Michelle',
                     link: 'https://calendar.app.google/ReYshN96dnDGxpmm9'
                 },
                 {
@@ -6349,7 +6367,7 @@ body.is-dashboard-screen #brandHeaderTopo { display: none !important; }
                     link: 'https://febra.site/suporteebsaa'
                 },
                 {
-                    nome: 'Michelle',
+                    nome: 'Palestrante Poderoso - Michelle',
                     link: 'https://calendar.app.google/ReYshN96dnDGxpmm9'
                 },
                 {
@@ -7957,7 +7975,6 @@ body.is-dashboard-screen #brandHeaderTopo { display: none !important; }
 
                 return `
                     <div class="ml-mentor-group-wrap">
-                        <div class="ml-mentor-group-titulo">${pilarNome}</div>
                         <div class="ml-mentor-group-cards">${cards}</div>
                     </div>`;
             }).filter(Boolean).join('');

@@ -560,6 +560,7 @@ body.is-login-screen .container {
     width: 100% !important;
     max-width: 100% !important;
     margin: 0 auto;
+    padding-top: 70px !important;
 }
 
 #masterContent {
@@ -4391,7 +4392,7 @@ body.is-dashboard-screen #brandHeaderTopo { display: none !important; }
 .login-left-logo, .login-left-logo img,
 .logo-lion, .logo-lion img,
 .ml-platform-lion, .ml-platform-lion img { box-sizing: border-box; }
-.ml-brand-mark { width: 44px; height: 44px; display: inline-grid; place-items: center; border-radius: 50%; background: var(--bg-2); border: 1px solid var(--line-strong); overflow: hidden; flex-shrink: 0; }
+.ml-brand-mark { width: 52px; height: 52px; display: inline-grid; place-items: center; border-radius: 50%; background: var(--bg-2); border: 1px solid var(--line-strong); overflow: hidden; flex-shrink: 0; }
 .ml-brand-mark img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .ml-brand-mark-sm { width: 28px; height: 28px; display: inline-grid; place-items: center; border-radius: 50%; background: var(--bg-2); border: 1px solid var(--line); overflow: hidden; flex-shrink: 0; }
 .ml-brand-mark-sm img { width: 100%; height: 100%; object-fit: cover; display: block; }
@@ -4418,13 +4419,16 @@ body.is-dashboard-screen #brandHeaderTopo { display: none !important; }
 
 
 .ml-topbar {
-    position: sticky; top: 0; z-index: 100;
+    position: fixed; top: 0; left: 0; right: 0; z-index: 200;
     display: flex; align-items: center; justify-content: space-between;
     gap: 24px; padding: 14px 32px;
-    background: rgba(26, 22, 28, 0.85);
-    backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+    background: rgba(26, 22, 28, 0.92);
+    backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
     border-bottom: 1px solid var(--line);
 }
+/* Compensar altura do topbar fixo */
+.dashboard-card > .ml-topbar + * { margin-top: 0; }
+#dashboardScreen .ml-main { padding-top: 80px; }
 .ml-brand { display: flex; align-items: center; gap: 12px; }
 .ml-brand-logo {
     width: 36px; height: 36px; border-radius: 50%;
@@ -4488,7 +4492,7 @@ body.is-dashboard-screen #brandHeaderTopo { display: none !important; }
 .ml-hero-title em {
     font-style: italic; font-weight: 400; color: var(--gold);
 }
-.ml-hero-dot { color: var(--royal); }
+.ml-hero-dot { color: var(--gold); }
 .ml-hero-sub {
     font-family: var(--sans); font-size: 16px; line-height: 1.55;
     color: var(--text-dim); max-width: 520px; margin: 8px 0 0;

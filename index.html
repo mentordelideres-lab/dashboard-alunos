@@ -4391,7 +4391,7 @@ body.is-dashboard-screen #brandHeaderTopo { display: none !important; }
 .login-left-logo, .login-left-logo img,
 .logo-lion, .logo-lion img,
 .ml-platform-lion, .ml-platform-lion img { box-sizing: border-box; }
-.ml-brand-mark { width: 36px; height: 36px; display: inline-grid; place-items: center; border-radius: 50%; background: var(--bg-2); border: 1px solid var(--line-strong); overflow: hidden; flex-shrink: 0; }
+.ml-brand-mark { width: 44px; height: 44px; display: inline-grid; place-items: center; border-radius: 50%; background: var(--bg-2); border: 1px solid var(--line-strong); overflow: hidden; flex-shrink: 0; }
 .ml-brand-mark img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .ml-brand-mark-sm { width: 28px; height: 28px; display: inline-grid; place-items: center; border-radius: 50%; background: var(--bg-2); border: 1px solid var(--line); overflow: hidden; flex-shrink: 0; }
 .ml-brand-mark-sm img { width: 100%; height: 100%; object-fit: cover; display: block; }
@@ -5482,6 +5482,16 @@ body.is-dashboard-screen #brandHeaderTopo { display: none !important; }
 /* Botão toggle estilizado */
 .ml-arq-outros-toggle { border-color: var(--line-strong) !important; }
 .ml-arq-outros-toggle:hover { border-color: var(--gold) !important; color: var(--gold) !important; }
+
+.ml-footer { border-top: 1px solid var(--line); padding: 20px 32px; margin-top: auto; }
+.ml-footer-inner { display: flex; align-items: center; justify-content: space-between; gap: 20px; max-width: 1400px; margin: 0 auto; }
+.ml-footer-brand { display: flex; align-items: center; gap: 12px; }
+.ml-footer-logo { width: 40px; height: 40px; border-radius: 50%; background: var(--bg-2); border: 1px solid var(--line-strong); display: grid; place-items: center; overflow: hidden; flex-shrink: 0; }
+.ml-footer-logo img { width: 100%; height: 100%; object-fit: cover; }
+.ml-footer-brand-text { display: flex; flex-direction: column; gap: 2px; }
+.ml-footer-name { font-family: var(--serif); font-size: 15px; font-weight: 500; color: var(--text); letter-spacing: -0.01em; }
+.ml-footer-sub { font-size: 11px; color: var(--text-muted); letter-spacing: 0.04em; }
+.ml-footer-copy { font-size: 12px; color: var(--text-muted); }
 </style>
 </head>
 <body class="is-login-screen">
@@ -5949,11 +5959,16 @@ body.is-dashboard-screen #brandHeaderTopo { display: none !important; }
 
             <!-- ========== FOOTER ========== -->
             <footer class="ml-footer">
-                <div class="ml-footer-left">
-                    <span class="ml-brand-mark ml-brand-mark-sm"><img src="lion-logo.png" alt=""  onerror="this.style.display='none';var s=document.createElement('span');s.textContent='🦁';s.style.cssText='font-size:80px;line-height:1;display:grid;place-items:center;width:100%;height:100%';this.parentElement.appendChild(s)" loading="eager"></span>
-                    <span class="ml-footer-text">Mentor de Líderes · <span id="ml-footer-turma">Turma · 2026</span></span>
+                <div class="ml-footer-inner">
+                    <div class="ml-footer-brand">
+                        <span class="ml-footer-logo"><img src="lion-logo.png" alt=""  onerror="this.style.display='none';var s=document.createElement('span');s.textContent='🦁';s.style.cssText='font-size:28px;line-height:1';this.parentElement.appendChild(s)" loading="eager"></span>
+                        <div class="ml-footer-brand-text">
+                            <span class="ml-footer-name">Mentor de Líderes</span>
+                            <span class="ml-footer-sub">Painel de acompanhamento do aluno</span>
+                        </div>
+                    </div>
+                    <div class="ml-footer-copy">© 2026 Febracis · <span id="ml-footer-turma">Turma · 2026</span></div>
                 </div>
-                <div class="ml-footer-right">Painel de acompanhamento do aluno</div>
             </footer>
 
             </main>
@@ -7709,7 +7724,7 @@ body.is-dashboard-screen #brandHeaderTopo { display: none !important; }
                         icone: '💼',
                         nome: 'Mentor High Ticket',
                         entregavel: 'Entrega da Mentoria',
-                        mentor: 'com Michelle',
+                        mentor: 'com Ana Agnes',
                         status: pilaresData.mentorHighTicket,
                         isPilarLivro: false
                     }
